@@ -1,0 +1,35 @@
+ {
+   "name": "Doomsday Task-Manager",
+   "version": "0.1",
+   "description": "Persistant and Nasty Extention, to keep you on the track of your tasks.",
+   "permissions": ["tabs", "activeTab", "*://*/", "declarativeContent", "storage"],
+   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+   "background": {
+	   "scripts": ["background.js"],
+	   "persistent": false
+   },
+   "content_scripts": [{
+      "matches": ["http://*/*", "https://*/*"],
+      "css": ["content-script.css"],
+      "js": ["content-script.js"]
+   }],
+   "web_accessible_resources": [
+      "*"
+   ],
+   "page_action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+      "16": "images/icon16.png",
+      "32": "images/icon32.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+      }
+   },
+   "icons": {
+      "16": "images/icon16.png",
+      "32": "images/icon32.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+   },
+   "manifest_version": 2
+ }

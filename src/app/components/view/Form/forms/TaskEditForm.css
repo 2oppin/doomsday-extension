@@ -1,0 +1,52 @@
+.dd-popup-form-task {
+  display: flex;
+  flex-direction: column;
+  font: monospace;
+}
+.dd-popup-form-task h5 {
+  color: #ee2200;
+  text-shadow: #421000;
+}
+.dd-popup-form-inputfield {
+  padding: 1px;
+  text-align: left;
+  border: outset 2px #774400;
+  background: #421000;
+  color: #ee2200;
+}
+.dd-popup-form-inputfield label {
+  width: 120px;
+  display: block;
+  float: left;
+}
+.dd-popup-form-inputfield textarea {
+  width: 100%;
+}
+.dd-popup-form-inputfield input {
+  width: 180px;
+  color: #ffcccc;
+  background: black;
+  border: inset 3px gray;
+  float: right;
+}
+
+.dd-popup-form-task .dd-form-buttonset {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.dd-popup-form-row {
+  display: flex;
+}
+.dd-popup-form-column {
+  display: flex;
+  flex-direction: column;
+  text-align: center;  
+}
+.dd-popup-form-inputfield .dd-popup-form-row .dd-popup-form-inputfield label,
+.dd-popup-form-inputfield .dd-popup-form-row .dd-popup-form-inputfield input {
+  width: 60px;
+  float: none;
+}
+.dd-popup-form-inputfield .dd-popup-form-row .dd-popup-form-inputfield input {
+  width: 90px;
+}

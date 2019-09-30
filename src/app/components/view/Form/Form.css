@@ -1,0 +1,138 @@
+.dd-popup-form {
+  margin: auto;
+  /*margin-top: 0;/*-400px;*/
+  position: relative;
+  box-sizing: content-box;
+  border: 13px solid transparent;
+  color: black;
+  font-family: MONOSPACE;
+  padding: 0;
+  min-width: 300px;
+}
+.dd-popup-form-contents {
+  background: rgba(220, 49, 0, 0.6);
+  padding: 25px 50px 15px;
+  min-height: 200px  
+}
+h3.dd-form-caption {
+  line-height: 45px;
+  padding-left: 10px;
+  background: rgba(84, 20, 2, 0.78);
+  color: white;
+}
+.dd-popup-close {
+  position: absolute;
+  box-sizing: border-box;
+  width:25px;
+  height:25px;
+  top: 10px;
+  right: 10px;
+  line-height: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  background: red;
+  cursor: pointer;
+  border: outset 3px;
+  color: white;
+}
+
+.dd-popup-form-tasklist .tasklist {
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+}
+.dd-popup-form-tasklist .tasklist .item {
+display: flex;
+flex-direction: row;
+height: 50px;
+align-items: center;
+justify-content: center;
+background: #461010;
+border: solid 1px white;
+padding: 0 5px 0 5px;
+color: white
+}
+.dd-popup-form-tasklist .tasklist .item.active {
+border: double 10px #a2a2a2;
+margin: -5px -5px 0 -5px;
+z-index: 10;
+}
+.dd-popup-form-tasklist  .tasklist .item span{
+padding: 3px;
+}
+.dd-popup-form-tasklist  .tasklist .item span.info {
+flex-grow: 1;
+}
+.dd-popup-form-tasklist  .tasklist .item span.prg { 
+display: flex;
+flex-grow: 1;
+flex-direction: column;
+padding:3px;
+height: 25px;
+}
+.dd-popup-form-tasklist  .tasklist .item span.prg .cpt {
+font-size: 12px;
+line-height: 12px;
+text-align: center;
+}
+.dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar {
+flex-grow: 1;
+width: 100%;
+min-height: 5px;
+background: #ef3232;
+padding:0;
+}
+.dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar.inv {
+background: rgb(56, 135, 238);
+}
+.dd-popup-form-tasklist  .tasklist .item span.prg .prg-val {
+width: 1px;
+height: 100%;
+background: #ffe928;;
+}
+.dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar.inv .prg-val {
+background: #ef3232;
+}
+
+.dd-popup-form-tasklist  .tasklist .item span.prg .countdown {
+font-size: 10px;
+line-height: 10px;
+text-align: center;
+margin-top: -10px;
+padding: 0;
+}
+.dd-popup-form-tasklist  .tasklist .item span.prg .countdown .deadline-clock {
+color: #ef3232;
+}
+.dd-brd{
+  border-image: url () 33 round;
+}
+
+/*
+
+.dd-popup-form-tasklist ul {
+  padding: 0;
+  list-style-type: none;
+}
+*/
+.dd-popup-form-task-btn {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  padding-top: 2px;
+  line-height: 19px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  border: outset 3px;
+  box-sizing: border-box;
+  color: black;  
+  background: #a72e2e;
+}
+.dd-popup-form-task-btn.dd-add-task {
+  width: auto;
+  padding: 3px;
+}
