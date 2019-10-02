@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import Task from '@app/models/task';
 import _bt from './button';
 import _progressBar from './progressbar';
 
 export default class TaskItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {tasks:[], selected: null};
+  }
   static getDerivedStateFromProps(props) {
-    return {task: props.task, selected: props.active};
+    return {task: new Task(props.task), selected: props.active};
   }
 
   isActive() {
@@ -14,9 +19,9 @@ export default class TaskItem extends Component {
   renderActive(task) {
     return (
       <div className='item'>
-        <_bt u="9208" title="Suspend ..." cb={() => this.pauseTask(task)} />
-        <__progressBar />
-        <_bt u="10004" title="Complete" cb={() => this.finishTask(task)} />
+        <_bt u="⏸" title="Suspend ..." cb={() => this.pauseTask(task)} />
+        <_progressBar task={task} />
+        <_bt u="✔" title="Mark Completed" cb={() => this.finishTask(task)} />
       </div>
     )
   }

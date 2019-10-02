@@ -15,11 +15,12 @@ export default class TaskListForm extends BasicForm {
 
   renderForm() {
     const {tasks, active} = this.props
-    console.log('TTTTTTTTAAAAAAAAASKS', tasks);
     return (
       <div>
         <div className="dd-popup-form-tasklist">
-          {tasks.map(t => <TaskItem key={t.id} active={t.id === active} task={t} />)}
+          <div className="tasklist">
+            {tasks.map(t => <TaskItem key={t.id} active={t.id === active} task={t} />)}
+          </div>
         </div>
         <span
           className="dd-popup-form-task-btn dd-brd dd-add-task"

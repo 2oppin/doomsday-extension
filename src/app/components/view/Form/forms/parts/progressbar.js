@@ -1,53 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import './progressbar.css';
 
-export default function ProgressBar({u, cb, task}) {
+export default function ProgressBar({task}) {
   const progress = task.progress;
-  const left = task.estimate - task.did;
-  const _countDown = () => {
+  const failed = task.estimate < task.did;
+  const formatInterval = (left) => {
+    const aleft = Math.abs(left);
+    const h = (left/3600000)|0, ah = Math.abs(h);
+    const m = ((aleft - ah*3600000)/60000)|0;
+    const s = ((aleft - ah*3600000 - m*60000)/1000)|0;
 
-    el.setAttribute('class', 'countdown');
-    const cnt = document.createElement('span');
-    cnt.setAttribute('class', 'countdown-clock');
-    el.appendChild(cnt);
+    const f = (v) => (v+'').padStart(2, '0');
+    return `${f(h)}:${f(m)}:${f(s)}`;
+  };
+  const [counter, setCounter] = useState(formatInterval(task.estimate - task.did));
+
+  useEffect(() => {
+    const interval = setInterval(() => 
+      setCounter(formatInterval(task.estimate - task.did)),
+      1000
+    );
+
+    return () => clearInterval(interval);
+  })
 
 
-    if (left < 0) {
-        const cnte = document.createElement('span');
-        cnte.setAttribute('class', 'deadline-clock');
-        cnte.innerHTML = ;
-        el.appendChild(cnte);
-        cnt.classList.add('failed');
-    }
-    const interval = setInterval(() => {
-        if (!el.isConnected) clearInterval(interval);
-        const left = this.estimate - this.did, aleft = Math.abs(left);
-        const h = (left/3600000)|0, ah = Math.abs(h);
-        const m = ((aleft - ah*3600000)/60000)|0;
-        const s = ((aleft - ah*3600000 - m*60000)/1000)|0;
 
-        const f = (v) => (v+'').padStart(2, '0');
-        let time = `${f(h)}:${f(m)}:${f(s)}`;
-
-        cnt.innerHTML = time;
-    }, 1000);
-
-    return el;
-  }  
-
-  const failed = left < 0;
   
   return (
     <span
       className="prg"
-      onClick={cb}
-      title={title}
+      title={task.name}
     >
       <span className="countdown">
-        <span className={`countdown-clock${failed ? ' failed' : ''}`}></span>
+        <span className={`countdown-clock${failed ? ' failed' : ''}`}>{counter}</span>
         {failed ? (<span className='deadline-clock'>{((this.estimate / 3600000) | 0)}h - failed</span>) : null}
       </span>
-      {_countDown()}
-      <span className="cpt">{task.name}</span>
+       <span className="cpt">{task.name}</span>
       <div className={`prg-bar${progress < 0 ? ' inv' : ''}`}>
         <div className="prg-val" style={{width: `${Math.abs(progress)}%`}}></div>
       </div>
