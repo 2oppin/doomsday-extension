@@ -1,12 +1,18 @@
 import React from 'react';
 import BasicForm from './BasicForm';
-import { Dispatcher } from '../../../../services/dispatcher';
+import { Dispatcher } from '@app/services/dispatcher';
+import Task from '@app/models/task';
 import TaskItem from './parts/TaskItem';
 
 export default class TaskListForm extends BasicForm {
   constructor(props) {
     super(props);
-    this.state = {...this.state, caption: 'List of Missions:'};
+    this.state = {
+      ...this.state,
+      caption: 'List of Missions:',
+      tasks: (props.tasks || []).map(t => new Task(t)),
+      active: props.active,
+    };
   }
 
   addTask() {
@@ -14,7 +20,8 @@ export default class TaskListForm extends BasicForm {
   }
 
   renderForm() {
-    const {tasks, active} = this.props
+    const {tasks, active} = this.state;
+
     return (
       <div>
         <div className="dd-popup-form-tasklist">

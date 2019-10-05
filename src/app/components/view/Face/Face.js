@@ -15,7 +15,7 @@ class Face extends Component {
     return (
       <div style={{
         backgroundImage: `url(${url})`
-      }} className={`dd-face ${mood || 'god'}`}>
+      }} className={`dd-face ${mood || 'bad'}`}>
       </div>
     );
   }

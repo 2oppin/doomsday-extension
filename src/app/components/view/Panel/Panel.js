@@ -26,7 +26,7 @@ class Panel extends Component {
     if (overflow)
       Dispatcher.dispatch('closeForm');
     else
-      Dispatcher.dispatch('showForm', {name: 'TaskList'})
+      Dispatcher.dispatch('showForm', {name: 'TaskList'});
   }
 
   renderFace({mode}) {
@@ -77,7 +77,8 @@ console.log('panel render:', form);
         ? {
             width: '100vw',
             height: '100vh',
-            backgroundImage: `url(${url})`
+            backgroundColor: 'rgba(50,0,0,0.8)',
+//            backgroundImage: `url(${url})`
           }
         : {
           backgroundImage: 'none',

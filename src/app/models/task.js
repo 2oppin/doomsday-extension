@@ -1,8 +1,8 @@
 import U from '@app/common/routines';
 
 export default class Task {
-    constructor({guid, name, estimate, deadline, description, started, finished, done}) {
-        this.guid = guid || U.UUID();
+    constructor({id, name, estimate, deadline, description, started, finished, done}) {
+        this.id = id || U.UUID();
         this.name = name || 'New Mission';
         this.estimate = estimate || 2*3600*1000;
         this.deadline = new Date(deadline || 3600*1000*24  + (new Date()).getTime());
@@ -11,6 +11,10 @@ export default class Task {
         this.started = started || null;
         this.finished = finished || null;
     };
+
+    get active() {
+        return !!this.started;
+    }
 
     get did() {
         const now = (new Date()).getTime();

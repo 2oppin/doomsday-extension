@@ -42,7 +42,7 @@ export default class TaskEditForm extends BasicForm {
           <input type="text" value={task.name} onChange={(e) => this.setState({task: {...task, name: e.target.value}})} />
         </div>
         <div className="dd-popup-form-inputfield">
-          <label>Estimate (in hours)</label>
+          <label>Estimate (hours)</label>
           <input type="number" value={task.estimate} onChange={(e) => this.setState({task: {...task, estimate: e.target.value}})} />
         </div>
         <div className="dd-popup-form-column">

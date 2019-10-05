@@ -5,7 +5,7 @@ import TaskListForm from "./forms/TaskListForm";
 import './Form.css';
 import TaskEditForm from "./forms/TaskEditForm";
 
-export default class Form extends Component {
+class Form extends Component {
   constructor(props) {
     super(props);
     const url = chrome.extension.getURL("images/bgt2xo.png");
@@ -38,3 +38,5 @@ export default class Form extends Component {
     );
   }
 }
+
+export default

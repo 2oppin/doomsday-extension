@@ -4,8 +4,9 @@
   font: monospace;
 }
 .dd-popup-form-task h5 {
-  color: #ee2200;
+  color: #feffe1;
   text-shadow: #421000;
+  margin-bottom: 0;
 }
 .dd-popup-form-inputfield {
   padding: 1px;
@@ -15,7 +16,7 @@
   color: #ee2200;
 }
 .dd-popup-form-inputfield label {
-  width: 120px;
+  width: 150px;
   display: block;
   float: left;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './progressbar.css';
+import Task from '@app/models/task';
 
 export default function ProgressBar({task}) {
   const progress = task.progress;
@@ -16,13 +17,15 @@ export default function ProgressBar({task}) {
   const [counter, setCounter] = useState(formatInterval(task.estimate - task.did));
 
   useEffect(() => {
-    const interval = setInterval(() => 
-      setCounter(formatInterval(task.estimate - task.did)),
-      1000
+    const interval = setInterval(() => {
+        console.log('ccc', `${task.estimate} - ${task.did}`, task);
+        setCounter(formatInterval(task.estimate - task.did))
+      },
+      5000
     );
 
     return () => clearInterval(interval);
-  })
+  });
 
 
 
