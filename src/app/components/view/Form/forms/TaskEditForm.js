@@ -1,7 +1,7 @@
 import React from 'react';
 import BasicForm from './BasicForm';
 import { Dispatcher } from '@app/services/dispatcher';
-import routines from '@app/common/routines';
+import { UUID } from '@app/common/routines';
 
 import './TaskEditForm.css';
 const DEFAULT_TASK = {
@@ -24,7 +24,11 @@ export default class TaskEditForm extends BasicForm {
   saveTask() {
     const {task} = this.state;
     if (!task.id)
-      Dispatcher.call('addTask', {task: {...task, id: routines.UUID()}});
+      Dispatcher.call('addTask', {task: {...task, id: UUID()}});
+    else {
+      Dispatcher.call('updateTask', {task});
+    }
+
     this.backToList();
   }
 
@@ -43,7 +47,7 @@ export default class TaskEditForm extends BasicForm {
         </div>
         <div className="dd-popup-form-inputfield">
           <label>Estimate (hours)</label>
-          <input type="number" value={task.estimate} onChange={(e) => this.setState({task: {...task, estimate: e.target.value}})} />
+          <input type="number" value={(task.estimate / 3600000) | 0} onChange={(e) => this.setState({task: {...task, estimate: (e.target.value * 3600000) | 0}})} />
         </div>
         <div className="dd-popup-form-column">
           <h5>Deadline</h5>

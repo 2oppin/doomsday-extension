@@ -52,7 +52,7 @@ export default class TaskItem extends Component {
   }
 
   startTask(task){
-    return Dispatcher.call('startTask', {guid: task.guid, started: (new Date()).getTime()});
+    return Dispatcher.call('startTask', {id: task.id, started: (new Date()).getTime()});
   }
   editTask(task) {
       console.log('edit click');
@@ -60,15 +60,15 @@ export default class TaskItem extends Component {
   }
 
   finishTask(task){
-    return Dispatcher.call('finishTask', {guid: task.guid, finished: (new Date()).getTime()});
+    return Dispatcher.call('finishTask', {id: task.id, finished: (new Date()).getTime()});
   }
 
   pauseTask(task) {
     let done = (task.done || 0) + ((new Date()).getTime() - new Date(task.started).getTime());
-    return Dispatcher.call('pauseTask', {guid: task.guid, started: null, done});
+    return Dispatcher.call('pauseTask', {id: task.id, started: null, done});
   }
 
   deleteTask(task) {
-    return Dispatcher.call('deleteTask', {guid: task.guid});
+    return Dispatcher.call('deleteTask', {id: task.id});
   }
 }

@@ -18,15 +18,13 @@ export default function ProgressBar({task}) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-        console.log('ccc', `${task.estimate} - ${task.did}`, task);
         setCounter(formatInterval(task.estimate - task.did))
       },
-      5000
+      1000
     );
 
     return () => clearInterval(interval);
   });
-
 
 
   
@@ -37,7 +35,7 @@ export default function ProgressBar({task}) {
     >
       <span className="countdown">
         <span className={`countdown-clock${failed ? ' failed' : ''}`}>{counter}</span>
-        {failed ? (<span className='deadline-clock'>{((this.estimate / 3600000) | 0)}h - failed</span>) : null}
+        {failed ? (<span className='deadline-clock'>{((task.estimate / 3600000) | 0)}h - failed</span>) : null}
       </span>
        <span className="cpt">{task.name}</span>
       <div className={`prg-bar${progress < 0 ? ' inv' : ''}`}>

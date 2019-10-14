@@ -39,4 +39,4 @@ class Form extends Component {
   }
 }
 
-export default
+export default Form;

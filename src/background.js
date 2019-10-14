@@ -48,7 +48,7 @@ chrome.runtime.onInstalled.addListener(
       udpateTasks(() => storage.tasks);
     });
     chrome.runtime.onMessage.addListener((msg, sender, resp) => {
-      const {task, action, tabId, guid, started, finished, done} = msg;
+      const {task, action, tabId, id, started, finished, done} = msg;
 console.log('Act', msg);
       switch(action) {
       	case 'addTask':
@@ -56,22 +56,23 @@ console.log('Act', msg);
           break;
         case 'startTask':
           udpateTasks((tasks) => tasks.map(t => {
-            if (t.guid == guid) t.started = started;
+            if (t.id === id) t.started = started;
+            console.log('STARTING:', t);
             return t;
           }));
           break;
         case 'updateTask':
-          udpateTasks((tasks) => tasks.map(t => t.guid == task.guid ? task : t));
+          udpateTasks((tasks) => tasks.map(t => t.id === task.id ? task : t));
           break;          
         case 'finishTask':
           udpateTasks((tasks) => tasks.map(t => {
-            if (t.guid == guid) t.finished = finished;
+            if (t.id === id) t.finished = finished;
             return t;
           }));
           break;
         case 'pauseTask':
           udpateTasks((tasks) => tasks.map(t => {
-            if (t.guid == guid) {
+            if (t.id === id) {
               t.done = done;
               t.started = null;
             }
@@ -79,8 +80,11 @@ console.log('Act', msg);
           }));
           break;
         case 'deleteTask':
-          udpateTasks((tasks) => tasks.filter(t => t.guid != guid));
+          udpateTasks((tasks) => tasks.filter(t => t.id !== id));
           break;
+        case 'refresh':
+          udpateTasks(tasks => tasks);
+          break
       } 
     });
 });

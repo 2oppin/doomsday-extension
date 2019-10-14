@@ -10,6 +10,12 @@ export default class TaskListForm extends BasicForm {
     this.state = {
       ...this.state,
       caption: 'List of Missions:',
+      ...TaskListForm.getDerivedStateFromProps(props)
+    };
+  }
+
+  static getDerivedStateFromProps(props) {
+    return {
       tasks: (props.tasks || []).map(t => new Task(t)),
       active: props.active,
     };

@@ -12,6 +12,7 @@
     font-size: 12px;
     line-height: 12px;
     text-align: center;
+    margin-right: 55px;
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar {
     flex-grow: 1;
@@ -33,6 +34,7 @@
 }
 
 .dd-popup-form-tasklist  .tasklist .item span.prg .countdown {
+    position: relative;
     font-size: 10px;
     line-height: 10px;
     text-align: center;
