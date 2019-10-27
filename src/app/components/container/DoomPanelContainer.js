@@ -43,7 +43,8 @@ export class DoomPanelContainer extends Component {
         console.log('DDDATATA', {...this.config, ...data});
         this.setState({
             form: {name, data: {...this.config, ...data}},
-            overflow: true
+            overflow: true,
+            face: this.config.showFace
         });
     }
     onTaskActivation({guid}) {
@@ -52,6 +53,9 @@ export class DoomPanelContainer extends Component {
     onConfig(config) {
         console.log("READY TO UPDATE: ", config);
         this.config = config;
+        this.setState({
+            face: config.showFace ? {mode: 'bad'} : null
+        });
     }
 
     render() {

@@ -10,6 +10,12 @@ const DEFAULT_TASK = {
   deadline: new Date(new Date().getTime() + 24*3600000),
   description: 'Need to go through the HELL!!!'
 };
+const time = (d = new Date()) => (d = new Date(d)) && `${d.getUTCHours() || '00'}:${d.getUTCMinutes() || '00'}:${d.getUTCSeconds() || '00'}`;
+const date = (d = new Date()) => `${d.getUTCFullYear()}-${`${d.getUTCMonth()+1}`.padStart(2, '0')}-${`${d.getDate()}`.padStart(2, '0')}`;
+const dateTime = (d) => (t) => {
+  return (t = new Date(t)) && new Date(d).setHours( t.getHours(), t.getMinutes(), t.getSeconds());
+};
+
 export default class TaskEditForm extends BasicForm {
   constructor(props) {
     super(props);
@@ -54,11 +60,24 @@ export default class TaskEditForm extends BasicForm {
           <div className="dd-popup-form-row">
             <div className="dd-popup-form-inputfield dd-popup-form-column">
               <label>Date</label>
-              <input type="date" value={task.deadline} onChange={(e) => this.setState({task: {...task, deadline: e.target.value}})} />
+              <input
+                type="date"
+                value={date(new Date(task.deadline))}
+                onChange={(e) => {
+                  console.log('newD=', e.target.value);
+                  this.setState({task: {...task, deadline: dateTime(new Date(e.target.value))(new Date(task.deadline))}})
+                }} />
             </div>
             <div className="dd-popup-form-inputfield dd-popup-form-column">
               <label>Time</label>
-              <input type="time" value={task.deadline} onChange={(e) => this.setState({task: {...task, deadline: e.target.value}})} />
+              <input
+                type="time"
+                dvalue={time(task.deadline)}
+                onChange={(e) => this.setState({task: {
+                  ...task,
+                    deadline: dateTime(task.deadline)
+                      ((new Date()).setHours(...e.target.value.split(':')))
+                }})} />
             </div>
           </div>
         </div>

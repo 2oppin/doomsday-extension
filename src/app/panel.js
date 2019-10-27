@@ -39,7 +39,7 @@ const renderTasks = (tasks) => {
       color: black;">&#${unc};</span>`;
     li.innerHTML = `<li>${bt(9654)}${bt(9208)} - ${t.name}</li>`;
     ul.appendChild(li);
-  })
+  });
   ddPopupTaskList.innerHTML = '';
   ddPopupTaskList.appendChild(ul);
 };

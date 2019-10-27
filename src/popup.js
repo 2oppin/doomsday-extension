@@ -4,18 +4,36 @@ import Face from './app/components/view/Face';
 import {DOOM_OWERFLOW_APP_ID} from './app/globals';
 import './popup.css';
 
+const defaultConfig = {
+  tasks:[],
+  showFace: false,
+};
 class Popup extends React.Component {
   constructor(params) {
     super(params);
+    this.state = { config: defaultConfig };
+    this.loadTasks();
+  }
 
-    this.state = {config: {tasks:[]}};
+  loadTasks() {
     chrome.storage.sync.get(['tasks'], ({tasks}) => {
-      this.setState({config:{tasks}});
-      this.runDoomCmd('configUpdated', {tasks});
+      this.setState(prev => ({
+        config: {
+          ...prev.config,
+          tasks
+        }}), () => this.runDoomCmd('configUpdated', { tasks, showFace: this.state.config.showFace }));
     });
   }
+
+  checkFace() {
+    this.setState(prev => ({
+      config: {
+        ...prev.config,
+        showFace: !prev.config.showFace
+      }}), () => this.runDoomCmd('configUpdated', this.state.config));
+  }
+
   runDoomCmd(cmd, data) {
-    console.log('DOOM called...', cmd, data);
     chrome.tabs.query(
       {
         active: true,
@@ -30,6 +48,7 @@ class Popup extends React.Component {
         )
     )
   }
+
   render() {
     const {config} = this.state;
 
@@ -37,6 +56,13 @@ class Popup extends React.Component {
       <div className='dd-popup'>
         <div onClick={() => this.runDoomCmd('showForm', {name: 'TasksList', data: {tasks: config.tasks}})}>
           <Face />
+          <span>
+            <label for="face-checker">Show face on all pages: </label>
+            <input id="face-checker" type="checkbox"
+               value={config.showFace}
+               onClick={() => this.checkFace()}
+            />
+          </span>
         </div>
       </div>
     );

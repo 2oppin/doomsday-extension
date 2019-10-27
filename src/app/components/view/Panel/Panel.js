@@ -10,14 +10,17 @@ class Panel extends Component {
     const url = chrome.extension.getURL("images/bgt2xo.png");
     this.state = {
       url,
-      face: {r: 15, y: 5, x: 0},
+      face: null,//{r: 15, y: 5, x: 0},
       ...Panel.getDerivedStateFromProps(props)
     };
   }
 
-  static getDerivedStateFromProps(props) {
+  static getDerivedStateFromProps(props, prevState) {
     console.log('PANEL:', props.tasks);
-    return {tasks: props.tasks};
+    return {
+      tasks: props.tasks,
+      face: props.face ? {r: 15, y: 5, x: 0, ...props.face} : null,
+    };
   }
 
   toggleFormDisplaying() {
@@ -29,8 +32,11 @@ class Panel extends Component {
       Dispatcher.dispatch('showForm', {name: 'TaskList'});
   }
 
-  renderFace({mode}) {
+  renderFace() {
     const {face} = this.state;
+
+    if (!face) return null;
+
     return (
       <div
         className="doom-face-asdf"
@@ -42,7 +48,7 @@ class Panel extends Component {
           right: face.r ? `${face.r}px` : 'auto',
           left: face.x ? `${face.x}px` : 'auto',
         }}
-      ><Face mode={mode} /></div>
+      ><Face mode={face.mode} /></div>
     );
   }
 
@@ -67,8 +73,8 @@ class Panel extends Component {
   }
 
   render() {
-    const {overflow, face, form} = this.props;
-    const {url, tasks} = this.state;
+    const {overflow, form} = this.props;
+    const {url, tasks, face} = this.state;
     form && form.data && (form.data.tasks = tasks);
 console.log('panel render:', form);
     return (
@@ -86,7 +92,7 @@ console.log('panel render:', form);
           height: 'auto'
         }
         } className={`dd-popup`}>
-        ${face ? this.renderFace(face) : null}
+        ${this.renderFace(face)}
         ${form ? this.renderForm(form) : null}
       </div>
     );
