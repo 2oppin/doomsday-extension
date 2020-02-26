@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './progressbar.css';
-import Task from '@app/models/task';
 
 export default function ProgressBar({task}) {
   const progress = task.progress;
@@ -27,7 +26,7 @@ export default function ProgressBar({task}) {
   });
 
 
-  
+
   return (
     <span
       className="prg"

@@ -8,6 +8,9 @@
     background-position: -21px -205px;
     animation: dd-face-left-right 5s infinite step-end;
   }
+  .dd-face.ok {
+    background-position-y: -21px;
+  }
   .dd-face.norm {
     background-position-y: -110px;
   }

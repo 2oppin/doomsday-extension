@@ -1,10 +1,10 @@
-import React from 'react';
-import BasicForm from './BasicForm';
+import React, {Component} from 'react';
 import { Dispatcher } from '@app/services/dispatcher';
 import Task from '@app/models/task';
 import TaskItem from './parts/TaskItem';
+import Form from '@app/components/view/Form';
 
-export default class TaskListForm extends BasicForm {
+export default class TaskListForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +16,7 @@ export default class TaskListForm extends BasicForm {
 
   static getDerivedStateFromProps(props) {
     return {
-      tasks: (props.tasks || []).map(t => new Task(t)),
+      tasks: props.tasks || [],
       active: props.active,
     };
   }
@@ -25,23 +25,25 @@ export default class TaskListForm extends BasicForm {
     Dispatcher.dispatch('showForm', {name: 'TaskEdit', data: { task: {}}})
   }
 
-  renderForm() {
+  render() {
     const {tasks, active} = this.state;
 
     return (
-      <div>
-        <div className="dd-popup-form-tasklist">
-          <div className="tasklist">
-            {tasks.map(t => <TaskItem key={t.id} active={t.id === active} task={t} />)}
+      <Form caption="List of Tasks:">
+        <div>
+          <div className="dd-popup-form-tasklist">
+            <div className="tasklist">
+              {tasks.map(t => <TaskItem key={t.id} active={t.id === active} task={t} />)}
+            </div>
           </div>
+          <span
+            className="dd-popup-form-task-btn dd-brd dd-add-task"
+            onClick={this.addTask}
+          >
+            &#10133; <b>New Task</b>
+          </span>
         </div>
-        <span
-          className="dd-popup-form-task-btn dd-brd dd-add-task"
-          onClick={this.addTask}
-        >
-          &#10133; <b>New Task</b>
-        </span>
-      </div>
+      </Form>
     )
   }
 }

@@ -4,18 +4,18 @@ import Task from '@app/models/task';
 import _bt from './button';
 import _progressBar from './progressbar';
 
+import './task-item.css';
+
+const hrs = (msec) => `${Math.floor(msec/36000)/100}h`;
+
 export default class TaskItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {tasks:[], selected: null};
-  }
   static getDerivedStateFromProps(props) {
     return {task: new Task(props.task), selected: props.active};
   }
 
   renderActive(task) {
     return (
-      <div className='item'>
+      <div className='task-item item'>
         <_bt u="⏸" title="Suspend ..." cb={() => this.pauseTask(task)} />
         <_progressBar task={task} />
         <_bt u="✔" title="Mark Completed" cb={() => this.finishTask(task)} />
@@ -25,9 +25,9 @@ export default class TaskItem extends Component {
 
   renderPaused(task) {
     return (
-      <div className="item">
+      <div className="task-item item">
         <_bt u="▶" title="Start Working... NOW!" cb={() => this.startTask(task)} />
-        <span className="info">{task.name}</span>
+        {this.renderNonActiveTask(task)}
         <_bt u="✎" title="Edit" cb={() => this.editTask(task)} />
       </div>
     )
@@ -35,10 +35,22 @@ export default class TaskItem extends Component {
 
   renderFinished(task) {
     return (
-      <div className="item">
+      <div className="task-item item">
         <_bt u="♻" title="Remove Task from history" cb={() => this.deleteTask(task)} />
-        <span className="info">{task.name}</span>
+        {this.renderNonActiveTask(task)}
       </div>
+    );
+  }
+
+  renderNonActiveTask(task) {
+    let cls = 'warn';
+    if (task.done > 0.9 * task.estimate) cls = 'bad';
+    else if (task.done < 0.5 * task.estimate) cls = 'good';
+    return (
+      <span className="info hinted">
+        <span className="hint">Spent: <span className={cls}>{hrs(task.done)}</span> of {hrs(task.estimate)}</span>
+          <span className="content">{task.name}</span>
+        </span>
     );
   }
 

@@ -1,0 +1,30 @@
+.task-item .hinted {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    padding:3px;
+    height: 25px;
+}
+.task-item .hinted .content {
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    margin-right: 55px;
+}
+.task-item .hinted .hint {
+    position: relative;
+    font-size: 10px;
+    line-height: 10px;
+    text-align: center;
+    margin-top: -10px;
+    padding: 0;
+}
+.task-item .hinted .hint .good {
+    color: rgb(56, 135, 238);
+}
+.task-item .hinted .hint .warn {
+    color: #ffe928;;
+}
+.task-item .hinted .hint .bad {
+    color: #ef3232;
+}

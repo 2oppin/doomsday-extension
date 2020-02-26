@@ -1,13 +1,13 @@
-import React from 'react';
-import BasicForm from './BasicForm';
+import React, {Component} from 'react';
 import { Dispatcher } from '@app/services/dispatcher';
 import { UUID } from '@app/common/routines';
 
 import './TaskEditForm.css';
+import Form from '@app/components/view/Form';
 const DEFAULT_TASK = {
   name: 'New Mission',
   estimate: 2,
-  deadline: new Date(new Date().getTime() + 24*3600000),
+  deadline: new Date(new Date().getTime() + 24*3600*1000),
   description: 'Need to go through the HELL!!!'
 };
 const time = (d = new Date()) => (d = new Date(d)) && `${d.getUTCHours() || '00'}:${d.getUTCMinutes() || '00'}:${d.getUTCSeconds() || '00'}`;
@@ -16,14 +16,14 @@ const dateTime = (d) => (t) => {
   return (t = new Date(t)) && new Date(d).setHours( t.getHours(), t.getMinutes(), t.getSeconds());
 };
 
-export default class TaskEditForm extends BasicForm {
+export default class TaskEditForm extends Component {
   constructor(props) {
     super(props);
     const {task} = props;
     this.state = {
       ...this.state,
       task: {...DEFAULT_TASK, ...task},
-      caption: (task.id ? 'Rewise' : 'New') + ' Mission:'
+      caption: (task.id ? 'Revise' : 'New') + ' Mission:'
     };
   }
 
@@ -42,10 +42,10 @@ export default class TaskEditForm extends BasicForm {
     Dispatcher.dispatch('showForm', {name: 'TaskList'});
   }
 
-  renderForm() {
+  render() {
     const {task} = this.state;
 
-    return (
+    return (<Form caption={`Edit "${task.name}":`}>
       <div className="dd-popup-form-task">
         <div className="dd-popup-form-inputfield">
           <label>Code Name</label>
@@ -72,7 +72,7 @@ export default class TaskEditForm extends BasicForm {
               <label>Time</label>
               <input
                 type="time"
-                dvalue={time(task.deadline)}
+                value={time(task.deadline)}
                 onChange={(e) => this.setState({task: {
                   ...task,
                     deadline: dateTime(task.deadline)
@@ -83,13 +83,13 @@ export default class TaskEditForm extends BasicForm {
         </div>
         <div className="dd-popup-form-inputfield">
           <label>Brief</label>
-          <textarea type="text" value={task.description} onChange={(e) => this.setState({task: {...task, description: e.target.text}})} />
+          <textarea value={task.description} onChange={(e) => this.setState({task: {...task, description: e.target.text}})} />
         </div>
         <div className="dd-form-buttonset">
           <button onClick={this.backToList}>Cancel</button>
           <button onClick={() => this.saveTask()}>{task.id ? 'Update' : 'Add'} Mission</button>
         </div>
       </div>
-    )
+    </Form>)
   }
 }
