@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {Dispatcher} from '../../services/dispatcher';
 import Panel from "../view/Panel/Panel";
-import Form from '@app/components/view/Form';
 import FaceDraggable from '@app/components/view/Face/FaceDraggable';
 import TaskEditForm from '@app/components/view/Form/forms/TaskEditForm';
 import TaskListForm from '@app/components/view/Form/forms/TaskListForm';
@@ -11,7 +10,7 @@ export class DoomPanelContainer extends Component {
     // hellthchekInterval = null;
     constructor(params) {
         super(params);
-        console.log('Your DOOM begins 22 now...');
+        console.log('Your DOOM begins now...');
         this.state = {
             overflow: false,
             form: null,

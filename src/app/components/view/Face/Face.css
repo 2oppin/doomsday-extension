@@ -5,40 +5,75 @@
     outline: none;
     background-position-x: -468px;
     background-position-y: -20px;
-    background-position: -21px -205px;
     animation: dd-face-left-right 5s infinite step-end;
-  }
-  .dd-face.ok {
-    background-position-y: -21px;
-  }
-  .dd-face.norm {
-    background-position-y: -110px;
-  }
-  .dd-face.bad {
-    background-position-y: -200px;
-  }
-  .dd-face.worse {
-    background-position-y: -290px;
-  }
-  .dd-face.worst {
-    background-position-y: -380px;
-  }
-  .dd-face.god {
-    background-position: -21px -205px;
-    animation: none;/* dd-god-face-left-right 5s infinite step-end; */
-  }
+}
 
-  @keyframes dd-face-left-right {
-    0%  {background-position-x: -468px;}
-    20% {background-position-x: -540px;}
-    40%  {background-position-x: -468px;}
-    75% {background-position-x: -396px;}
-    100%  {background-position-x: -468px;}
-  }
-  @keyframes dd-god-face-left-right  {
-    0%  {background-position: -21px -205px;}
-    20% {background-position: -540px -20px;}
-    40%  {background-position: -21px -205px;}
-    75% {background-position: -396px -20px;}
-    100%  {background-position: -21px -205px;}
-  }
+.dd-face.static {
+    animation: none !important;
+}
+
+.dd-face.ok {
+    background-position-y: -21px;
+}
+
+.dd-face.norm {
+    background-position-y: -110px;
+}
+
+.dd-face.bad {
+    background-position-y: -200px;
+}
+
+.dd-face.worse {
+    background-position-y: -290px;
+}
+
+.dd-face.worst {
+    background-position-y: -380px;
+}
+
+.dd-face.dead {
+    background-position-y: -380px;
+    animation: none;
+}
+
+.dd-face.god {
+    background-position: -21px -205px;
+    animation: none; /* dd-god-face-left-right 5s infinite step-end; */
+}
+
+@keyframes dd-face-left-right {
+    0% {
+        background-position-x: -468px;
+    }
+    20% {
+        background-position-x: -540px;
+    }
+    40% {
+        background-position-x: -468px;
+    }
+    75% {
+        background-position-x: -396px;
+    }
+    100% {
+        background-position-x: -468px;
+    }
+}
+
+@keyframes dd-god-face-left-right {
+    0% {
+        background-position: -21px -205px;
+    }
+    20% {
+        background-position: -540px -20px;
+    }
+    40% {
+        background-position: -21px -205px;
+    }
+    75% {
+        background-position: -396px -20px;
+    }
+    100% {
+        background-position: -21px -205px;
+    }
+}
