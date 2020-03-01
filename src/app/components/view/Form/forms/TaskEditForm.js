@@ -82,6 +82,10 @@ export default class TaskEditForm extends Component {
           </div>
         </div>
         <div className="dd-popup-form-inputfield">
+          <label>Worklog</label>
+          <input type="number" value={(task.done / 3600000)} onChange={(e) => this.setState({task: {...task, done: (e.target.value * 3600000)}})} />
+        </div>
+        <div className="dd-popup-form-inputfield">
           <label>Brief</label>
           <textarea value={task.description} onChange={(e) => this.setState({task: {...task, description: e.target.text}})} />
         </div>
