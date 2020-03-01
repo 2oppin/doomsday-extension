@@ -5,6 +5,7 @@ import FaceDraggable from '@app/components/view/Face/FaceDraggable';
 import TaskEditForm from '@app/components/view/Form/forms/TaskEditForm';
 import TaskListForm from '@app/components/view/Form/forms/TaskListForm';
 import Task from '@app/models/task';
+import ImportForm from '@app/components/view/Form/forms/ImportForm';
 
 export class DoomPanelContainer extends Component {
     // hellthchekInterval = null;
@@ -109,9 +110,11 @@ export class DoomPanelContainer extends Component {
         const {tasks, config} = this.state;
 
         console.log('FORM', data.tasks[data.tasks.length-1].name);
-        if(name === 'TaskEdit') {
+        if (name === 'TaskEdit') {
             return <TaskEditForm {...data} />;
-        } else
+        } else if (name === 'ImportForm')
+            return <ImportForm {...data} />;
+        else
             return <TaskListForm {...{tasks}} />;
     }
 

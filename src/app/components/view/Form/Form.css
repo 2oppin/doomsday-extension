@@ -12,7 +12,7 @@
 .dd-popup-form-contents {
   background: rgba(220, 49, 0, 0.6);
   padding: 25px 50px 15px;
-  min-height: 200px  
+  min-height: 200px
 }
 h3.dd-form-caption {
   line-height: 45px;
@@ -86,10 +86,13 @@ padding: 3px;
   cursor: pointer;
   border: outset 3px;
   box-sizing: border-box;
-  color: black;  
+  color: black;
   background: #a72e2e;
 }
 .dd-popup-form-task-btn.dd-add-task {
   width: auto;
   padding: 3px;
+}
+.r-btn {
+  float: right;
 }
