@@ -41,4 +41,22 @@ export default class Task {
         }
         return progress;
     }
+
+    static compare(a, b) {
+        a = new Task(a);
+        b = new Task(b);
+
+        if (a.finished && !b.finished) return 1;
+        if (b.finished && !a.finished) return -1;
+
+        if (a.started && !b.started) return -1;
+        if (b.started && !a.started) return 1;
+        if (b.started && a.started) {
+            if (a.started === b.started) return 0;
+            return a.started < b.started ? 1 : -1;
+        }
+
+        if (a.created === b.created) return 0;
+        return a.created < b.created ? 1 : -1;
+    }
 }

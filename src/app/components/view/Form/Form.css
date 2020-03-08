@@ -12,7 +12,7 @@
 .dd-popup-form-contents {
   background: rgba(220, 49, 0, 0.6);
   padding: 25px 50px 15px;
-  min-height: 200px
+  min-height: 200px;
 }
 h3.dd-form-caption {
   line-height: 45px;
@@ -43,6 +43,8 @@ h3.dd-form-caption {
   list-style-type: none;
   display: flex;
   flex-direction: column;
+  max-height: 400px;
+  overflow-y: auto;
 }
 .dd-popup-form-tasklist .tasklist .item {
 display: flex;

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Dispatcher } from '@app/services/dispatcher';
 import TaskItem from './parts/TaskItem';
 import Form from '@app/components/view/Form';
+import Task from '@app/models/task';
 
 export default class TaskListForm extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ export default class TaskListForm extends Component {
 
   static getDerivedStateFromProps(props) {
     return {
-      tasks: props.tasks || [],
+      tasks: (props.tasks || []).sort(Task.compare),
       active: props.active,
     };
   }
