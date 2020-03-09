@@ -6,6 +6,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ChromeExtensionReloader = require("webpack-chrome-extension-reloader");
 
 module.exports = {
+  mode: "production",
+  devtool: "source-map",
   entry: {
     background: './src/background.js',
     'content-script': './src/app/app.js',
@@ -16,18 +18,28 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    modules: [ path.resolve(__dirname, "src"), path.resolve(__dirname, 
-    "node_modules")],
-    alias: {"@app": path.resolve(__dirname, "src/app")}
+    modules: [
+      path.resolve(__dirname, "src"),
+      path.resolve(__dirname, "node_modules")
+    ],
+    alias: {
+      "@app": path.resolve(__dirname, "src/app")
+    },
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: "ts-loader",
         },
+      },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
       },
       {
         test: /\.html$/,
