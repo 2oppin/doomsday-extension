@@ -1,0 +1,40 @@
+.dd-field.date-time-field {
+    display: flex;
+    flex-direction: row;
+}
+
+.dd-field.date-time-field .dd-field-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.dd-field.date-time-field .dd-field-col.error input {
+    color: #ee2200;
+}
+
+.dd-field.date-time-field input {
+    color: rgb(255, 204, 204);
+    float: right;
+    background: black;
+    border-width: 3px;
+    border-style: inset;
+    border-color: grey;
+    border-image: initial;
+    min-width: 190px;
+}
+
+.dd-field.date-time-field label {
+    display: block;
+    color: rgb(238, 34, 0);
+    padding: 1px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: rgb(119, 68, 0);
+    border-image: initial;
+    background: rgb(66, 16, 0);
+}
+.dd-field.date-time-field span.field-error {
+    color: #ee2200;
+    font-size: 10px;
+    background: wheat;
+}

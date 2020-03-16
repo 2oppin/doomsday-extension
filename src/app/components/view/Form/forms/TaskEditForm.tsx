@@ -1,3 +1,4 @@
+import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
 import Task from "@app/models/task";
 import React, {ChangeEvent, Component, SyntheticEvent} from "react";
 
@@ -42,7 +43,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
         this.state = {
             ...this.props,
             task: {...DEFAULT_TASK, ...task},
-            caption: (task.id ? "Revise" : "New") + " Mission:",
+            caption: (task.id ? "Update" : "Add") + " Mission:",
         };
     }
 
@@ -64,35 +65,14 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                     />
                 </div>
                 <div className="dd-popup-form-column">
-                    <h5>Deadline</h5>
-                    <div className="dd-popup-form-row">
-                        <div className="dd-popup-form-inputfield dd-popup-form-column">
-                            <label>Date</label>
-                            <input
-                                type="date"
-                                value={date(new Date(task.deadline))}
-                                onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "deadline", (v: any) => dateTime(new Date(v))(new Date(task.deadline)))}
-                            />
-                        </div>
-                        <div className="dd-popup-form-inputfield dd-popup-form-column">
-                            <label>Time</label>
-                            <input
-                                type="time"
-                                value={time(task.deadline)}
-                                onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "deadline", (v: any) => {
-                                    const timeValue = new Date();
-                                    // @ts-ignore
-                                    timeValue.setHours(...v.split(":"));
-                                    return dateTime(task.deadline)(timeValue);
-                                })}
-                            />
-                        </div>
-                    </div>
+                    <DateTimeField caption="Deadline" value={new Date(task.deadline)} onChange={(d) => {
+                        this.updateTaskProp({nativeEvent: {target: {value: d}}} as any, "deadline", (v: any) => v);
+                    }}/>
                 </div>
                 <div className="dd-popup-form-inputfield">
                     <label>Worklog</label>
                     <input type="number" value={(task.done / 3600000)}
-                           onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "done", (v: any) => "" + v * 3600000)}
+                           onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "done", (v: any) => v * 3600000)}
                     />
                 </div>
                 <div className="dd-popup-form-inputfield">
@@ -107,7 +87,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
         </Form>);
     }
 
-    private updateTaskProp(e: SyntheticEvent, key: string, cast: (val: any) => Date|string = (v: any) => "" + v) {
+    private updateTaskProp(e: SyntheticEvent, key: string, cast: (val: any) => Date|number|string = (v: any) => "" + v) {
         const event: any = e.nativeEvent;
         if (!event.target) return;
         this.setState((prevState: ITaskEditState) => {
