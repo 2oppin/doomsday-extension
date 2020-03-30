@@ -1,6 +1,7 @@
-import React, {Component, ReactNode} from "react";
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 
-import { Dispatcher } from "@app/services/dispatcher";
+import {Dispatcher} from "@app/services/dispatcher";
+import React, {Component, ReactNode} from "react";
 
 import "./Form.css";
 
@@ -30,6 +31,6 @@ export class Form extends Component<IFormProps, {}> {
   }
 
   private closeForm() {
-    Dispatcher.dispatch("closeForm");
+    Dispatcher.dispatch(DoomPluginEvent.closeForm);
   }
 }

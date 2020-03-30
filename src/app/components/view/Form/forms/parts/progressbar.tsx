@@ -1,4 +1,4 @@
-import Task from "@app/models/task";
+import {Task} from "@app/models/task";
 import React, { useEffect, useState } from "react";
 import "./progressbar.css";
 

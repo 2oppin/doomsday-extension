@@ -1,11 +1,12 @@
-import React, { Component } from "react";
-
-import Task from "@app/models/task";
-import { Dispatcher } from "@app/services/dispatcher";
-import _bt from "./button";
-import _progressBar from "./progressbar";
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 
 import {Face} from "@app/components/view/Face";
+
+import {Task} from "@app/models/task";
+import {Dispatcher} from "@app/services/dispatcher";
+import React, {Component} from "react";
+import _bt from "./button";
+import _progressBar from "./progressbar";
 
 import "./task-item.css";
 
@@ -94,23 +95,23 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
   }
 
   private startTask(task: Task) {
-    return Dispatcher.call("startTask", {id: task.id, started: (new Date()).getTime()});
+    return Dispatcher.call(DoomPluginEvent.startTask, {id: task.id, started: (new Date()).getTime()});
   }
 
   private editTask(task: Task) {
-      return Dispatcher.dispatch("showForm", {name: "TaskEdit", data: {task}});
+      return Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskEdit", data: {task}});
   }
 
   private finishTask(task: Task) {
-    return Dispatcher.call("finishTask", {id: task.id, finished: (new Date()).getTime()});
+    return Dispatcher.call(DoomPluginEvent.finishTask, {id: task.id, finished: (new Date()).getTime()});
   }
 
   private pauseTask(task: Task) {
     const done = (task.done || 0) + ((new Date()).getTime() - new Date(task.started).getTime());
-    return Dispatcher.call("pauseTask", {id: task.id, started: null, done});
+    return Dispatcher.call(DoomPluginEvent.pauseTask, {id: task.id, started: null, done});
   }
 
   private deleteTask(task: Task) {
-    return Dispatcher.call("deleteTask", {id: task.id});
+    return Dispatcher.call(DoomPluginEvent.deleteTask, {id: task.id});
   }
 }

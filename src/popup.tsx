@@ -1,77 +1,74 @@
+import {DoomPluginEvent, postActiveTabs} from "@app/common/chromeEvents";
+
+import {IConfig} from "@app/globals";
+import {Task} from "@app/models/task";
+import {Dispatcher} from "@app/services/dispatcher";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Face} from "./app/components/view/Face";
-import {DOOM_OWERFLOW_APP_ID, IConfig} from "./app/globals";
 import "./popup.css";
 
-const defaultConfig: IConfig = {
-  tasks: [],
-  showFace: false,
-};
-
-interface IPopupStatus {
-  config: IConfig;
+interface IPopupStatus extends IConfig {
+  ready: boolean;
 }
 class Popup extends React.Component<{}, IPopupStatus> {
   constructor(params: any) {
     super(params);
-    this.state = { config: defaultConfig };
-    this.loadTasks();
+    this.state = {
+      tasks: [],
+      showFace: false,
+      ready: false,
+    };
+  }
+
+  public componentDidMount(): void {
+    this.loadConfig()
+        .then(() => this.setState({ready: true}));
   }
 
   public render() {
-    const {config} = this.state;
+    const {showFace, tasks, ready} = this.state;
+
+    if (!ready) return null;
 
     return (
         <div className="dd-popup">
-          <div onClick={() => this.runDoomCmd("showForm", {name: "TasksList", data: {tasks: config.tasks}})}>
+          <div>
             <Face />
             <span>
-            <label htmlFor="face-checker">Show face on all pages: </label>
-            <input id="face-checker" type="checkbox"
-                   value={config.showFace ? "checked" : ""}
-                   onChange={(e) => this.setFaceVisibility(e.target.checked)}
-            />
-          </span>
+              <label htmlFor="face-checker">Show face on all pages: </label>
+              <input id="face-checker" type="checkbox"
+                     checked={showFace}
+                     onChange={(e) =>
+                         this.setState({showFace: e.target.checked}, () => this.updateConfig())
+                     }
+              />
+              <button
+                  onClick={() =>
+                      Dispatcher.call(DoomPluginEvent.showForm, {name: "TasksList", data: {tasks}})
+                  }
+              >
+                Show Tasks
+              </button>
+              </span>
           </div>
         </div>
     );
   }
 
-  private loadTasks() {
-    chrome.storage.sync.get(["tasks"], ({tasks}) => {
-      this.setState((prev) => ({
-        config: {
-          ...prev.config,
-          tasks,
-        }}), () => this.runDoomCmd(
-            "configUpdated",
-          { tasks, showFace: this.state.config.showFace },
-        ));
-    });
+  private loadConfig(): Promise<any> {
+    return new Promise((r) =>
+      chrome.storage.sync.get(["tasks", "showFace"], ({tasks = [], showFace = false}) => {
+        this.setState({tasks, showFace}, r);
+      }),
+    );
   }
 
-  private setFaceVisibility(val: boolean) {
-    this.setState((prev) => ({
-      config: {
-        ...prev.config,
-        showFace: val,
-      }}), () => this.runDoomCmd("configUpdated", this.state.config));
-  }
-
-  private runDoomCmd(cmd: string, data: any) {
-    chrome.tabs.query(
-      {
-        active: true,
-        lastFocusedWindow: true,
-      },
-      (tabs) =>
-        tabs.map((tab) =>
-          chrome.tabs.executeScript(
-            tab.id,
-            {code: `document.getElementById('${DOOM_OWERFLOW_APP_ID}').dispatchEvent(new CustomEvent('doom', {detail:{action: '${cmd}', data: ${JSON.stringify(data)}}}));`},
-          ),
-        ),
+  private updateConfig() {
+    const {tasks, showFace} = this.state;
+    Dispatcher.call(
+        DoomPluginEvent.configUpdated,
+        { tasks, showFace },
     );
   }
 }

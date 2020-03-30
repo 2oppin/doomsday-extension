@@ -1,3 +1,4 @@
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {FaceMood} from "@app/components/view/Face/Face";
 
 import {FaceDraggable} from "@app/components/view/Face/FaceDraggable";
@@ -6,11 +7,10 @@ import {TaskEditForm} from "@app/components/view/Form/forms/TaskEditForm";
 import {TaskListForm} from "@app/components/view/Form/forms/TaskListForm";
 import {Panel} from "@app/components/view/Panel/Panel";
 import {IConfig} from "@app/globals";
-import Task from "@app/models/task";
+import {Task} from "@app/models/task";
 
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component} from "react";
-import Timeout = NodeJS.Timeout;
 
 interface IDoomPanelProps {
     tasks?: Task[];
@@ -26,7 +26,7 @@ interface IDoomPanelState {
 }
 
 export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelState> {
-    private hellthchekInterval: Timeout = null;
+    private hellthchekInterval: any = null;
 
     constructor(params: any) {
         super(params);
@@ -43,7 +43,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     public componentDidMount() {
         const {tasks} = this.state;
         this.listen();
-        this.hellthchekInterval = setInterval(this.hellthchekOnFace.bind(this), 10000);
+        this.hellthchekInterval = setInterval(() => this.hellthchekOnFace(), 3000);
     }
 
     public componentWillUnmount() {
@@ -51,7 +51,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     }
 
     public render() {
-        const {face, form, tasks} = this.state;
+        const {face, form} = this.state;
         return (
             <div className="doom-manager">
                 <Panel overflow={!!form} onEscClick={() => this.onCloseForm()}>
@@ -63,8 +63,8 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     }
 
     private hellthchekOnFace() {
-        const {config, tasks, face} = this.state;
-        //     if (!config.showFace) return;
+        const {face, tasks} = this.state;
+        if (!face) return;
 
         const failed = tasks.filter((t) => t.active && t.failed);
         const progress = tasks.filter((t) => t.active && !t.failed).reduce((a, t, i) => i ? (t.progress + a * (i - 1)) / i : t.progress, 0);
@@ -79,20 +79,15 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     }
 
     private listen() {
-        this.listenAction("closeForm", () => this.onCloseForm());
-        this.listenAction("showForm", (args: any) => this.onShowForm(args));
-        this.listenAction("tasksUpdated", (tasks: any[]) => this.setState({
-            tasks: tasks.map((t) => new Task(t)),
-        }));
-        this.listenAction("taskActivation", (args: any) => this.onTaskActivation(args));
-        this.listenAction("configUpdated", (args: any) => this.onConfig(args));
-    }
-
-    private listenAction(action: string, cb: (args: any) => void) {
-        Dispatcher.once(action, (...data) => {
-            cb.bind(this)(...data);
-            this.listenAction(action, cb);
+        Dispatcher.subscribe(DoomPluginEvent.closeForm, () => this.onCloseForm());
+        Dispatcher.subscribe(DoomPluginEvent.showForm, (args: any) => this.onShowForm(args));
+        Dispatcher.subscribe(DoomPluginEvent.tasksUpdated, (tasks: any[]) => {
+            this.setState({
+                tasks: tasks.map((t) => new Task(t)),
+            });
         });
+        Dispatcher.subscribe(DoomPluginEvent.taskActivation, (args: any) => this.onTaskActivation(args));
+        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => this.onConfig(args));
     }
 
     private onCloseForm() {

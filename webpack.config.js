@@ -9,9 +9,9 @@ module.exports = {
   mode: "production",
   devtool: "source-map",
   entry: {
-    background: './src/background.js',
-    'content-script': './src/app/app.js',
-    popup: './src/popup.js'
+    background: './src/background.ts',
+    'content-script': './src/app/app.tsx',
+    popup: './src/popup.tsx'
   },
   output: {
     path: __dirname + '/dist',

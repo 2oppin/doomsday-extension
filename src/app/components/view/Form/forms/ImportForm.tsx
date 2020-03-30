@@ -1,8 +1,9 @@
-import Task from "@app/models/task";
-import React, {Component} from "react";
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 
 import {Form} from "@app/components/view/Form/Form";
-import { Dispatcher } from "@app/services/dispatcher";
+import {Task} from "@app/models/task";
+import {Dispatcher} from "@app/services/dispatcher";
+import React, {Component} from "react";
 
 interface ITaskListFormState {
   preloadedTasks?: Task[];
@@ -55,8 +56,8 @@ export default class TaskListForm extends Component<{}, ITaskListFormState> {
       return;
     }
     if (!confirm("Are you sure? All your current tasks will be replaced")) return;
-    Dispatcher.call("resetTasks", {tasks: preloadedTasks});
-    Dispatcher.dispatch("showForm", {name: "TaskList"});
+    Dispatcher.call(DoomPluginEvent.resetTasks, {tasks: preloadedTasks});
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskList"});
   }
 
   private exportConfig() {

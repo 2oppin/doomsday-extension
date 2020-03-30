@@ -1,8 +1,9 @@
-import React, {Component} from "react";
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 
 import {Form} from "@app/components/view/Form/Form";
-import Task from "@app/models/task";
-import { Dispatcher } from "@app/services/dispatcher";
+import {Task} from "@app/models/task";
+import {Dispatcher} from "@app/services/dispatcher";
+import React, {Component} from "react";
 import {TaskItem} from "./parts/TaskItem";
 
 interface ITaskListProps {
@@ -69,11 +70,11 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
   }
 
   private addTask() {
-    Dispatcher.dispatch("showForm", {name: "TaskEdit", data: { task: {}}});
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskEdit", data: { task: {}}});
   }
 
   private importConfig() {
-    Dispatcher.dispatch("showForm", {name: "ImportForm", data: { task: {}}});
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "ImportForm", data: { task: {}}});
   }
 
   private exportConfig() {

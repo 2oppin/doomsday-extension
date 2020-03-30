@@ -1,4 +1,4 @@
-import Task from "@app/models/task";
+import {Task} from "@app/models/task";
 
 export const DOOM_OWERFLOW_APP_ID = "dd-doom-extention-app";
 
@@ -10,6 +10,7 @@ export interface IConfig {
 export interface IDDMessage {
  task?: Task;
  tasks?: Task[];
+ showFace?: boolean;
  action: string;
  tabId?: number;
  id: any;
@@ -17,5 +18,3 @@ export interface IDDMessage {
  finished: number;
  done: number;
 }
-
-export default {DOOM_OWERFLOW_APP_ID};

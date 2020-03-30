@@ -1,11 +1,12 @@
-import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
-import Task from "@app/models/task";
-import React, {ChangeEvent, Component, SyntheticEvent} from "react";
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 
 import {UUID} from "@app/common/routines";
-import {Dispatcher} from "@app/services/dispatcher";
+import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
 
 import {Form} from "@app/components/view/Form/Form";
+import {Task} from "@app/models/task";
+import {Dispatcher} from "@app/services/dispatcher";
+import React, {Component, SyntheticEvent} from "react";
 
 import "./TaskEditForm.css";
 
@@ -103,15 +104,15 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
     private saveTask() {
         const {task} = this.state;
         if (!task.id)
-            Dispatcher.call("addTask", {task: {...task, id: UUID()}});
+            Dispatcher.call(DoomPluginEvent.addTask, {task: {...task, id: UUID()}});
         else {
-            Dispatcher.call("updateTask", {task});
+            Dispatcher.call(DoomPluginEvent.updateTask, {task});
         }
 
         this.backToList();
     }
 
     private backToList() {
-        Dispatcher.dispatch("showForm", {name: "TaskList"});
+        Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskList"});
     }
 }

@@ -1,6 +1,6 @@
 import { UUID } from "@app/common/routines";
 
-interface ITask {
+export interface ITask {
     id: string;
     name: string;
     estimate: number;
@@ -11,7 +11,8 @@ interface ITask {
     finished: number;
     done: number;
 }
-export default class Task implements ITask {
+
+export class Task implements ITask {
     public static compare(a: Task, b: Task) {
         a = new Task(a);
         b = new Task(b);
@@ -45,7 +46,7 @@ export default class Task implements ITask {
         this.id = id;
         this.name = name;
         this.estimate = estimate;
-        this.deadline = deadline;
+        this.deadline = new Date(deadline);
         this.description = description;
         this.done = done || 0;
         this.created = started || (new Date()).getTime();
