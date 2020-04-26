@@ -1,32 +1,28 @@
 import {DoomPluginEvent, postAllTabs, postSingleTab} from "@app/common/chromeEvents";
 import {IConfig, IDDMessage} from "@app/globals";
 import {ITask} from "@app/models/task";
+import {DoomStorage} from "@app/services/storage";
 
 const setupPopups = (config: IConfig, tabId: number) => postSingleTab(tabId)(DoomPluginEvent.configUpdated, config);
 
-const getCurrentTasks = (): Promise<ITask[]> => (new Promise((r) =>
-        chrome.storage.sync.get(["tasks"], ({tasks = []}: any) => r(tasks)))
-);
+const getCurrentTasks = (): Promise<ITask[]> => DoomStorage.get("tasks");
+
 const updateTasks = async (cb: (tasks: any[]) => any = (t) => t): Promise<any> => {
-    let storedTasks: any[] = await getCurrentTasks();
+    let storedTasks: any[] = await getCurrentTasks() || [];
     storedTasks = cb(storedTasks);
-    chrome.storage.sync.set(
-        {tasks: storedTasks},
-        () => postAllTabs(DoomPluginEvent.tasksUpdated, storedTasks),
-    );
+    DoomStorage.set("tasks", storedTasks)
+        .then(() => postAllTabs(DoomPluginEvent.tasksUpdated, storedTasks));
     return storedTasks;
 };
 
 const updateConfig = async ({showFace}: any): Promise<any> => {
     const tasks: any[] = await getCurrentTasks();
-    chrome.storage.sync.set(
-        {tasks, showFace},
-        () => postAllTabs(DoomPluginEvent.configUpdated, {tasks, showFace}),
-    );
+    DoomStorage.set("showFace", showFace)
+        .then(() => postAllTabs(DoomPluginEvent.configUpdated, {tasks, showFace}));
 };
 
 const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
-    const {task, tasks, showFace, action, id, started, finished, done} = msg;
+    const {task, tasks, showFace, action, id, done} = msg;
     switch (action) {
         case "configUpdated":
             updateConfig({showFace});
@@ -35,8 +31,10 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
             updateTasks((prevTasks) => [...prevTasks, task]);
             break;
         case "startTask":
-            updateTasks((prevTasks) => prevTasks.map((t) => {
-                if (t.id === id) t.started = started;
+            updateTasks((prevTasks) => prevTasks.map((t: ITask) => {
+                if (t.id === id && !t.worklog.find((w) => w.finished === null)) {
+                    t.worklog.push({started: (new Date()).getTime(), finished: null});
+                }
                 return t;
             }));
             break;
@@ -47,16 +45,18 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
             updateTasks(() => tasks);
             break;
         case "finishTask":
-            updateTasks((storeTasks) => storeTasks.map((t) => {
-                if (t.id === id) t.finished = finished;
+            updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
+                if (t.id === id) t.complete = (new Date()).getTime();
                 return t;
             }));
             break;
         case "pauseTask":
-            updateTasks((storeTasks) => storeTasks.map((t) => {
+            updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
                 if (t.id === id) {
-                    t.done = done;
-                    t.started = null;
+                    const ongoing = t.worklog.find((w) => !w.finished);
+                    if (ongoing) {
+                        ongoing.finished = (new Date()).getTime();
+                    }
                 }
                 return t;
             }));
@@ -76,18 +76,19 @@ chrome.runtime.onInstalled.addListener((inst) => {
     chrome.tabs.onUpdated.addListener(() => {
         updateTasks((tasks) => tasks);
     });
-    chrome.storage.sync.get(["tasks"], ({tasks = []}) => {
-        chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-            chrome.declarativeContent.onPageChanged.addRules([{
-                conditions: [
-                    new chrome.declarativeContent.PageStateMatcher({
-                        pageUrl: {schemes: ["http", "https"]/*, hostEquals: 'developer.chrome.com'*/},
-                    }),
-                ],
-                actions: [new chrome.declarativeContent.ShowPageAction()],
-            }]);
-        });
-        updateTasks(() => tasks);
-    });
     chrome.runtime.onMessage.addListener(dispatchMessage);
+    getCurrentTasks()
+        .then((tasks) => {
+            chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+                chrome.declarativeContent.onPageChanged.addRules([{
+                    conditions: [
+                        new chrome.declarativeContent.PageStateMatcher({
+                            pageUrl: {schemes: ["http", "https"]/*, hostEquals: 'developer.chrome.com'*/},
+                        }),
+                    ],
+                    actions: [new chrome.declarativeContent.ShowPageAction()],
+                }]);
+            });
+            updateTasks(() => tasks);
+        });
 });

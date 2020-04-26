@@ -6,17 +6,18 @@
     height: 25px;
 }
 .task-item .hinted .content {
-    font-size: 12px;
-    line-height: 12px;
+    font-family: monospace;
+    font-size: 1em;
+    line-height: 1em;
     text-align: center;
     margin-right: 55px;
 }
 .task-item .hinted .hint {
     position: relative;
-    font-size: 10px;
-    line-height: 10px;
+    font-size: 0.8em;
+    line-height: 0.8em;
     text-align: center;
-    margin-top: -10px;
+    margin-top: -0.8em;
     padding: 0;
 }
 .task-item .hinted .hint .good {

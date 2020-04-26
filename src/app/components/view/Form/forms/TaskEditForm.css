@@ -41,7 +41,7 @@
 .dd-popup-form-column {
   display: flex;
   flex-direction: column;
-  text-align: center;  
+  text-align: center;
 }
 .dd-popup-form-inputfield .dd-popup-form-row .dd-popup-form-inputfield label,
 .dd-popup-form-inputfield .dd-popup-form-row .dd-popup-form-inputfield input {

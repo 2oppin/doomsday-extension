@@ -87,31 +87,30 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
 
   public render() {
     const {task} = this.props;
-    if (task.finished)
+    if (task.complete)
       return this.renderFinished(task);
     return task.active
       ? this.renderActive(task)
       : this.renderPaused(task);
   }
 
-  private startTask(task: Task) {
-    return Dispatcher.call(DoomPluginEvent.startTask, {id: task.id, started: (new Date()).getTime()});
+  private startTask({id, name, worklog}: Task) {
+    return Dispatcher.call(DoomPluginEvent.startTask, {id});
   }
 
   private editTask(task: Task) {
       return Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskEdit", data: {task}});
   }
 
-  private finishTask(task: Task) {
-    return Dispatcher.call(DoomPluginEvent.finishTask, {id: task.id, finished: (new Date()).getTime()});
+  private finishTask({id}: Task) {
+    return Dispatcher.call(DoomPluginEvent.finishTask, {id});
   }
 
-  private pauseTask(task: Task) {
-    const done = (task.done || 0) + ((new Date()).getTime() - new Date(task.started).getTime());
-    return Dispatcher.call(DoomPluginEvent.pauseTask, {id: task.id, started: null, done});
+  private async pauseTask({id, name, worklog}: Task) {
+    return Dispatcher.call(DoomPluginEvent.pauseTask, {id});
   }
 
-  private deleteTask(task: Task) {
-    return Dispatcher.call(DoomPluginEvent.deleteTask, {id: task.id});
+  private deleteTask({id}: Task) {
+    return Dispatcher.call(DoomPluginEvent.deleteTask, {id});
   }
 }

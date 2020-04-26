@@ -1,0 +1,10 @@
+:root {
+    --cl-blue: rgb(56, 135, 238);
+    --cl-red: #ef3232;
+    --cl-red-lt: #ff9c9c;
+    --cl-yellow: #ffe928;
+    --cl-dark: #461010;
+    --cl-dark-lt: rgba(84, 20, 2, 0.78);
+    --cl-btn-bg: #a72e2e;
+    --cl-btn-bg-lt: rgba(167, 46, 46, 0.8);
+}

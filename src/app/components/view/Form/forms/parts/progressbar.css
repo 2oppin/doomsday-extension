@@ -18,19 +18,19 @@
     flex-grow: 1;
     width: 100%;
     min-height: 5px;
-    background: #ef3232;
+    background: var(--cl-red);
     padding:0;
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar.inv {
-    background: rgb(56, 135, 238);
+    background: var(--cl-blue);
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .prg-val {
     width: 1px;
     height: 100%;
-    background: #ffe928;;
+    background: var(--cl-yellow);
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar.inv .prg-val {
-    background: #ef3232;
+    background: var(--cl-red);
 }
 
 .dd-popup-form-tasklist  .tasklist .item span.prg .countdown {
@@ -42,5 +42,5 @@
     padding: 0;
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .countdown .deadline-clock {
-    color: #ef3232;
+    color: var(--cl-red);
 }

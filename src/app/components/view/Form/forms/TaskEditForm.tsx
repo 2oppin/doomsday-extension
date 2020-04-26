@@ -2,9 +2,11 @@ import {DoomPluginEvent} from "@app/common/chromeEvents";
 
 import {UUID} from "@app/common/routines";
 import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
+import {WorklogField} from "@app/components/view/Form/fields/WorklogField";
 
 import {Form} from "@app/components/view/Form/Form";
 import {Task} from "@app/models/task";
+import {Worklog} from "@app/models/worklog";
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component, SyntheticEvent} from "react";
 
@@ -71,10 +73,9 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                     }}/>
                 </div>
                 <div className="dd-popup-form-inputfield">
-                    <label>Worklog</label>
-                    <input type="number" value={(task.done / 3600000)}
-                           onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "done", (v: any) => v * 3600000)}
-                    />
+                    <WorklogField worklog={task.worklog} onChange={(w) =>
+                        this.updateTaskProp({nativeEvent: {target: {value: w}}} as any, "worklog", (v: any) => v)
+                    } />
                 </div>
                 <div className="dd-popup-form-inputfield">
                     <label>Brief</label>
@@ -88,7 +89,22 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
         </Form>);
     }
 
-    private updateTaskProp(e: SyntheticEvent, key: string, cast: (val: any) => Date|number|string = (v: any) => "" + v) {
+    private updateWorklogByStartDate(startDate: Date, newW: Partial<Worklog>): void {
+        this.setState((prevState: ITaskEditState) => {
+            return {
+                task: new Task({
+                    ...prevState.task,
+                    worklog: prevState.task.worklog.map((w) =>
+                        w.started.getTime() === startDate.getTime()
+                            ? {...w, ...newW}
+                            : w,
+                    ),
+                }),
+            };
+        });
+    }
+
+    private updateTaskProp(e: SyntheticEvent, key: string, cast: (val: any) => Date|number|string|Worklog[] = (v: any) => "" + v) {
         const event: any = e.nativeEvent;
         if (!event.target) return;
         this.setState((prevState: ITaskEditState) => {

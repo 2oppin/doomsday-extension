@@ -20,7 +20,7 @@ interface ITaskListSate {
 export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
   public static getDerivedStateFromProps(props: ITaskListProps) {
     return {
-      tasks: (props.tasks || []).sort(Task.compare),
+      tasks: (props.tasks || []).sort(Task.sort),
       active: props.active,
     };
   }

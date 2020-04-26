@@ -12,6 +12,8 @@ import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component} from "react";
 
+import "@app/app.css";
+
 interface IDoomPanelProps {
     tasks?: Task[];
 }
@@ -82,8 +84,9 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         Dispatcher.subscribe(DoomPluginEvent.closeForm, () => this.onCloseForm());
         Dispatcher.subscribe(DoomPluginEvent.showForm, (args: any) => this.onShowForm(args));
         Dispatcher.subscribe(DoomPluginEvent.tasksUpdated, (tasks: any[]) => {
+            const preparedTasks = tasks.map((t) => new Task(t));
             this.setState({
-                tasks: tasks.map((t) => new Task(t)),
+                tasks: preparedTasks,
             });
         });
         Dispatcher.subscribe(DoomPluginEvent.taskActivation, (args: any) => this.onTaskActivation(args));

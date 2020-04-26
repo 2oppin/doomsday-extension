@@ -1,3 +1,4 @@
+import {formatDate, formatTime} from "@app/common/routines";
 import React, {Component} from "react";
 
 import "./date-time-field.css";
@@ -56,11 +57,11 @@ export class DateTimeField extends Component<IDateTimeFieldProps, IDateTimeField
     }
 
     private formatDate(d: Date): string {
-        return `${d.getUTCFullYear()}-${`${d.getUTCMonth() + 1}`.padStart(2, "0")}-${`${d.getDate()}`.padStart(2, "0")}`;
+        return formatDate(d);
     }
 
     private formatTime(d: Date): string {
-        return `${`${d.getUTCHours()}`.padStart(2, "0")}:${`${d.getUTCMinutes()}`.padStart(2, "0")}`;
+        return formatTime(d);
     }
 
     private updateDate() {

@@ -1,7 +1,6 @@
 import {DoomPluginEvent, postActiveTabs} from "@app/common/chromeEvents";
 
 import {IConfig} from "@app/globals";
-import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
