@@ -1,4 +1,5 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
+import {Help} from "@app/components/help/Help";
 
 import {Form} from "@app/components/view/Form/Form";
 import {Task} from "@app/models/task";
@@ -83,6 +84,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
               </span>
             </>}
           </div>
+          <Help />
         </Form>
     );
   }

@@ -1,6 +1,7 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 
 import {UUID} from "@app/common/routines";
+import {Help} from "@app/components/help/Help";
 import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
 import {WorklogField} from "@app/components/view/Form/fields/WorklogField";
 
@@ -60,7 +61,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
 
         return (<Form caption={caption}>
             <div className="dd-popup-form-task">
-                <div className="dd-popup-form-inputfield">
+                <div className="dd-popup-form-inputfield" data-help={"task-name"}>
                     <label>Code Name</label>
                     <input type="text" value={task.name} onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "name")} />
                 </div>

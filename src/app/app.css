@@ -8,9 +8,12 @@
     --cl-dark: #461010;
     --cl-gray-lt: #cccccc;
     --cl-gray: #8d8484;
+    --cl-dark-opq: rgba(70, 16, 16, 0.8);
     --cl-dark-lt: rgba(84, 20, 2, 0.78);
     --cl-btn-bg: #a72e2e;
     --cl-btn-bg-lt: rgba(167, 46, 46, 0.8);
     --cl-white: #ffffff;
     --cl-bisque: #ffe4c4;
+    --cl-cobalt: #1c2e3e;
+    --cl-cobalt-opq: #1c2e3eb8;
 }

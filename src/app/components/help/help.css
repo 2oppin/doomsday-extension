@@ -1,0 +1,18 @@
+.help-container .overflow {
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    position: fixed;
+    z-index: 10000;
+    background: var(--cl-cobalt-opq);
+}
+.help-container .overflow .tooltip {
+    position: fixed;
+    min-width: 300px;
+    min-height: 100px;
+    color: var(--cl-white);
+    background: var(--cl-cobalt);
+    border-radius: 4px;
+    box-shadow: 1px 2px 2px var(--cl-white);
+}
