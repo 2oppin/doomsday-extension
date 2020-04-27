@@ -21,11 +21,18 @@
     padding: 0;
 }
 .task-item .hinted .hint .good {
-    color: rgb(56, 135, 238);
+    color: var(--cl-blue);
 }
 .task-item .hinted .hint .warn {
-    color: #ffe928;;
+    color: var(--cl-yellow);
 }
 .task-item .hinted .hint .bad {
-    color: #ef3232;
+    color: var(--cl-red);
+}
+.task-item .caption-link {
+    cursor: pointer;
+}
+.task-item .caption-link:hover {
+    color: var(--cl-white);
+    text-shadow: 1px 2px 1px var(--cl-blue)
 }

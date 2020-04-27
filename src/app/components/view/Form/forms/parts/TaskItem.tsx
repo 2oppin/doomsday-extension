@@ -29,7 +29,9 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
     return (
       <div className="task-item item">
         <_bt u="⏸" title="Suspend ..." cb={() => this.pauseTask(task)} />
-        <_progressBar task={task} />
+        <_progressBar task={task} caption={
+          <span className="cpt caption-link" onClick={() => this.showTask(task)}>{task.name}</span>
+        }/>
         {this.renderTaskFace(task)}
         <_bt u="✔" title="Mark Completed" cb={() => this.finishTask(task)} />
       </div>
@@ -76,7 +78,7 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
           <span>Spent: <span className={cls}>{hrs(task.done)}h</span> of {hrs(task.estimate)}h</span>
           <span>Deadline: <span className={clsdd}>{tilldd}h</span></span>
         </span>
-        <span className="content">{task.name}</span>
+        <span className="content caption-link" onClick={() => this.showTask(task)}>{task.name}</span>
       </span>
     );
   }
@@ -92,6 +94,10 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
     return task.active
       ? this.renderActive(task)
       : this.renderPaused(task);
+  }
+
+  private showTask(task: Task) {
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskView", data: { task}});
   }
 
   private startTask({id, name, worklog}: Task) {

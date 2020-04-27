@@ -16,6 +16,9 @@ export class Task implements ITask {
         a = new Task(a);
         b = new Task(b);
 
+        if (a.active && !b.active) return -1;
+        if (b.active && !a.active) return 1;
+
         if (a.complete && !b.complete) return 1;
         if (b.complete && !a.complete) return -1;
 
@@ -49,6 +52,7 @@ export class Task implements ITask {
     constructor({id, name, created, estimate, deadline, description, complete = null, worklog = []}: ITask) {
         this.id = id;
         this.name = name;
+        this.complete = complete ? new Date(complete) : null;
         this.estimate = estimate;
         this.deadline = new Date(deadline);
         this.description = description;

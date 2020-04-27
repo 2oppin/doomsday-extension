@@ -10,7 +10,8 @@ enum WorklogLogAction {NONE, RESIZE_L, RESIZE_R, MOVE}
 
 interface IWorklogFieldProps {
     worklog: Worklog[];
-    onChange: (worklog: Worklog[]) => void;
+    readonly?: boolean;
+    onChange?: (worklog: Worklog[]) => void;
 }
 
 interface IWorklogFieldState {
@@ -40,9 +41,10 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
     }
 
     public render() {
+        const {readonly} = this.props;
         const {worklog, days, range, done, selectedInx, virtWorklog} = this.state;
         return (
-            <div className={"dd-worklog-field"}>
+            <div className={`dd-worklog-field${readonly ? " readonly" : ""}`}>
                 <h5>{(done / 3600000).toFixed(2)}h done in {worklog.length} logs for {days.length} days {
                     null} from {formatDate(new Date(range[0]))} till {formatDate(new Date(range[1]))}</h5>
                 <ul className={"days"}>
@@ -72,7 +74,7 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
     }
 
     private onMDown(e: SyntheticEvent<HTMLDivElement, MouseEvent>) {
-        if (!this.state.selectedInx) return;
+        if (this.props.readonly || !this.state.selectedInx) return;
         const el = e.nativeEvent.target as HTMLDivElement;
         let log: HTMLDivElement;
         if (el.classList.contains("log")) {
@@ -139,7 +141,7 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
 
     private onMUp(e: SyntheticEvent<HTMLDivElement|HTMLUListElement, MouseEvent>) {
         const virt: HTMLDivElement = this.virtLog.current;
-        if (!virt) return;
+        if (this.props.readonly || !virt) return;
         const period: HTMLDivElement = virt.parentElement as HTMLDivElement;
         const day = period.dataset.day;
         const periodBox = period.getBoundingClientRect();
@@ -162,7 +164,7 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
     }
 
     private onMMove(e: SyntheticEvent<HTMLDivElement, MouseEvent>) {
-        if (this.state.action !== WorklogLogAction.NONE) {
+        if (this.props.readonly || this.state.action !== WorklogLogAction.NONE) {
             return this.onMMaction(e);
         }
         const el = e.nativeEvent.target as HTMLDivElement;
@@ -212,6 +214,9 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
 
     private normalizeWorklog(worklog: Worklog[]): Worklog[] {
         return worklog.sort(Task.sortByStarted).reduce<Worklog[]>((a, w) => {
+            if (!w.finished) {
+                w.finished = new Date();
+            }
             const lastEl = a.slice(-1)[0];
             if (a.length && lastEl.isTooCloseTo(w)) {
                 return [...a.slice(0, -1), lastEl.merge(w)];
@@ -234,9 +239,9 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
         const range = worklog.reduce(
             (a, w) => {
                 daysObj[formatDate(w.started)] = true;
-                daysObj[formatDate(w.finished)] = true;
+                daysObj[formatDate(w.finished || new Date())] = true;
                 done += w.done;
-                return [Math.max(w.started.getTime(), a[0]), Math.min(w.finished.getTime(), a[1])];
+                return [Math.max(w.started.getTime(), a[0]), Math.min(w.finished.getTime() || (new Date()).getTime(), a[1])];
             },
             [-1, Number.MAX_VALUE],
         );

@@ -3,6 +3,9 @@
   flex-direction: column;
   font: monospace;
 }
+.dd-popup-form-task p {
+  background: var(--cl-bisque);
+}
 .dd-popup-form-task h5 {
   color: #feffe1;
   text-shadow: #421000;

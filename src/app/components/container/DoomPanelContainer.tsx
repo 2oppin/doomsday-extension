@@ -5,6 +5,7 @@ import {FaceDraggable} from "@app/components/view/Face/FaceDraggable";
 import ImportForm from "@app/components/view/Form/forms/ImportForm";
 import {TaskEditForm} from "@app/components/view/Form/forms/TaskEditForm";
 import {TaskListForm} from "@app/components/view/Form/forms/TaskListForm";
+import {TaskViewForm} from "@app/components/view/Form/forms/TaskViewForm";
 import {Panel} from "@app/components/view/Panel/Panel";
 import {IConfig} from "@app/globals";
 import {Task} from "@app/models/task";
@@ -141,6 +142,8 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
         if (name === "TaskEdit") {
             return <TaskEditForm {...data} />;
+        } else if (name === "TaskView") {
+            return <TaskViewForm {...data} />;
         } else if (name === "ImportForm")
             return <ImportForm {...data} />;
         else

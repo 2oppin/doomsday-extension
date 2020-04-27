@@ -1,8 +1,8 @@
 import {Task} from "@app/models/task";
-import React, { useEffect, useState } from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import "./progressbar.css";
 
-export default function ProgressBar({task}: {task: Task}) {
+export default function ProgressBar({task, caption}: {task: Task, caption: ReactNode}) {
   const progress = task.progress;
   const failed = task.estimate < task.done;
   const formatInterval = (left: number) => {
@@ -26,8 +26,6 @@ export default function ProgressBar({task}: {task: Task}) {
     return () => clearInterval(interval);
   });
 
-
-
   return (
     <span
       className="prg"
@@ -37,7 +35,7 @@ export default function ProgressBar({task}: {task: Task}) {
         <span className={`countdown-clock${failed ? " failed" : ""}`}>{counter}</span>
         {failed ? (<span className="deadline-clock">{((task.estimate / 3600000) | 0)}h - failed</span>) : null}
       </span>
-       <span className="cpt">{task.name}</span>
+      {caption}
       <div className={`prg-bar${progress < 0 ? " inv" : ""}`}>
         <div className="prg-val" style={{width: `${Math.abs(progress)}%`}} />
       </div>
