@@ -1,13 +1,11 @@
-.dd-worklog-field {
-    max-height: 400px;
-    overflow-y: scroll;
-}
 .dd-worklog-field ul.days {
     list-style: none;
     padding: 0;
     display: flex;
     flex-direction: column;
     border-bottom: solid 1px white;
+    max-height: 160px;
+    overflow-y: auto;
 }
 .dd-worklog-field ul.days li {
     display: flex;
@@ -42,14 +40,15 @@
 .dd-worklog-field.readonly ul.days li .period .log {
     cursor: default;
 }
-.dd-worklog-field ul.days li .period .log.selected
-/*, .dd-worklog-field ul.days li .period .log:hover */{
+.dd-worklog-field ul.days li .period .log.selected {
     background: var(--cl-blue);
 }
-.dd-worklog-field ul.days li .period .log.selected.r-border {
+.dd-worklog-field ul.days li .period .log.selected.r-border,
+.dd-worklog-field ul.days li .period .log.virtual.r-border {
     border-right: solid 1px var(--cl-red-lt);
 }
-.dd-worklog-field ul.days li .period .log.selected.l-border {
+.dd-worklog-field ul.days li .period .log.selected.l-border,
+.dd-worklog-field ul.days li .period .log.virtual.l-border {
     border-left: solid 1px var(--cl-red-lt);
 }
 .dd-worklog-field ul.days li .period .log.virtual {

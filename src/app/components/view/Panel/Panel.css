@@ -21,6 +21,7 @@
 }
 
 .dd-popup div::-webkit-scrollbar,
+.dd-popup ul::-webkit-scrollbar,
 .dd-popup p::-webkit-scrollbar {
   height: 5px;
   width: 8px;
@@ -28,6 +29,7 @@
   border: solid 1px white;
 }
 .dd-popup div::-webkit-scrollbar-thumb,
+.dd-popup ul::-webkit-scrollbar-thumb,
 .dd-popup p::-webkit-scrollbar-thumb{
   background: #cc5500;
   border: solid 1px white;
@@ -37,6 +39,7 @@
 }
 
 .dd-popup div::-webkit-scrollbar-corner,
+.dd-popup ul::-webkit-scrollbar-corner,
 .dd-popup p::-webkit-scrollbar-corner {
   background: #630a17;
 }

@@ -63,7 +63,7 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
                             >
                                 {this.periodsFromDay(d)}
                                 {virtWorklog && virtWorklog.day === d && (
-                                    <div ref={this.virtLog} className={"log virtual"} style={virtWorklog} />
+                                    <div ref={this.virtLog} className={`log virtual${this.getLRClass()}`} style={virtWorklog} />
                                 )}
                             </div>
                         </li>
@@ -193,7 +193,7 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
     }
 
     private periodsFromDay(d: string): React.ReactNode {
-        const {worklog, selectedInx, action} = this.state;
+        const {worklog, selectedInx} = this.state;
         return worklog.filter((w) => formatDate(w.started) === d || formatDate(w.finished) === d)
             .map((w) => {
                 const inx: number = w.started.getTime();
@@ -201,15 +201,20 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
 
                 const left = (w.started.getTime() - (new Date(`${d} 00:00:00`)).getTime()) / (24 * 36000.0);
                 const width = (w.finished.getTime() - w.started.getTime()) / (24 * 36000);
-                const calcClass = `${action === WorklogLogAction.RESIZE_R ? " r-border" : ""}`
-                    + `${action === WorklogLogAction.RESIZE_L ? " l-border" : ""}`;
                 return (
                     <div key={inx} data-index={inx}
-                        className={`log ${!isSelected ? "" : ` selected${calcClass}`}`}
+                        className={`log ${!isSelected ? "" : ` selected${this.getLRClass()}`}`}
                         style={{left: `${left}%`, width: `${width}%`}}
                     />
                 );
             });
+    }
+
+    private getLRClass(): string {
+        const {action} = this.state;
+        if (action === WorklogLogAction.RESIZE_R) return " r-border";
+        if (action === WorklogLogAction.RESIZE_L) return " l-border";
+        return "";
     }
 
     private normalizeWorklog(worklog: Worklog[]): Worklog[] {

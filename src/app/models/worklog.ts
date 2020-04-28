@@ -28,12 +28,21 @@ export class Worklog implements IWorklog {
             && diffDate(this.started, w.started) < 0;
     }
 
+    public intersects(w: Worklog) {
+        if (!w.finished || !this.finished) {
+            return false;
+        }
+        return (diffDate(this.finished, w.started) > 0 ? 1 : -1)
+            !== (diffDate(this.finished, w.finished) > 0 ? 1 : -1);
+    }
+
     public isTooCloseTo(w: Worklog) {
         const min5 = 300;
         return (Math.abs(diffDate(this.finished, w.started)) < min5)
           || (Math.abs(diffDate(this.started, w.finished)) < min5)
           || w.includes(this)
-          || this.includes(w);
+          || this.includes(w)
+          || this.intersects(w);
     }
 
     public merge(w: Worklog): Worklog {

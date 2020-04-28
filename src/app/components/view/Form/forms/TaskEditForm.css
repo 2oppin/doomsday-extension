@@ -57,6 +57,6 @@
   width: 90px;
 }
 
-.dd-popup-form-task.view .dd-worklog-field {
-  max-height: 250px;
+.dd-popup-form-task.view .dd-worklog-field .days {
+  max-height: 120px;
 }

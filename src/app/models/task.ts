@@ -22,12 +22,19 @@ export class Task implements ITask {
         if (a.complete && !b.complete) return 1;
         if (b.complete && !a.complete) return -1;
 
+        const logA = a.started && a.lastLogTime.getTime();
+        const logB = b.started && b.lastLogTime.getTime();
+        if (logA && logB && logA !== logB) {
+            return logA > logB ? -1 : 1;
+        }
+
         const startedCmp = Task.sortByStarted(a, b);
         if (startedCmp) return startedCmp;
 
         if (a.created.getTime() !== b.created.getTime()) {
-            return a.created.getTime() < b.created.getTime() ? 1 : -1;
+            return a.created.getTime() > b.created.getTime() ? -1 : 1;
         }
+
         return b.name.localeCompare(a.name);
     }
 
@@ -70,6 +77,10 @@ export class Task implements ITask {
 
     get active(): boolean {
         return !!this.started && !this.complete && !this.worklog.slice(-1)[0].finished;
+    }
+
+    get lastLogTime(): Date|null {
+        return (this.started && this.worklog.slice(-1)[0].finished) || null;
     }
 
     get failed() {
