@@ -5,6 +5,8 @@
 }
 .dd-popup-form-task p {
   background: var(--cl-bisque);
+  max-height: 300px;
+  overflow-y: scroll;
 }
 .dd-popup-form-task h5 {
   color: #feffe1;
@@ -53,4 +55,8 @@
 }
 .dd-popup-form-inputfield .dd-popup-form-row .dd-popup-form-inputfield input {
   width: 90px;
+}
+
+.dd-popup-form-task.view .dd-worklog-field {
+  max-height: 250px;
 }

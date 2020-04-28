@@ -20,13 +20,15 @@
   right: 15px;
 }
 
-.dd-popup div::-webkit-scrollbar {
+.dd-popup div::-webkit-scrollbar,
+.dd-popup p::-webkit-scrollbar {
   height: 5px;
   width: 8px;
   background: #404040;
   border: solid 1px white;
 }
-.dd-popup div::-webkit-scrollbar-thumb {
+.dd-popup div::-webkit-scrollbar-thumb,
+.dd-popup p::-webkit-scrollbar-thumb{
   background: #cc5500;
   border: solid 1px white;
   border-radius: 3px;
@@ -34,6 +36,7 @@
   cursor: pointer;
 }
 
-.dd-popup div::-webkit-scrollbar-corner {
+.dd-popup div::-webkit-scrollbar-corner,
+.dd-popup p::-webkit-scrollbar-corner {
   background: #630a17;
 }

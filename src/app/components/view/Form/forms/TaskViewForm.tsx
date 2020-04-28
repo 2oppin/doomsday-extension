@@ -20,7 +20,7 @@ export class TaskViewForm extends Component<ITaskViewProps, {}> {
         const {task} = this.props;
 
         return (<Form caption={"View Task"}>
-            <div className="dd-popup-form-task">
+            <div className="dd-popup-form-task view">
                 <div className="dd-popup-form-inputfield">
                     <label>Code name</label>
                     <h5>{task.name}</h5>

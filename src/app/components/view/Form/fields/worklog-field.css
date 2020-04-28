@@ -1,3 +1,7 @@
+.dd-worklog-field {
+    max-height: 400px;
+    overflow-y: scroll;
+}
 .dd-worklog-field ul.days {
     list-style: none;
     padding: 0;
@@ -34,6 +38,9 @@
     background: var(--cl-yellow);
     min-width: 1px;
     cursor: move;
+}
+.dd-worklog-field.readonly ul.days li .period .log {
+    cursor: default;
 }
 .dd-worklog-field ul.days li .period .log.selected
 /*, .dd-worklog-field ul.days li .period .log:hover */{
