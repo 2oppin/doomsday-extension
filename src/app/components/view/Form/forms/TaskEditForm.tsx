@@ -5,19 +5,22 @@ import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
 import {WorklogField} from "@app/components/view/Form/fields/WorklogField";
 
 import {Form} from "@app/components/view/Form/Form";
-import {Task} from "@app/models/task";
+import {ITask, Task} from "@app/models/task";
 import {Worklog} from "@app/models/worklog";
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component, SyntheticEvent} from "react";
 
 import "./TaskEditForm.css";
 
-const DEFAULT_TASK = {
+const DEFAULT_TASK: ITask = {
+    complete: null,
+    created: null,
+    id: null,
     name: "New Mission",
     estimate: 2 * 3600 * 1000,
-    done:  0,
     deadline: new Date(new Date().getTime() + 24 * 3600 * 1000),
     description: "Go down through the hell and back alive!",
+    worklog: [],
 };
 const time = (d = new Date()) =>
     (d = new Date(d)) && `${d.getUTCHours() || "00"}:${d.getUTCMinutes() || "00"}:${d.getUTCSeconds() || "00"}`;
@@ -72,11 +75,13 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                         this.updateTaskProp({nativeEvent: {target: {value: d}}} as any, "deadline", (v: any) => v);
                     }}/>
                 </div>
-                <div className="dd-popup-form-inputfield">
-                    <WorklogField worklog={task.worklog} onChange={(w) =>
-                        this.updateTaskProp({nativeEvent: {target: {value: w}}} as any, "worklog", (v: any) => v)
-                    } />
-                </div>
+                {(task.worklog.length || null) && (
+                    <div className="dd-popup-form-inputfield">
+                        <WorklogField worklog={task.worklog} onChange={(w) =>
+                            this.updateTaskProp({nativeEvent: {target: {value: w}}} as any, "worklog", (v: any) => v)
+                        } />
+                    </div>
+                )}
                 <div className="dd-popup-form-inputfield">
                     <label>Brief</label>
                     <textarea value={task.description} onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "description")} />
