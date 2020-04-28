@@ -45,7 +45,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
     return (
         <Form caption="List of Tasks:">
           <div>
-            <div className="dd-popup-form-tasklist">
+            <div className="dd-popup-form-tasklist" data-help={"help-task-list"}>
               <div className="tasklist">
                 {tasks.map((t) => <TaskItem {...{readonly, previousForm}} key={t.id} active={t.id === active} task={t} />)}
               </div>

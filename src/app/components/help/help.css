@@ -7,12 +7,28 @@
     z-index: 10000;
     background: var(--cl-cobalt-opq);
 }
-.help-container .overflow .tooltip {
+.help-container .tooltip {
     position: fixed;
-    min-width: 300px;
-    min-height: 100px;
+    z-index: 10000;
+    width: 300px;
+    height: 100px;
     color: var(--cl-white);
     background: var(--cl-cobalt);
     border-radius: 4px;
     box-shadow: 1px 2px 2px var(--cl-white);
+    border: solid 1px white;
+    padding: 5px;
+}
+.help-container .tooltip .buttonset {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+.help-container .dd-brd {
+    color: var(--cl-white);
+    background: var(--cl-cobalt);
+    width: auto;
+}
+.help-container .dd-brd span {
+    margin-left: 15px;
 }
