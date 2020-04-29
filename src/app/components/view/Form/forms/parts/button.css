@@ -1,0 +1,31 @@
+.dd-popup-form-task-btn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    padding-top: 2px;
+    line-height: 19px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: outset 3px;
+    box-sizing: border-box;
+    color: var(--cl-white);
+    background: var(--cl-btn-bg);
+}
+.dd-popup-form-task-btn.dd-big-btn {
+    width: auto;
+    padding: 3px;
+}
+.r-btn {
+    float: right;
+}
+.dd-popup-form-task-btn.yellow-btn {
+    color: var(--cl-dark);
+    background: var(--cl-yellow-dark);
+}
+.dd-popup-form-task-btn.dd-brd.readonly {
+    background: var(--cl-gray-lt);
+    color: var(--cl-dark);
+    cursor: pointer;
+}

@@ -4,6 +4,7 @@ export const DOOM_OWERFLOW_APP_ID = "dd-doom-extention-app";
 
 export interface IConfig {
     tasks: any[];
+    archives: any[];
     showFace: boolean;
 }
 

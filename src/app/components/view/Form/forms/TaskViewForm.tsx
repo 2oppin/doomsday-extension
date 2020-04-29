@@ -12,6 +12,7 @@ import "./TaskEditForm.css";
 
 interface ITaskViewProps {
     task: Task;
+    previousForm?: string;
 }
 
 export class TaskViewForm extends Component<ITaskViewProps, {}> {
@@ -41,13 +42,18 @@ export class TaskViewForm extends Component<ITaskViewProps, {}> {
                     <p>{task.description.split(/\n/).map((sentence) => <>{sentence}<br/></>)}</p>
                 </div>
                 <div className="dd-form-buttonset">
-                    <button onClick={this.backToList}>Cancel</button>
+                    <span
+                        className="dd-popup-form-task-btn dd-brd dd-add-task dd-big-btn r-bt"
+                        onClick={() => this.backToList()}
+                    >
+                        Back
+                    </span>
                 </div>
             </div>
         </Form>);
     }
 
     private backToList() {
-        Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskList"});
+        Dispatcher.dispatch(DoomPluginEvent.showForm, {name: this.props.previousForm || "TaskList"});
     }
 }

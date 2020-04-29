@@ -2,12 +2,14 @@ import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {FaceMood} from "@app/components/view/Face/Face";
 
 import {FaceDraggable} from "@app/components/view/Face/FaceDraggable";
+import {ArchiveListForm} from "@app/components/view/Form/forms/ArchiveListForm";
 import ImportForm from "@app/components/view/Form/forms/ImportForm";
 import {TaskEditForm} from "@app/components/view/Form/forms/TaskEditForm";
 import {TaskListForm} from "@app/components/view/Form/forms/TaskListForm";
 import {TaskViewForm} from "@app/components/view/Form/forms/TaskViewForm";
 import {Panel} from "@app/components/view/Panel/Panel";
 import {IConfig} from "@app/globals";
+import {Archive} from "@app/models/archive";
 import {Task} from "@app/models/task";
 
 import {Dispatcher} from "@app/services/dispatcher";
@@ -20,7 +22,6 @@ interface IDoomPanelProps {
 }
 
 interface IDoomPanelState {
-    tasks: Task[];
     overflow: boolean;
     form: any;
     face: { mood: FaceMood } | null;
@@ -37,14 +38,13 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
             overflow: false,
             form: null,
             face: {mood: FaceMood.BAD},
-            tasks: [],
             activeTask: null,
             config: null,
         };
     }
 
     public componentDidMount() {
-        const {tasks} = this.state;
+        const {config} = this.state;
         this.listen();
         this.hellthchekInterval = setInterval(() => this.hellthchekOnFace(), 3000);
     }
@@ -66,11 +66,11 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     }
 
     private hellthchekOnFace() {
-        const {face, tasks} = this.state;
+        const {face, config} = this.state;
         if (!face) return;
 
-        const failed = tasks.filter((t) => t.active && t.failed);
-        const progress = tasks.filter((t) => t.active && !t.failed).reduce((a, t, i) => i ? (t.progress + a * (i - 1)) / i : t.progress, 0);
+        const failed = config.tasks.filter((t) => t.active && t.failed);
+        const progress = config.tasks.filter((t) => t.active && !t.failed).reduce((a, t, i) => i ? (t.progress + a * (i - 1)) / i : t.progress, 0);
 
         let mood = FaceMood.OK;
         if (progress === 0 && !failed.length) mood = FaceMood.GOD;
@@ -84,14 +84,10 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     private listen() {
         Dispatcher.subscribe(DoomPluginEvent.closeForm, () => this.onCloseForm());
         Dispatcher.subscribe(DoomPluginEvent.showForm, (args: any) => this.onShowForm(args));
-        Dispatcher.subscribe(DoomPluginEvent.tasksUpdated, (tasks: any[]) => {
-            const preparedTasks = tasks.map((t) => new Task(t));
-            this.setState({
-                tasks: preparedTasks,
-            });
-        });
         Dispatcher.subscribe(DoomPluginEvent.taskActivation, (args: any) => this.onTaskActivation(args));
-        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => this.onConfig(args));
+        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => {
+            this.onConfig(args);
+        });
     }
 
     private onCloseForm() {
@@ -102,9 +98,9 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     }
 
     private onShowForm({name, data}: { name: string, data: any }) {
-        const {config, tasks} = this.state;
+        const {config} = this.state;
         this.setState({
-            form: {name, data: {...config, ...data, tasks}},
+            form: {name, data},
             overflow: true,
             face: config && config.showFace ? {mood: FaceMood.BAD} : null,
         });
@@ -119,34 +115,41 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         }));
     }
 
-    private onConfig(config: IConfig) {
-        this.setState({
-            config,
-            face: config.showFace ? {mood: FaceMood.BAD} : null,
+    private onConfig(config: Partial<IConfig>) {
+        this.setState((prev) => {
+            if (config.tasks) config.tasks = (config.tasks || []).map((t) => new Task(t));
+            if (config.archives) config.archives = (config.archives || []).map((a) => new Archive(a));
+            return {
+                config: {...prev.config, ...config},
+                face: config.showFace ? {mood: FaceMood.BAD} : null,
+            };
         });
     }
 
     private toggleFormDisplaying() {
-        this.setState((prev) => ({
-            form: prev.form
-                ? null
-                : {name: "TaskList", data: {...prev.config, tasks: prev.tasks}},
-        }));
+        this.setState((prev) => {
+            return {
+                form: prev.form ? null : {name: "TaskList"},
+            };
+        });
     }
 
     private renderForm() {
         if (!this.state.form) return null;
-
-        const {name, data} = this.state.form;
-        const {tasks, config} = this.state;
+        const {name, data = {}} = this.state.form;
+        const {config} = this.state;
+        const {archives = []} = config;
 
         if (name === "TaskEdit") {
             return <TaskEditForm {...data} />;
         } else if (name === "TaskView") {
             return <TaskViewForm {...data} />;
+        } else if (name === "ArchiveList") {
+            return <ArchiveListForm archives={archives} />;
         } else if (name === "ImportForm")
             return <ImportForm {...data} />;
-        else
-            return <TaskListForm {...{tasks}} />;
+        else {
+            return <TaskListForm {...{tasks: config.tasks, ...data}} />;
+        }
     }
 }
