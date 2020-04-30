@@ -39,7 +39,7 @@ export class TaskViewForm extends Component<ITaskViewProps, {}> {
                 </div>
                 <div className="dd-popup-form-inputfield">
                     <label>Brief</label>
-                    <p>{task.description.split(/\n/).map((sentence) => <>{sentence}<br/></>)}</p>
+                    <p>{task.description.split(/\n/).map((sentence, i) => <span key={i}>{sentence}<br/></span>)}</p>
                 </div>
                 <div className="dd-form-buttonset">
                     <span
