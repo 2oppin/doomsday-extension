@@ -14,6 +14,8 @@ const hrs = (msec: number) => ((msec / 36000) / 100) | 0;
 
 interface ITaskItemProps {
   active: boolean;
+  readonly?: boolean;
+  previousForm?: string;
   task: Task;
 }
 export class TaskItem extends Component<ITaskItemProps, {}> {
@@ -26,36 +28,39 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
   }
 
   public renderActive(task: Task) {
+    const {readonly} = this.props;
     return (
       <div className="task-item item">
-        <_bt u="⏸" title="Suspend ..." cb={() => this.pauseTask(task)} />
+        <_bt u="⏸" {...{readonly}} title="Suspend ..." cb={() => this.pauseTask(task)} />
         <_progressBar task={task} caption={
           <span className="cpt caption-link" onClick={() => this.showTask(task)}>{task.name}</span>
         }/>
         {this.renderTaskFace(task)}
-        <_bt u="✔" title="Mark Completed" cb={() => this.finishTask(task)} />
+        <_bt u="✔" {...{readonly}} title="Mark Completed" cb={() => this.finishTask(task)} />
       </div>
     );
   }
 
   public renderPaused(task: Task) {
+    const {readonly} = this.props;
     return (
       <div className="task-item item">
-        <_bt u="▶" title="Start Working... NOW!" cb={() => this.startTask(task)} />
+        <_bt u="▶" {...{readonly}} title="Start Working... NOW!" cb={() => this.startTask(task)} />
         {this.renderNonActiveTask(task)}
         {this.renderTaskFace(task)}
-        <_bt u="✎" title="Edit" cb={() => this.editTask(task)} />
+        <_bt u="✎" {...{readonly}} title="Edit" cb={() => this.editTask(task)} />
       </div>
     );
   }
 
   public renderFinished(task: Task) {
+    const {readonly} = this.props;
     return (
       <div className="task-item item">
-        <_bt u="♻" title="Remove Task from history" cb={() => this.deleteTask(task)} />
+        <_bt u={`\ud83c\udf81`} {...{readonly}} title="Add Task to Archive" yellow={true} cb={() => this.archiveTask(task)} />
         {this.renderNonActiveTask(task)}
         {this.renderTaskFace(task)}
-        <div style={{width: 30}}/>
+        <_bt u="♻" {...{readonly}} title="Remove Task from history" cb={() => this.deleteTask(task)} />
       </div>
     );
   }
@@ -97,7 +102,8 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
   }
 
   private showTask(task: Task) {
-    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskView", data: { task}});
+    const {previousForm} = this.props;
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskView", data: {task, previousForm}});
   }
 
   private startTask({id, name, worklog}: Task) {
@@ -118,5 +124,9 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
 
   private deleteTask({id}: Task) {
     return Dispatcher.call(DoomPluginEvent.deleteTask, {id});
+  }
+
+  private archiveTask({id}: Task) {
+    return Dispatcher.call(DoomPluginEvent.archiveTask, {id});
   }
 }

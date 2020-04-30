@@ -49,15 +49,16 @@ h3.dd-form-caption {
   overflow-y: auto;
 }
 .dd-popup-form-tasklist .tasklist .item {
-display: flex;
-flex-direction: row;
-height: 50px;
-align-items: center;
-justify-content: center;
-background: var(--cl-dark);
-border: solid 1px white;
-padding: 0 5px 0 5px;
-color: white
+  display: flex;
+  min-width: 400px;
+  flex-direction: row;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  background: var(--cl-dark);
+  border: solid 1px white;
+  padding: 0 5px 0 5px;
+  color: white
 }
 .dd-popup-form-tasklist .tasklist .item.active {
 border: double 10px #a2a2a2;
@@ -69,34 +70,4 @@ padding: 3px;
 }
 .dd-brd{
   border-image: 33 round;
-}
-
-/*
-
-.dd-popup-form-tasklist ul {
-  padding: 0;
-  list-style-type: none;
-}
-*/
-.dd-popup-form-task-btn {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  padding-top: 2px;
-  line-height: 19px;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-  border: outset 3px;
-  box-sizing: border-box;
-  color: black;
-  background: var(--cl-btn-bg);
-}
-.dd-popup-form-task-btn.dd-add-task {
-  width: auto;
-  padding: 3px;
-}
-.r-btn {
-  float: right;
 }

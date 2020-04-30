@@ -22,8 +22,8 @@ export class Task implements ITask {
         if (a.complete && !b.complete) return 1;
         if (b.complete && !a.complete) return -1;
 
-        const logA = a.started && a.lastLogTime.getTime();
-        const logB = b.started && b.lastLogTime.getTime();
+        const logA = a.started && a.lastLogTime && a.lastLogTime.getTime();
+        const logB = b.started && b.lastLogTime && b.lastLogTime.getTime();
         if (logA && logB && logA !== logB) {
             return logA > logB ? -1 : 1;
         }

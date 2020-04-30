@@ -9,6 +9,8 @@ import {TaskItem} from "./parts/TaskItem";
 interface ITaskListProps {
   tasks: Task[];
   active?: string;
+  readonly?: boolean;
+  previousForm?: string;
 }
 
 interface ITaskListSate {
@@ -35,6 +37,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
   }
 
   public render() {
+    const {readonly, previousForm} = this.props;
     const {tasks, active} = this.state;
 
     return (
@@ -42,31 +45,43 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
           <div>
             <div className="dd-popup-form-tasklist">
               <div className="tasklist">
-                {tasks.map((t) => <TaskItem key={t.id} active={t.id === active} task={t} />)}
+                {tasks.map((t) => <TaskItem {...{readonly, previousForm}} key={t.id} active={t.id === active} task={t} />)}
               </div>
             </div>
-            <span
-                className="dd-popup-form-task-btn dd-brd dd-add-task"
+            {!readonly && <span
+                className="dd-popup-form-task-btn dd-brd dd-big-btn"
                 onClick={() => this.addTask()}
             >
-            &#10133; <b>New Task</b>
-          </span>
+              &#10133; <b>New Task</b>
+            </span>}
             <span
-                className="dd-popup-form-task-btn dd-brd r-btn"
-                onClick={() => this.exportConfig()}
-                style={{transform: `rotate(180deg)`, border: "inset"}}
+                className="dd-popup-form-task-btn dd-brd dd-big-btn yellow-btn"
+                onClick={() => this.showArchives()}
             >
-            &#8687;
-          </span>
-            <span
-                className="dd-popup-form-task-btn dd-brd r-btn"
-                onClick={() => this.importConfig()}
-            >
-            &#8687;
-          </span>
+              &#x1F381; <b>Show Archives</b>
+            </span>
+            {!readonly && <>
+              <span
+                  className="dd-popup-form-task-btn dd-brd r-btn"
+                  onClick={() => this.exportConfig()}
+                  style={{transform: `rotate(180deg)`, border: "inset"}}
+              >
+                &#8687;
+              </span>
+                <span
+                    className="dd-popup-form-task-btn dd-brd r-btn"
+                    onClick={() => this.importConfig()}
+                >
+                &#8687;
+              </span>
+            </>}
           </div>
         </Form>
     );
+  }
+
+  private showArchives() {
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "ArchiveList", data: { task: {}}});
   }
 
   private addTask() {
