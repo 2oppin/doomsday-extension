@@ -2,16 +2,19 @@ import {Task} from "@app/models/task";
 
 export const DOOM_OWERFLOW_APP_ID = "dd-doom-extention-app";
 
+export interface IConfigOptions {
+    showFace: boolean;
+}
 export interface IConfig {
     tasks: any[];
     archives: any[];
-    showFace: boolean;
+    options: IConfigOptions;
 }
 
 export interface IDDMessage {
  task?: Task;
  tasks?: Task[];
- showFace?: boolean;
+ options?: IConfigOptions;
  action: string;
  tabId?: number;
  id: any;

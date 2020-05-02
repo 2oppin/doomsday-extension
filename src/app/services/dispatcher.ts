@@ -1,4 +1,5 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
+import {IDDMessage} from "@app/globals";
 
 class DispatcherSvc {
   private onceListeners: {[event: string]: Array<(args: any) => any>} = {};
@@ -6,6 +7,14 @@ class DispatcherSvc {
 
   constructor() {
     this.onceListeners = {};
+    chrome.runtime.onMessage.addListener((data: IDDMessage) => {
+      if (!data) return;
+      const {action} = data;
+      if (this.listeners[action]) {
+        delete data.action;
+        this.listeners[action].forEach((cb) => cb(data));
+      }
+    });
   }
 
   public dispatch(event: DoomPluginEvent, data?: any) {

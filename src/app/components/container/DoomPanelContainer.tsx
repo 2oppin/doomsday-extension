@@ -10,7 +10,7 @@ import {TaskViewForm} from "@app/components/view/Form/forms/TaskViewForm";
 import {Panel} from "@app/components/view/Panel/Panel";
 import {IConfig} from "@app/globals";
 import {Archive} from "@app/models/archive";
-import {Task} from "@app/models/task";
+import {faceMoodOnTasks, Task} from "@app/models/task";
 
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component} from "react";
@@ -67,18 +67,9 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
     private hellthchekOnFace() {
         const {face, config} = this.state;
-        if (!face) return;
+        if (!face || !config.tasks) return;
 
-        const failed = config.tasks.filter((t) => t.active && t.failed);
-        const progress = config.tasks.filter((t) => t.active && !t.failed).reduce((a, t, i) => i ? (t.progress + a * (i - 1)) / i : t.progress, 0);
-
-        let mood = FaceMood.OK;
-        if (progress === 0 && !failed.length) mood = FaceMood.GOD;
-        else if (progress > 90 || failed.length) mood = FaceMood.WORST;
-        else if (progress > 70) mood = FaceMood.WORSE;
-        else if (progress > 50) mood = FaceMood.BAD;
-        else if (progress > 20) mood = FaceMood.NORM;
-        this.setState({face: {mood}});
+        this.setState({face: {mood: faceMoodOnTasks(config.tasks)}});
     }
 
     private listen() {
@@ -99,10 +90,11 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
     private onShowForm({name, data}: { name: string, data: any }) {
         const {config} = this.state;
+        const showFace = config && config.options && config.options.showFace;
         this.setState({
             form: {name, data},
             overflow: true,
-            face: config && config.showFace ? {mood: FaceMood.BAD} : null,
+            face: showFace ? {mood: FaceMood.BAD} : null,
         });
     }
 
@@ -119,9 +111,11 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         this.setState((prev) => {
             if (config.tasks) config.tasks = (config.tasks || []).map((t) => new Task(t));
             if (config.archives) config.archives = (config.archives || []).map((a) => new Archive(a));
+            const newConfig = {...prev.config, ...config};
+            const showFace = newConfig.options && newConfig.options.showFace;
             return {
-                config: {...prev.config, ...config},
-                face: config.showFace ? {mood: FaceMood.BAD} : null,
+                config: newConfig,
+                face: showFace ? {mood: faceMoodOnTasks(newConfig.tasks)} : null,
             };
         });
     }

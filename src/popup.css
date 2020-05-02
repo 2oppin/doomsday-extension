@@ -5,3 +5,16 @@ body {
 button {
   color: #a72e2e;
 }
+.dd-popup {
+  min-width: 150px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+}
+.dd-popup .control {
+  margin: 15px 0;
+}
+.dd-popup span b {
+  color: #ef3232;;
+}

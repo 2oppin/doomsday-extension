@@ -47,10 +47,10 @@ interface ITaskEditState {
 export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
     constructor(props: any) {
         super(props);
-        const {task} = props;
+        const {task = new Task(DEFAULT_TASK)} = props;
         this.state = {
             ...this.props,
-            task: task || DEFAULT_TASK,
+            task,
             caption: (task.id ? "Update" : "Add") + " Mission:",
         };
     }
@@ -91,7 +91,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                         <div className={"priority-container"}><_prrt lvl={task.priority} /></div>
                     </div>
                 </div>
-                {(task.worklog.length || null) && (
+                {((task.worklog && task.worklog.length) || null) && (
                     <div className="dd-popup-form-inputfield">
                         <WorklogField worklog={task.worklog} onChange={(w) =>
                             this.updateTaskProp({nativeEvent: {target: {value: w}}} as any, "worklog", (v: any) => v)

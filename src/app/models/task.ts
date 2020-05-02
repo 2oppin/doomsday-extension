@@ -1,3 +1,4 @@
+import {FaceMood} from "@app/components/view/Face/Face";
 import {IWorklog, Worklog} from "@app/models/worklog";
 
 export interface ITask {
@@ -81,7 +82,9 @@ export class Task implements ITask {
         this.deadline = new Date(deadline);
         this.description = description;
         this.created = created ? new Date(created) : new Date();
-        this.worklog = worklog.map((w) => new Worklog(w)).sort(Task.sortByStarted);
+        this.worklog = worklog.map((w, i) => {
+            return new Worklog(w);
+        }).sort(Task.sortByStarted);
     }
 
     get priority(): number {
@@ -135,4 +138,23 @@ export class Task implements ITask {
         }
         return progress;
     }
+
+    public toObject() {
+        const data = {...this, priority: this.priority};
+        delete data.priorityValue;
+        return data;
+    }
+}
+
+export function faceMoodOnTasks(tasks: Task[]): FaceMood {
+    const failed = tasks.filter((t) => t.active && t.failed);
+    const progress = tasks.filter((t) => t.active && !t.failed).reduce((a, t, i) => i ? (t.progress + a * (i - 1)) / i : t.progress, 0);
+
+    let mood = FaceMood.OK;
+    if (progress === 0 && !failed.length) mood = FaceMood.GOD;
+    else if (progress > 90 || failed.length) mood = FaceMood.WORST;
+    else if (progress > 70) mood = FaceMood.WORSE;
+    else if (progress > 50) mood = FaceMood.BAD;
+    else if (progress > 20) mood = FaceMood.NORM;
+    return mood;
 }

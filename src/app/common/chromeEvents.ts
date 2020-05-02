@@ -4,7 +4,6 @@ import QueryInfo = chrome.tabs.QueryInfo;
 export enum DoomPluginEvent {
     refresh = "refresh",
 
-    requestConfig = "requestConfig",
     configUpdated = "configUpdated",
     taskActivation = "taskActivation",
     addTask = "addTask",
@@ -24,8 +23,8 @@ export enum DoomPluginEvent {
 }
 
 export const dispatchEventTextCmd = (eventType: DoomPluginEvent, data: any): string => {
-    return `document.getElementById('${DOOM_OWERFLOW_APP_ID}')`
-        + `.dispatchEvent(new CustomEvent('doom', {detail:{action: '${eventType}', data: ${JSON.stringify(data)}}}));`;
+    return `((el) => el && el.dispatchEvent(new CustomEvent('doom', {detail:{action: '${eventType}', data: ${JSON.stringify(data)}}})))
+    (document.getElementById('${DOOM_OWERFLOW_APP_ID}'));`;
 };
 
 const withTabs = (query: QueryInfo) => (cb: (tabs: chrome.tabs.Tab[]) => Promise<any>) =>
@@ -51,4 +50,8 @@ export const postSingleTab = (tabId: number) => (event: DoomPluginEvent, data: a
         {code: dispatchEventTextCmd(event, data)},
         r,
     ));
+};
+
+export const postSingleRecipient = (recvId: string) => (event: DoomPluginEvent, data: any): void => {
+    chrome.runtime.sendMessage(recvId, {action: event, ...data});
 };

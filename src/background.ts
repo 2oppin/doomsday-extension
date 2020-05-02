@@ -1,11 +1,9 @@
-import {DoomPluginEvent, postAllTabs, postSingleTab} from "@app/common/chromeEvents";
+import {DoomPluginEvent, postActiveTabs, postAllTabs, postSingleRecipient} from "@app/common/chromeEvents";
 import {formatDate} from "@app/common/routines";
-import {IConfig, IDDMessage} from "@app/globals";
+import {IConfig, IConfigOptions, IDDMessage} from "@app/globals";
 import {IArchive} from "@app/models/archive";
 import {ITask} from "@app/models/task";
 import {DoomStorage} from "@app/services/storage";
-
-const setupPopups = (config: IConfig, tabId: number) => postSingleTab(tabId)(DoomPluginEvent.configUpdated, config);
 
 const getCurrentTasks = (): Promise<ITask[]> => DoomStorage.get("tasks");
 
@@ -30,10 +28,10 @@ const updateTasks = async (cb: (tasks: ITask[]) => any = (t) => t): Promise<any>
     return storedTasks;
 };
 
-const updateConfig = async (cb: (arg: {showFace: boolean}) => any): Promise<any> => {
-    const showFace = cb(await DoomStorage.get("showFace"));
-    DoomStorage.set("showFace", showFace)
-        .then(() => postAllTabs(DoomPluginEvent.configUpdated, {showFace}));
+const updateOptions = async (cb: (arg: IConfigOptions) => any): Promise<any> => {
+    const options = cb(await DoomStorage.get("options"));
+    return DoomStorage.set("options", options)
+        .then(() => postAllTabs(DoomPluginEvent.configUpdated, {options}));
 };
 
 const updateArchives = async (cb: (tasks: IArchive[]) => any = (t) => t): Promise<any> => {
@@ -42,27 +40,30 @@ const updateArchives = async (cb: (tasks: IArchive[]) => any = (t) => t): Promis
         .then(() => postAllTabs(DoomPluginEvent.configUpdated, {archives}));
 };
 
-const broadcastConfig = () => {
+const broadcastConfig = (recvId?: string) => {
     return Promise.all([
         DoomStorage.get("tasks"),
         DoomStorage.get("archives"),
-        DoomStorage.get("showFace"),
+        DoomStorage.get("options"),
     ])
-        .then(([tasks, archives, showFace]) => {
-            postAllTabs(DoomPluginEvent.configUpdated, {tasks, archives, showFace});
+        .then(([tasks, archives, options]) => {
+            if (recvId)
+                postSingleRecipient(recvId)(DoomPluginEvent.configUpdated, {tasks, archives, options});
+            else
+                postAllTabs(DoomPluginEvent.configUpdated, {tasks, archives, options});
         });
 };
 
 const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
-    const {task, tasks, showFace, action, id, done} = msg;
+    const {task, tasks, options, action, id, done} = msg;
     switch (action) {
-        case "configUpdated":
-            updateConfig(() => ({showFace}));
+        case DoomPluginEvent.configUpdated:
+            updateOptions(() => (options));
             break;
-        case "addTask":
+        case DoomPluginEvent.addTask:
             updateTasks((prevTasks) => [...prevTasks, task]);
             break;
-        case "startTask":
+        case DoomPluginEvent.startTask:
             updateTasks((prevTasks) => prevTasks.map((t: ITask) => {
                 if (t.id === id && !t.worklog.find((w) => !w.finished)) {
                     t.worklog.push({started: (new Date()).getTime(), finished: null});
@@ -70,19 +71,25 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
                 return t;
             }));
             break;
-        case "updateTask":
+        case DoomPluginEvent.updateTask:
             updateTasks((storeTasks) => storeTasks.map((t) => t.id === task.id ? task : t));
             break;
-        case "resetTasks":
+        case DoomPluginEvent.resetTasks:
             updateTasks(() => tasks);
             break;
-        case "finishTask":
+        case DoomPluginEvent.finishTask:
             updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
-                if (t.id === id) t.complete = (new Date()).getTime();
+                if (t.id === id) {
+                    const ongoing = t.worklog.find((w) => !w.finished);
+                    if (ongoing) {
+                        ongoing.finished = (new Date()).getTime();
+                    }
+                    t.complete = (new Date()).getTime();
+                }
                 return t;
             }));
             break;
-        case "pauseTask":
+        case DoomPluginEvent.pauseTask:
             updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
                 if (t.id === id) {
                     const ongoing = t.worklog.find((w) => !w.finished);
@@ -93,20 +100,17 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
                 return t;
             }));
             break;
-        case "deleteTask":
+        case DoomPluginEvent.deleteTask:
             updateTasks((storeTasks) => storeTasks.filter((t) => t.id !== id));
             break;
-        case "requestConfig":
-            broadcastConfig();
-            break;
-        case "archiveTask":
+        case DoomPluginEvent.archiveTask:
             updateTasks((storeTasks) => {
                 const archT = storeTasks.find((t) => t.id === id);
                 putTaskIntoArchive(archT);
                 return storeTasks.filter((t) => t.id !== id);
             });
             break;
-        case "unpackArchive":
+        case DoomPluginEvent.unpackArchive:
             updateArchives((storeArchs) => storeArchs.filter((a) => {
                 if (a.createdDay === id) {
                     updateTasks((storeTasks) => storeTasks.concat(a.tasks));
@@ -115,11 +119,14 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
                 return true;
             }));
             break;
-        case "deleteArchive":
+        case DoomPluginEvent.deleteArchive:
             updateArchives((storeArchs) => storeArchs.filter((a) => a.createdDay !== id));
             break;
-        case "refresh":
-            updateTasks((storeTasks) => storeTasks);
+        case DoomPluginEvent.showForm:
+            postActiveTabs(DoomPluginEvent.showForm, msg);
+            break;
+        case DoomPluginEvent.refresh:
+            broadcastConfig(sender.id);
             break;
     }
 };

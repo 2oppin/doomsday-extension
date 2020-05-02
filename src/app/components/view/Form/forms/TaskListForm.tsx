@@ -81,20 +81,20 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
   }
 
   private showArchives() {
-    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "ArchiveList", data: { task: {}}});
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "ArchiveList"});
   }
 
   private addTask() {
-    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskEdit", data: { task: {}}});
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskEdit"});
   }
 
   private importConfig() {
-    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "ImportForm", data: { task: {}}});
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "ImportForm"});
   }
 
   private exportConfig() {
     const {tasks} = this.state;
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks.map((t) => t.toObject())));
     const aEl = document.createElement("a");
     aEl.setAttribute("href", dataStr);
     aEl.setAttribute("download", "DOOMed-Tasks.json");

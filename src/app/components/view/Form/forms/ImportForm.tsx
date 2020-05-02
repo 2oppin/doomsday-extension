@@ -39,7 +39,7 @@ export default class TaskListForm extends Component<{}, ITaskListFormState> {
             </div>
           </div>
           <span
-            className="dd-popup-form-task-btn dd-brd dd-add-task r-btn"
+            className="dd-popup-form-task-btn dd-brd dd-add-task dd-big-btn r-btn"
             onClick={() => this.doImport()}
           >
             &#10133; <b>Import</b>
