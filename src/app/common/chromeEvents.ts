@@ -4,9 +4,8 @@ import QueryInfo = chrome.tabs.QueryInfo;
 export enum DoomPluginEvent {
     refresh = "refresh",
 
+    requestConfig = "requestConfig",
     configUpdated = "configUpdated",
-    tasksUpdated = "tasksUpdated",
-    oneTaskUpdated = "taskUpdated",
     taskActivation = "taskActivation",
     addTask = "addTask",
     updateTask = "updateTask",

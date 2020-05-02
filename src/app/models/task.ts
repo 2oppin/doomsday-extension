@@ -4,6 +4,7 @@ export interface ITask {
     id: string;
     name: string;
     estimate: number;
+    priority: number;
     created: Date|number;
     deadline: Date|number;
     description: string;
@@ -16,15 +17,29 @@ export class Task implements ITask {
         a = new Task(a);
         b = new Task(b);
 
-        if (a.active && !b.active) return -1;
-        if (b.active && !a.active) return 1;
+        if (a.complete && !b.complete) {
+            return 1;
+        } else if (b.complete && !a.complete) {
+            return -1;
+        }
 
-        if (a.complete && !b.complete) return 1;
-        if (b.complete && !a.complete) return -1;
+        if (a.active && !b.active) {
+            return -1;
+        } else if (b.active && !a.active) {
+            return 1;
+        }
+
+        if (a.priority !== b.priority) {
+            return  a.priority > b.priority ? -1 : 1;
+        }
 
         const logA = a.started && a.lastLogTime && a.lastLogTime.getTime();
         const logB = b.started && b.lastLogTime && b.lastLogTime.getTime();
-        if (logA && logB && logA !== logB) {
+        if (logA && !logB) {
+            return -1;
+        } else if (logB && !logA) {
+            return 1;
+        } else if (logA !== logB) {
             return logA > logB ? -1 : 1;
         }
 
@@ -55,16 +70,38 @@ export class Task implements ITask {
     public description: string;
     public complete: Date|null;
     public worklog: Worklog[];
+    private priorityValue: number = 0;
 
-    constructor({id, name, created, estimate, deadline, description, complete = null, worklog = []}: ITask) {
+    constructor({id, name, priority = 0, created, estimate, deadline, description, complete = null, worklog = []}: ITask) {
         this.id = id;
         this.name = name;
         this.complete = complete ? new Date(complete) : null;
         this.estimate = estimate;
+        this.priority = priority;
         this.deadline = new Date(deadline);
         this.description = description;
         this.created = created ? new Date(created) : new Date();
         this.worklog = worklog.map((w) => new Worklog(w)).sort(Task.sortByStarted);
+    }
+
+    get priority(): number {
+        return this.priorityValue;
+    }
+
+    set priority(val: number) {
+        this.priorityValue = val > 12 ? 12 : (val < 0 ? 0 : val);
+    }
+
+    get isHighestPriority(): boolean {
+        return this.priorityValue >= 10;
+    }
+
+    get isHighPriority(): boolean {
+        return this.priorityValue >= 8;
+    }
+
+    get isAboveAveragePriority(): boolean {
+        return this.priorityValue >= 6;
     }
 
     get started(): Date|null {

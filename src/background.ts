@@ -66,7 +66,6 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
             updateTasks((prevTasks) => prevTasks.map((t: ITask) => {
                 if (t.id === id && !t.worklog.find((w) => !w.finished)) {
                     t.worklog.push({started: (new Date()).getTime(), finished: null});
-                    console.log("STArT:", t.worklog.filter((w) => !w.finished));
                 }
                 return t;
             }));
@@ -86,7 +85,6 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
         case "pauseTask":
             updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
                 if (t.id === id) {
-                    console.log("PAUSE:", t.worklog.filter((w) => !w.finished));
                     const ongoing = t.worklog.find((w) => !w.finished);
                     if (ongoing) {
                         ongoing.finished = (new Date()).getTime();
@@ -97,6 +95,9 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
             break;
         case "deleteTask":
             updateTasks((storeTasks) => storeTasks.filter((t) => t.id !== id));
+            break;
+        case "requestConfig":
+            broadcastConfig();
             break;
         case "archiveTask":
             updateTasks((storeTasks) => {

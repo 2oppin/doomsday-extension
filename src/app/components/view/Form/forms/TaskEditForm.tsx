@@ -5,6 +5,7 @@ import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
 import {WorklogField} from "@app/components/view/Form/fields/WorklogField";
 
 import {Form} from "@app/components/view/Form/Form";
+import _prrt from "@app/components/view/Form/forms/parts/priority";
 import {ITask, Task} from "@app/models/task";
 import {Worklog} from "@app/models/worklog";
 import {Dispatcher} from "@app/services/dispatcher";
@@ -18,6 +19,7 @@ const DEFAULT_TASK: ITask = {
     id: null,
     name: "New Mission",
     estimate: 2 * 3600 * 1000,
+    priority: 0,
     deadline: new Date(new Date().getTime() + 24 * 3600 * 1000),
     description: "Go down through the hell and back alive!",
     worklog: [],
@@ -48,7 +50,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
         const {task} = props;
         this.state = {
             ...this.props,
-            task: {...DEFAULT_TASK, ...task},
+            task: task || DEFAULT_TASK,
             caption: (task.id ? "Update" : "Add") + " Mission:",
         };
     }
@@ -75,6 +77,20 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                         this.updateTaskProp({nativeEvent: {target: {value: d}}} as any, "deadline", (v: any) => v);
                     }}/>
                 </div>
+                <div className="dd-popup-form-inputfield">
+                    <label>Priority</label>
+                    <div className="dd-popup-form-row">
+                        <input
+                            type="number" max={12} min={0}
+                            title="Priority"
+                            value={task.priority}
+                            onChange={(e) => {
+                                task.priority = parseInt((e.nativeEvent.target as HTMLInputElement).value, 10);
+                                this.setState({});
+                            }} />
+                        <div className={"priority-container"}><_prrt lvl={task.priority} /></div>
+                    </div>
+                </div>
                 {(task.worklog.length || null) && (
                     <div className="dd-popup-form-inputfield">
                         <WorklogField worklog={task.worklog} onChange={(w) =>
@@ -99,6 +115,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
             return {
                 task: new Task({
                     ...prevState.task,
+                    priority: prevState.task.priority,
                     worklog: prevState.task.worklog.map((w) =>
                         w.started.getTime() === startDate.getTime()
                             ? {...w, ...newW}
@@ -116,6 +133,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
             return {
                 task: new Task({
                     ...prevState.task,
+                    priority: prevState.task.priority,
                     [key]: cast(event.target.tag === "textarea" ? event.target.text : event.target.value),
                 }),
             };
@@ -125,9 +143,9 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
     private saveTask() {
         const {task} = this.state;
         if (!task.id)
-            Dispatcher.call(DoomPluginEvent.addTask, {task: {...task, id: UUID()}});
+            Dispatcher.call(DoomPluginEvent.addTask, {task: {...task, id: UUID(), priority: task.priority}});
         else {
-            Dispatcher.call(DoomPluginEvent.updateTask, {task});
+            Dispatcher.call(DoomPluginEvent.updateTask, {task: {...task, priority: task.priority}});
         }
 
         this.backToList();

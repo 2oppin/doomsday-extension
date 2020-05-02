@@ -1,6 +1,7 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 
 import {Face} from "@app/components/view/Face";
+import _prrt from "@app/components/view/Form/forms/parts/priority";
 
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
@@ -20,7 +21,7 @@ interface ITaskItemProps {
 }
 export class TaskItem extends Component<ITaskItemProps, {}> {
   public static getDerivedStateFromProps(props: ITaskItemProps) {
-    return {task: new Task(props.task), selected: props.active};
+    return {task: props.task, selected: props.active};
   }
   constructor(props: ITaskItemProps) {
     super(props);
@@ -30,38 +31,38 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
   public renderActive(task: Task) {
     const {readonly} = this.props;
     return (
-      <div className="task-item item">
+      <>
         <_bt u="⏸" {...{readonly}} title="Suspend ..." cb={() => this.pauseTask(task)} />
         <_progressBar task={task} caption={
           <span className="cpt caption-link" onClick={() => this.showTask(task)}>{task.name}</span>
         }/>
         {this.renderTaskFace(task)}
         <_bt u="✔" {...{readonly}} title="Mark Completed" cb={() => this.finishTask(task)} />
-      </div>
+      </>
     );
   }
 
   public renderPaused(task: Task) {
     const {readonly} = this.props;
     return (
-      <div className="task-item item">
+      <>
         <_bt u="▶" {...{readonly}} title="Start Working... NOW!" cb={() => this.startTask(task)} />
         {this.renderNonActiveTask(task)}
         {this.renderTaskFace(task)}
         <_bt u="✎" {...{readonly}} title="Edit" cb={() => this.editTask(task)} />
-      </div>
+      </>
     );
   }
 
   public renderFinished(task: Task) {
     const {readonly} = this.props;
     return (
-      <div className="task-item item">
+      <>
         <_bt u={`\ud83c\udf81`} {...{readonly}} title="Add Task to Archive" yellow={true} cb={() => this.archiveTask(task)} />
         {this.renderNonActiveTask(task)}
         {this.renderTaskFace(task)}
         <_bt u="♻" {...{readonly}} title="Remove Task from history" cb={() => this.deleteTask(task)} />
-      </div>
+      </>
     );
   }
 
@@ -72,7 +73,8 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
     if (task.done > 0.9 * task.estimate) cls = StatusClass.BAD;
     else if (task.done < 0.5 * task.estimate) cls = StatusClass.GOOD;
 
-    const tilldd = hrs(new Date(task.deadline).getTime() - (new Date()).getTime());
+    const fin = (task.complete ? task.complete : new Date()).getTime();
+    const tilldd = hrs( (new Date(task.deadline).getTime()) - fin);
     let clsdd: StatusClass = StatusClass.NONE;
     if (tilldd < 0) clsdd = StatusClass.BAD;
     else if (tilldd < 24) clsdd = StatusClass.WARN;
@@ -95,10 +97,17 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
   public render() {
     const {task} = this.props;
     if (task.complete)
-      return this.renderFinished(task);
-    return task.active
-      ? this.renderActive(task)
-      : this.renderPaused(task);
+      return (<div className="task-item item">{this.renderFinished(task)}</div>);
+
+    return (
+        <div className="task-item item">
+          <div className={"priority-container"}><_prrt lvl={task.priority} /></div>
+          {task.active
+              ? this.renderActive(task)
+              : this.renderPaused(task)
+          }
+        </div>
+    );
   }
 
   private showTask(task: Task) {

@@ -6,7 +6,7 @@
 .dd-popup-form-task p {
   background: var(--cl-bisque);
   max-height: 300px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .dd-popup-form-task h5 {
   color: #feffe1;
@@ -19,6 +19,11 @@
   border: outset 2px #774400;
   background: #421000;
   color: #ee2200;
+}
+.dd-popup-form-task .priority-container {
+  position: absolute;
+  right: -42px;
+  top: 4px;
 }
 .dd-popup-form-inputfield label {
   width: 150px;
@@ -41,6 +46,7 @@
   flex-direction: row-reverse;
 }
 .dd-popup-form-row {
+  position: relative;
   display: flex;
 }
 .dd-popup-form-column {
