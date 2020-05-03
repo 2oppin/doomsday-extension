@@ -7,3 +7,5 @@ export const formatDate = (d: Date) =>
 
 export const formatTime = (d: Date) =>
     `${`${d.getUTCHours()}`.padStart(2, "0")}:${`${d.getUTCMinutes()}`.padStart(2, "0")}`;
+
+export const siteBase = () => window.location.href.replace(/^(https?:\/\/[^\/]+)\/?(.*)?/, "$1");
