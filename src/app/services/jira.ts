@@ -21,7 +21,7 @@ class JiraAPI {
     }
 
     public getActiveIssues() {
-        const jql = encodeURIComponent(`assignee="${this.user.displayName}" AND status not in ("Resolved", "Done")`);
+        const jql = encodeURIComponent(`assignee="${this.user.displayName}" AND resolution is EMPTY AND status not in ("Resolved", "Done")`);
         return this.call(`search?jql=${jql}`);
     }
 

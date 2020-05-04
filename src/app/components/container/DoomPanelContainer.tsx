@@ -43,7 +43,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
             form: null,
             face: {mood: FaceMood.BAD},
             activeTask: null,
-            config: null,
+            config: {tasks: [], archives: [], options: {showFace: false}},
             isJira: false,
         };
     }
@@ -145,7 +145,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         if (name === "TaskEdit") {
             return <TaskEditForm {...data} />;
         } else if (name === "JiraTasks") {
-            return <JiraIssuesForm {...data} />;
+            return <JiraIssuesForm {...data} tasks={config.tasks || []} />;
         } else if (name === "TaskView") {
             return <TaskViewForm {...data} />;
         } else if (name === "ArchiveList") {
