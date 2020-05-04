@@ -1,9 +1,11 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
+import {siteBase} from "@app/common/routines";
 import {FaceMood} from "@app/components/view/Face/Face";
 
 import {FaceDraggable} from "@app/components/view/Face/FaceDraggable";
 import {ArchiveListForm} from "@app/components/view/Form/forms/ArchiveListForm";
 import ImportForm from "@app/components/view/Form/forms/ImportForm";
+import {JiraIssuesForm} from "@app/components/view/Form/forms/JiraIssuesForm";
 import {TaskEditForm} from "@app/components/view/Form/forms/TaskEditForm";
 import {TaskListForm} from "@app/components/view/Form/forms/TaskListForm";
 import {TaskViewForm} from "@app/components/view/Form/forms/TaskViewForm";
@@ -13,6 +15,7 @@ import {Archive} from "@app/models/archive";
 import {faceMoodOnTasks, Task} from "@app/models/task";
 
 import {Dispatcher} from "@app/services/dispatcher";
+import {Jira} from "@app/services/jira";
 import React, {Component} from "react";
 
 import "@app/app.css";
@@ -27,6 +30,7 @@ interface IDoomPanelState {
     face: { mood: FaceMood } | null;
     activeTask: string;
     config: IConfig;
+    isJira: boolean;
 }
 
 export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelState> {
@@ -39,7 +43,8 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
             form: null,
             face: {mood: FaceMood.BAD},
             activeTask: null,
-            config: null,
+            config: {tasks: [], archives: [], options: {showFace: false}},
+            isJira: false,
         };
     }
 
@@ -47,6 +52,9 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         const {config} = this.state;
         this.listen();
         this.hellthchekInterval = setInterval(() => this.hellthchekOnFace(), 3000);
+        const base = siteBase();
+        Jira.isJiraSite()
+            .then((itIs) => this.setState({isJira: itIs}));
     }
 
     public componentWillUnmount() {
@@ -67,7 +75,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
     private hellthchekOnFace() {
         const {face, config} = this.state;
-        if (!face || !config.tasks) return;
+        if (!face || !config || !config.tasks) return;
 
         this.setState({face: {mood: faceMoodOnTasks(config.tasks)}});
     }
@@ -131,11 +139,13 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     private renderForm() {
         if (!this.state.form) return null;
         const {name, data = {}} = this.state.form;
-        const {config} = this.state;
+        const {config, isJira} = this.state;
         const {archives = []} = config;
 
         if (name === "TaskEdit") {
             return <TaskEditForm {...data} />;
+        } else if (name === "JiraTasks") {
+            return <JiraIssuesForm {...data} tasks={config.tasks || []} />;
         } else if (name === "TaskView") {
             return <TaskViewForm {...data} />;
         } else if (name === "ArchiveList") {
@@ -143,7 +153,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         } else if (name === "ImportForm")
             return <ImportForm {...data} />;
         else {
-            return <TaskListForm {...{tasks: config.tasks, ...data}} />;
+            return <TaskListForm {...{tasks: config.tasks, ...data, jira: isJira}} />;
         }
     }
 }

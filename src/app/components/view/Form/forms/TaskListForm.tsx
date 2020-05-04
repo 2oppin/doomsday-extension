@@ -11,6 +11,7 @@ interface ITaskListProps {
   active?: string;
   readonly?: boolean;
   previousForm?: string;
+  jira?: boolean;
 }
 
 interface ITaskListSate {
@@ -37,7 +38,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
   }
 
   public render() {
-    const {readonly, previousForm} = this.props;
+    const {readonly, previousForm, jira} = this.props;
     const {tasks, active} = this.state;
 
     return (
@@ -61,6 +62,12 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
               &#x1F381; <b>Show Archives</b>
             </span>
             {!readonly && <>
+              {jira && <span
+                  className="dd-popup-form-task-btn dd-brd r-btn blue-btn"
+                  onClick={() => this.showJiraTasks()}
+              >
+                J
+              </span>}
               <span
                   className="dd-popup-form-task-btn dd-brd r-btn"
                   onClick={() => this.exportConfig()}
@@ -82,6 +89,10 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
 
   private showArchives() {
     Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "ArchiveList"});
+  }
+
+  private showJiraTasks() {
+    Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "JiraTasks"});
   }
 
   private addTask() {

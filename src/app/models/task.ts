@@ -1,16 +1,21 @@
 import {FaceMood} from "@app/components/view/Face/Face";
 import {IWorklog, Worklog} from "@app/models/worklog";
 
+export interface ITaskSource {
+    src: string;
+    id: string;
+}
 export interface ITask {
     id: string;
     name: string;
-    estimate: number;
-    priority: number;
-    created: Date|number;
-    deadline: Date|number;
-    description: string;
-    complete: Date|number|null;
-    worklog: IWorklog[];
+    estimate?: number;
+    priority?: number;
+    created?: Date|number;
+    deadline?: Date|number;
+    description?: string;
+    complete?: Date|number|null;
+    worklog?: IWorklog[];
+    source?: ITaskSource;
 }
 
 export class Task implements ITask {
@@ -71,15 +76,17 @@ export class Task implements ITask {
     public description: string;
     public complete: Date|null;
     public worklog: Worklog[];
+    public source: ITaskSource = null;
     private priorityValue: number = 0;
 
-    constructor({id, name, priority = 0, created, estimate, deadline, description, complete = null, worklog = []}: ITask) {
+    constructor({id, name, priority = 0, source = null, created = null, estimate = 60000, deadline = null, description = "", complete = null, worklog = []}: ITask) {
         this.id = id;
         this.name = name;
         this.complete = complete ? new Date(complete) : null;
         this.estimate = estimate;
         this.priority = priority;
-        this.deadline = new Date(deadline);
+        this.deadline = deadline ? new Date(deadline) : new Date((new Date()).getTime() + 24 * 3600000);
+        this.source = source;
         this.description = description;
         this.created = created ? new Date(created) : new Date();
         this.worklog = worklog.map((w, i) => {

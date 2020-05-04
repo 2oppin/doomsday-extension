@@ -46,7 +46,7 @@ const broadcastConfig = (recvId?: string) => {
         DoomStorage.get("archives"),
         DoomStorage.get("options"),
     ])
-        .then(([tasks, archives, options]) => {
+        .then(([tasks = [], archives = [], options = {showFace: false}]) => {
             if (recvId)
                 postSingleRecipient(recvId)(DoomPluginEvent.configUpdated, {tasks, archives, options});
             else

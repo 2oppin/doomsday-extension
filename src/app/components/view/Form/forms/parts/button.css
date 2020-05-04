@@ -24,6 +24,9 @@
     color: var(--cl-dark);
     background: var(--cl-yellow-dark);
 }
+.dd-popup-form-task-btn.blue-btn {
+    background: var(--cl-blue);
+}
 .dd-popup-form-task-btn.dd-brd.readonly {
     background: var(--cl-gray-lt);
     color: var(--cl-dark);
