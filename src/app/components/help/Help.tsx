@@ -7,6 +7,10 @@ import React, {Component, RefObject} from "react";
 
 import "./help.css";
 
+export interface IHelpable {
+    dataHelp?: HelpInfo;
+}
+
 interface IHelpState {
     showTutorial: boolean;
     helpNames: HelpInfo[];
@@ -30,18 +34,19 @@ export class Help extends Component<{}, IHelpState> {
             right: false,
             bottom: false,
         };
+        this.onConfigUpdate = this.onConfigUpdate.bind(this);
     }
 
     public componentDidMount(): void {
         const helpNames = this.scanContentsOnHelpNames();
-        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (this.onConfigUpdate.bind(this)));
+        Dispatcher.subscribe(DoomPluginEvent.configUpdated, this.onConfigUpdate);
         this.setState({helpNames, activeHelpName: helpNames[0] || null}, () =>
             Dispatcher.call(DoomPluginEvent.refresh),
         );
     }
 
     public componentWillUnmount() {
-        Dispatcher.unsubscribe(DoomPluginEvent.configUpdated, (this.onConfigUpdate.bind(this)));
+        Dispatcher.unsubscribe(DoomPluginEvent.configUpdated, this.onConfigUpdate);
     }
 
     public componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<IHelpState>): void {
@@ -87,8 +92,8 @@ export class Help extends Component<{}, IHelpState> {
                     </span>
                 )}
                 {showTutorial && (<>
-                    <div className={"overflow"} onClick={() => this.closeTutorial()} />
-                    <div ref={this.tooltipRef} className={"tooltip"}>
+                    <div className={"overflow"} onClick={() => this.closeTutorial()} onKeyDown={(e) => this.onKeyPressed(e)}/>
+                    <div ref={this.tooltipRef} className={"tooltip"} onKeyDown={(e) => this.onKeyPressed(e)}>
                         {HelpDict[activeHelpName].text}
                         <div className={"buttonset"}>
                             <button onClick={() => this.nextClick()}>Next</button>
@@ -98,6 +103,15 @@ export class Help extends Component<{}, IHelpState> {
                 </>)}
             </div>
         );
+    }
+
+    protected onKeyPressed(e: any) {
+        if (e.nativeEvent.key === "Escape") {
+            this.closeTutorial();
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
     }
 
     protected scanContentsOnHelpNames(): HelpInfo[] {
@@ -120,12 +134,14 @@ export class Help extends Component<{}, IHelpState> {
 
     protected showTutorial() {
         const {activeHelpName} = this.state;
-        const el = document.querySelector(`[data-help="${activeHelpName}"]`);
-        const {x, y} = el.getBoundingClientRect();
+        const el: HTMLElement = document.querySelector(`[data-help="${activeHelpName}"]`) as HTMLElement;
+        const {x, y, width, height} = el.getBoundingClientRect();
         const elCopy = el.cloneNode(true) as HTMLElement;
         elCopy.id = this.virtId;
         elCopy.style.left = `${x}px`;
         elCopy.style.top = `${y}px`;
+        elCopy.style.width = `${width}px`;
+        elCopy.style.height = `${height}px`;
         elCopy.style.zIndex = "10020";
         elCopy.style.position = "fixed";
         el.parentElement.append(elCopy);

@@ -1,4 +1,5 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
+import {HelpInfo} from "@app/components/help/dictionary";
 import {Help} from "@app/components/help/Help";
 
 import {Form} from "@app/components/view/Form/Form";
@@ -45,7 +46,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
     return (
         <Form caption="List of Tasks:">
           <div>
-            <div className="dd-popup-form-tasklist" data-help={"help-task-list"}>
+            <div className="dd-popup-form-tasklist" data-help={HelpInfo.TaskList}>
               <div className="tasklist">
                 {tasks.map((t) => <TaskItem {...{readonly, previousForm}} key={t.id} active={t.id === active} task={t} />)}
               </div>
@@ -66,6 +67,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
               {jira && <span
                   className="dd-popup-form-task-btn dd-brd r-btn blue-btn"
                   onClick={() => this.showJiraTasks()}
+                  data-help={HelpInfo.JiraBtn}
               >
                 J
               </span>}
@@ -73,12 +75,14 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
                   className="dd-popup-form-task-btn dd-brd r-btn"
                   onClick={() => this.exportConfig()}
                   style={{transform: `rotate(180deg)`, border: "inset"}}
+                  data-help={HelpInfo.ExportBtn}
               >
                 &#8687;
               </span>
                 <span
                     className="dd-popup-form-task-btn dd-brd r-btn"
                     onClick={() => this.importConfig()}
+                    data-help={HelpInfo.ImportBtn}
                 >
                 &#8687;
               </span>

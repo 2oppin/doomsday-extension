@@ -1,8 +1,14 @@
+import {IHelpable} from "@app/components/help/Help";
 import {Task} from "@app/models/task";
 import React, {ReactNode, useEffect, useState} from "react";
 import "./progressbar.css";
 
-export default function ProgressBar({task, caption}: {task: Task, caption: ReactNode}) {
+interface IProgressBar extends IHelpable {
+  task: Task;
+  caption: ReactNode;
+}
+
+export default function ProgressBar({task, caption, dataHelp}: IProgressBar) {
   const progress = task.progress;
   const failed = task.estimate < task.done;
   const formatInterval = (left: number) => {
@@ -30,6 +36,7 @@ export default function ProgressBar({task, caption}: {task: Task, caption: React
     <span
       className="prg"
       title={task.name}
+      {...(dataHelp ? {"data-help": dataHelp} : {})}
     >
       <span className="countdown">
         <span className={`countdown-clock${failed ? " failed" : ""}`}>{counter}</span>

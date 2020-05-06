@@ -20,7 +20,13 @@ export class Form extends Component<IFormProps, {}> {
     return (
       <div className="dd-popup-form" style={{
         borderImage: `url(${url}) 33 round`,
-      }}>
+      }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }}
+      >
         <h3 className="dd-form-caption" style={{backgroundImage: `url(${url})`}} data-help={"help-form-caption"}>{caption}</h3>
         <div className="dd-popup-close" onClick={this.closeForm} data-help={"help-form-close"}>&times;</div>
         <div className="dd-popup-form-contents">

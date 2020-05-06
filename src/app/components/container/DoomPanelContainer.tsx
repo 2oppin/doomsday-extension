@@ -65,7 +65,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         const {face, form} = this.state;
         return (
             <div className="doom-manager">
-                <Panel overflow={!!form} onEscClick={() => this.onCloseForm()}>
+                <Panel overflow={!!form} onClose={() => this.onCloseForm()}>
                     {face && <FaceDraggable {...face} onDoubleClick={() => this.toggleFormDisplaying()}/>}
                     {this.renderForm()}
                 </Panel>

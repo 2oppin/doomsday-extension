@@ -1,4 +1,5 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
+import {HelpInfo} from "@app/components/help/dictionary";
 
 import {Face} from "@app/components/view/Face";
 import _prrt from "@app/components/view/Form/forms/parts/priority";
@@ -32,12 +33,12 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
     const {readonly} = this.props;
     return (
       <>
-        <_bt u="⏸" {...{readonly}} title="Suspend ..." cb={() => this.pauseTask(task)} />
+        <_bt u="⏸" {...{readonly}} title="Suspend ..." cb={() => this.pauseTask(task)} dataHelp={HelpInfo.TaskItemPause} />
         <_progressBar task={task} caption={
           <span className="cpt caption-link" onClick={() => this.showTask(task)}>{task.name}</span>
-        }/>
+        } dataHelp={HelpInfo.TaskItemProgressbar}/>
         {this.renderTaskFace(task)}
-        <_bt u="✔" {...{readonly}} title="Mark Completed" cb={() => this.finishTask(task)} />
+        <_bt u="✔" {...{readonly}} title="Mark Completed" cb={() => this.finishTask(task)}  dataHelp={HelpInfo.TaskItemMarkDone} />
       </>
     );
   }
@@ -46,10 +47,10 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
     const {readonly} = this.props;
     return (
       <>
-        <_bt u="▶" {...{readonly}} title="Start Working... NOW!" cb={() => this.startTask(task)} />
+        <_bt u="▶" {...{readonly}} title="Start Working... NOW!" cb={() => this.startTask(task)} dataHelp={HelpInfo.TaskItemStart} />
         {this.renderNonActiveTask(task)}
         {this.renderTaskFace(task)}
-        <_bt u="✎" {...{readonly}} title="Edit" cb={() => this.editTask(task)} />
+        <_bt u="✎" {...{readonly}} title="Edit" cb={() => this.editTask(task)} dataHelp={HelpInfo.TaskItemEdit} />
       </>
     );
   }
@@ -58,10 +59,10 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
     const {readonly} = this.props;
     return (
       <>
-        <_bt u={`\ud83c\udf81`} {...{readonly}} title="Add Task to Archive" yellow={true} cb={() => this.archiveTask(task)} />
+        <_bt u={`\ud83c\udf81`} {...{readonly}} title="Add Task to Archive" yellow={true} cb={() => this.archiveTask(task)} dataHelp={HelpInfo.TaskItemArchive} />
         {this.renderNonActiveTask(task)}
         {this.renderTaskFace(task)}
-        <_bt u="♻" {...{readonly}} title="Remove Task from history" cb={() => this.deleteTask(task)} />
+        <_bt u="♻" {...{readonly}} title="Remove Task from history" cb={() => this.deleteTask(task)} dataHelp={HelpInfo.TaskItemDelete} />
       </>
     );
   }
@@ -85,23 +86,25 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
           <span>Spent: <span className={cls}>{hrs(task.done)}h</span> of {hrs(task.estimate)}h</span>
           <span>Deadline: <span className={clsdd}>{tilldd}h</span></span>
         </span>
-        <span className="content caption-link" onClick={() => this.showTask(task)}>{task.name}</span>
+        <span className="content caption-link" onClick={() => this.showTask(task)} data-help={HelpInfo.TaskItemView}>{task.name}</span>
       </span>
     );
   }
 
   public renderTaskFace(task: Task) {
-    return <Face health={100 * ((task.estimate - task.done) / task.estimate)} width={35} noAnimate={true}/>;
+    return <span data-help={HelpInfo.TaskItemFace}>
+      <Face health={100 * ((task.estimate - task.done) / task.estimate)} width={35} noAnimate={true} />
+    </span>;
   }
 
   public render() {
     const {task} = this.props;
     if (task.complete)
-      return (<div className="task-item item">{this.renderFinished(task)}</div>);
+      return (<div className="task-item item" data-help={HelpInfo.TaskItemComplete}>{this.renderFinished(task)}</div>);
 
     return (
         <div className="task-item item">
-          <div className={"priority-container"}><_prrt lvl={task.priority} /></div>
+          {!task.priority ? null : <div className={"priority-container"} data-help={HelpInfo.TaskItemPriority}><_prrt lvl={task.priority} /></div>}
           {task.active
               ? this.renderActive(task)
               : this.renderPaused(task)

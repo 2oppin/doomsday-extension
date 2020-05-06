@@ -2,7 +2,7 @@ import React, {Component, ReactNode} from "react";
 import "./Panel.css";
 
 interface IPanelProps {
-  onEscClick: (e: KeyboardEvent) => void;
+  onClose: () => void;
   overflow: boolean;
   children: ReactNode;
 }
@@ -35,18 +35,20 @@ export class Panel extends Component<IPanelProps, {}> {
           width: "auto",
           height: "auto",
         }
-        } className={`dd-popup`}>
+        } className={`dd-popup`}
+        onClick={(e) => this.props.onClose()}
+      >
         {children}
       </div>
     );
   }
 
   private onKeyDown(e: KeyboardEvent) {
-    const {onEscClick} = this.props;
+    const {onClose} = this.props;
 
     switch (e.key) {
       case "Escape":
-        onEscClick(e);
+        onClose();
         e.preventDefault();
         return false;
     }

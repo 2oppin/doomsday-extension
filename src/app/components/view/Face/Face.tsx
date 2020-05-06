@@ -1,3 +1,5 @@
+import {HelpInfo} from "@app/components/help/dictionary";
+import {IHelpable} from "@app/components/help/Help";
 import React, {Component, ReactElement} from "react";
 import "./Face.css";
 
@@ -11,7 +13,7 @@ export enum FaceMood {
   GOD = "god",
 }
 
-interface IFaceProps {
+interface IFaceProps extends IHelpable {
   width?: number;
   health?: number;
   mood?: FaceMood;
@@ -22,6 +24,7 @@ export class Face extends Component<IFaceProps, {}> {
   private url = chrome.extension.getURL("images/faceo_.png");
 
   public render() {
+    const {dataHelp} = this.props;
     let {mood = null} = this.props;
     const {health, noAnimate = false, width = 73} = this.props;
     const {url} = this;
@@ -45,6 +48,7 @@ export class Face extends Component<IFaceProps, {}> {
       <div
           style={style}
           className={`dd-face ${mood || FaceMood.BAD} ${noAnimate ? "static" : ""}`}
+          {...(dataHelp ? {"data-help": dataHelp} : {})}
       >
       </div>
     );

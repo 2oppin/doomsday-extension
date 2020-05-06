@@ -11,18 +11,23 @@
     position: fixed;
     z-index: 10000;
     width: 300px;
-    height: 100px;
+    height: auto;
+    padding: 5px 5px 30px 5px;
     color: var(--cl-white);
     background: var(--cl-cobalt);
     border-radius: 4px;
     box-shadow: 1px 2px 2px var(--cl-white);
     border: solid 1px white;
-    padding: 5px;
 }
 .help-container .tooltip .buttonset {
     position: absolute;
     right: 5px;
     bottom: 5px;
+}
+.help-container .tooltip .buttonset button {
+    background: var(--cl-blue);
+    color: var(--cl-white);
+    border: outset var(--cl-blue);
 }
 .help-container .dd-brd {
     color: var(--cl-white);
