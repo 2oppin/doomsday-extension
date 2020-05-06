@@ -2,8 +2,19 @@ body {
   background: #151414;
   color: white;
 }
-button {
+.dd-popup button {
   color: #a72e2e;
+  width: 100%;
+  font-weight: bold;
+  border: outset #e9b30f;
+  background: #e9b30f;
+  margin: 0 3px;
+  cursor: pointer;
+}
+.dd-popup button.secondary {
+  color: #b6b6b6;
+  border: outset #283e5c;
+  background: #283e5c;
 }
 .dd-popup {
   min-width: 150px;
@@ -12,8 +23,14 @@ button {
   flex-direction: column;
   align-items: center;
 }
+.dd-popup .stats {
+  margin: 8px 0;
+}
 .dd-popup .control {
   margin: 15px 0;
+  display: flex;
+  width: 100%;
+  cursor: pointer;
 }
 .dd-popup span b {
   color: #ef3232;;

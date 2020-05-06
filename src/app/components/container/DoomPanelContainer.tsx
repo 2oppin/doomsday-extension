@@ -43,7 +43,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
             form: null,
             face: {mood: FaceMood.BAD},
             activeTask: null,
-            config: {tasks: [], archives: [], options: {showFace: false}},
+            config: {tasks: [], archives: [], options: {showFace: false, readHelp: [], facePosition: {r: 15, y: 5, x: 0}}},
             isJira: false,
         };
     }

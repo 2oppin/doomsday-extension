@@ -5,6 +5,7 @@ export enum DoomPluginEvent {
     refresh = "refresh",
 
     configUpdated = "configUpdated",
+    setOptions = "setOptions",
     taskActivation = "taskActivation",
     addTask = "addTask",
     updateTask = "updateTask",

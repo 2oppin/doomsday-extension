@@ -7,7 +7,7 @@ class DispatcherSvc {
 
   constructor() {
     this.onceListeners = {};
-    chrome.runtime.onMessage.addListener((data: IDDMessage) => {
+    chrome.runtime.onMessage.addListener((data: IDDMessage = {} as IDDMessage) => {
       if (!data) return;
       const {action} = data;
       if (this.listeners[action]) {

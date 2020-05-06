@@ -1,5 +1,8 @@
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {UUID} from "@app/common/routines";
 import {HelpDict, HelpInfo} from "@app/components/help/dictionary";
+import {IConfig} from "@app/globals";
+import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component, RefObject} from "react";
 
 import "./help.css";
@@ -7,6 +10,7 @@ import "./help.css";
 interface IHelpState {
     showTutorial: boolean;
     helpNames: HelpInfo[];
+    readHelp: HelpInfo[];
     activeHelpName: HelpInfo|null;
     right: boolean;
     bottom: boolean;
@@ -22,18 +26,22 @@ export class Help extends Component<{}, IHelpState> {
             showTutorial: false,
             activeHelpName: null,
             helpNames: [],
+            readHelp: [],
             right: false,
             bottom: false,
         };
     }
 
     public componentDidMount(): void {
-        const helpItems: HTMLElement[] = Array.prototype.slice.call(document.querySelectorAll("[data-help]"));
-        // @todo: Dispatcher.get("Viewed help") / filter current
-        let helpNames: HelpInfo[] = [];
-        helpNames = helpItems.reduce((a, el) => helpNames.includes(el.dataset.help as HelpInfo) ? a : [...a, el.dataset.help as HelpInfo], []);
-        console.log("HLP:", helpNames, "help-form-caption" as HelpInfo);
-        this.setState({helpNames, activeHelpName: helpNames[0] || null});
+        const helpNames = this.scanContentsOnHelpNames();
+        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (this.onConfigUpdate.bind(this)));
+        this.setState({helpNames, activeHelpName: helpNames[0] || null}, () =>
+            Dispatcher.call(DoomPluginEvent.refresh),
+        );
+    }
+
+    public componentWillUnmount() {
+        Dispatcher.unsubscribe(DoomPluginEvent.configUpdated, (this.onConfigUpdate.bind(this)));
     }
 
     public componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<IHelpState>): void {
@@ -92,6 +100,24 @@ export class Help extends Component<{}, IHelpState> {
         );
     }
 
+    protected scanContentsOnHelpNames(): HelpInfo[] {
+        const helpItems: HTMLElement[] = Array.prototype.slice.call(document.querySelectorAll("[data-help]"));
+        return helpItems.reduce((a, el) => [...a, el.dataset.help as HelpInfo], []);
+    }
+
+    protected onConfigUpdate(config: IConfig) {
+        const {options} = config;
+        if (!options) return;
+
+        const {readHelp = []} = options;
+        const helpNames = this.scanContentsOnHelpNames().filter((nm) => !readHelp.includes(nm));
+        this.setState({
+            readHelp,
+            helpNames,
+            activeHelpName: helpNames[0],
+        });
+    }
+
     protected showTutorial() {
         const {activeHelpName} = this.state;
         const el = document.querySelector(`[data-help="${activeHelpName}"]`);
@@ -111,13 +137,18 @@ export class Help extends Component<{}, IHelpState> {
         this.closeTutorial();
         // @todo: Dispatcher.add("Viewed help", activeHelpName) / filter current
 
-        this.setState(({activeHelpName, helpNames}) => {
+        this.setState(({activeHelpName, helpNames, readHelp}) => {
             const newHelpNames = helpNames.filter((nm) => nm !== activeHelpName);
             return {
                 helpNames: newHelpNames,
                 activeHelpName: newHelpNames[0] || null,
+                readHelp: [...readHelp, activeHelpName],
             };
-        }, () => this.state.helpNames.length && this.showTutorial());
+        }, () => {
+            const {readHelp} = this.state;
+            Dispatcher.call(DoomPluginEvent.setOptions, {readHelp});
+            if (this.state.helpNames.length) this.showTutorial();
+        });
     }
 
     protected closeTutorial() {

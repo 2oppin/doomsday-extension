@@ -1,6 +1,12 @@
-import {DoomPluginEvent, postActiveTabs, postAllTabs, postSingleRecipient} from "@app/common/chromeEvents";
+import {
+    DoomPluginEvent,
+    postActiveTabs,
+    postAllTabs,
+    postSingleRecipient,
+    postSingleTab,
+} from "@app/common/chromeEvents";
 import {formatDate} from "@app/common/routines";
-import {IConfig, IConfigOptions, IDDMessage} from "@app/globals";
+import {IConfigOptions, IDDMessage} from "@app/globals";
 import {IArchive} from "@app/models/archive";
 import {ITask} from "@app/models/task";
 import {DoomStorage} from "@app/services/storage";
@@ -40,16 +46,18 @@ const updateArchives = async (cb: (tasks: IArchive[]) => any = (t) => t): Promis
         .then(() => postAllTabs(DoomPluginEvent.configUpdated, {archives}));
 };
 
-const broadcastConfig = (recvId?: string) => {
+const broadcastConfig = (recvId?: string, tabId: number = null) => {
     return Promise.all([
         DoomStorage.get("tasks"),
         DoomStorage.get("archives"),
         DoomStorage.get("options"),
     ])
         .then(([tasks = [], archives = [], options = {showFace: false}]) => {
-            if (recvId)
+            if (tabId) {
+                postSingleTab(tabId)(DoomPluginEvent.configUpdated, {tasks, archives, options});
+            } else if (recvId) {
                 postSingleRecipient(recvId)(DoomPluginEvent.configUpdated, {tasks, archives, options});
-            else
+            } else
                 postAllTabs(DoomPluginEvent.configUpdated, {tasks, archives, options});
         });
 };
@@ -57,8 +65,11 @@ const broadcastConfig = (recvId?: string) => {
 const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
     const {task, tasks, options, action, id, done} = msg;
     switch (action) {
+        case DoomPluginEvent.setOptions:
+            updateOptions((prev) => ({...prev, ...msg}));
+            break;
         case DoomPluginEvent.configUpdated:
-            updateOptions(() => (options));
+            updateOptions((prev) => ({...prev, ...msg}));
             break;
         case DoomPluginEvent.addTask:
             updateTasks((prevTasks) => [...prevTasks, task]);
@@ -126,7 +137,7 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
             postActiveTabs(DoomPluginEvent.showForm, msg);
             break;
         case DoomPluginEvent.refresh:
-            broadcastConfig(sender.id);
+            broadcastConfig(sender.id, sender.tab && sender.tab.id);
             break;
     }
 };
