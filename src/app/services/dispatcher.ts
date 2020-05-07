@@ -7,7 +7,7 @@ class DispatcherSvc {
 
   constructor() {
     this.onceListeners = {};
-    chrome.runtime.onMessage.addListener((data: IDDMessage) => {
+    chrome.runtime.onMessage.addListener((data: IDDMessage = {} as IDDMessage) => {
       if (!data) return;
       const {action} = data;
       if (this.listeners[action]) {
@@ -31,8 +31,8 @@ class DispatcherSvc {
   }
 
   public unsubscribe(event: DoomPluginEvent, cbToRemove: (args: any) => any) {
-    const oldLn = this.listeners[event].length;
-    this.listeners[event] = (this.onceListeners[event] || []).filter((cb) => cbToRemove !== cb);
+    this.listeners[event] = (this.listeners[event] || []).filter((cb) => cbToRemove !== cb);
+    this.onceListeners[event] = (this.onceListeners[event] || []).filter((cb) => cbToRemove !== cb);
   }
 
   public once(action: DoomPluginEvent, cb: (args: any) => any) {

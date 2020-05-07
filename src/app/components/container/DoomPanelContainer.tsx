@@ -43,7 +43,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
             form: null,
             face: {mood: FaceMood.BAD},
             activeTask: null,
-            config: {tasks: [], archives: [], options: {showFace: false}},
+            config: {tasks: [], archives: [], options: {showFace: false, readHelp: [], facePosition: {r: 15, y: 5, x: 0}}},
             isJira: false,
         };
     }
@@ -65,7 +65,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         const {face, form} = this.state;
         return (
             <div className="doom-manager">
-                <Panel overflow={!!form} onEscClick={() => this.onCloseForm()}>
+                <Panel overflow={!!form} onClose={() => this.onCloseForm()}>
                     {face && <FaceDraggable {...face} onDoubleClick={() => this.toggleFormDisplaying()}/>}
                     {this.renderForm()}
                 </Panel>

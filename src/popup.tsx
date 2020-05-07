@@ -1,7 +1,7 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {FaceMood} from "@app/components/view/Face/Face";
 
-import {IConfig} from "@app/globals";
+import {IConfig, IConfigOptions} from "@app/globals";
 import {faceMoodOnTasks, Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 import {ReactNode} from "react";
@@ -10,16 +10,17 @@ import * as ReactDOM from "react-dom";
 import {Face} from "./app/components/view/Face";
 import "./popup.css";
 
-interface IPopupStatus extends IConfig {
+interface IPopupStatus {
     ready: boolean;
     mood: FaceMood;
+    tasks: Task[];
+    options: Partial<IConfigOptions>;
 }
 
 class Popup extends React.Component<{}, IPopupStatus> {
     constructor(params: any) {
         super(params);
         this.state = {
-            archives: [],
             tasks: [],
             options: {showFace: false},
             mood: FaceMood.OK,
@@ -39,7 +40,7 @@ class Popup extends React.Component<{}, IPopupStatus> {
         return (
             <div className="dd-popup">
                 <Face {...{mood}} />
-              <div>{this.taskStats(tasks)}</div>
+              <div className={"stats"}>{this.taskStats(tasks)}</div>
               <button
                   onClick={() => Dispatcher.call(DoomPluginEvent.showForm, {name: "TasksList"})}
               >
@@ -57,6 +58,9 @@ class Popup extends React.Component<{}, IPopupStatus> {
                            );
                        }}
                 />
+              </div>
+              <div>
+                  <button className={"secondary"} onClick={() => this.resetTutorial()}>{`\ud83d\udcd6`} Reset Tutorial</button>
               </div>
             </div>
         );
@@ -87,9 +91,13 @@ class Popup extends React.Component<{}, IPopupStatus> {
         });
     }
 
+    private resetTutorial() {
+        Dispatcher.call(DoomPluginEvent.setOptions, {readHelp: []});
+    }
+
     private updateConfig() {
-        const {options} = this.state;
-        Dispatcher.call(DoomPluginEvent.configUpdated, {options});
+        const {showFace} = this.state.options;
+        Dispatcher.call(DoomPluginEvent.setOptions, {showFace});
     }
 }
 
