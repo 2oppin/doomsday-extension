@@ -2,10 +2,12 @@
     --cl-blue: rgb(56, 135, 238);
     --cl-red: #ef3232;
     --cl-red-lt: #ff9c9c;
+    --cl-rogue: #ffcccc;
     --cl-yellow-lt: #ffd042;
     --cl-yellow: #ffe928;
     --cl-yellow-dark: #e9b30f;
     --cl-dark: #461010;
+    --cl-black: #000000;
     --cl-gray-lt: #cccccc;
     --cl-gray: #8d8484;
     --cl-dark-opq: rgba(70, 16, 16, 0.8);

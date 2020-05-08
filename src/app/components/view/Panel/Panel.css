@@ -7,7 +7,9 @@
   top: 0;
   width: auto;
   height: auto;
-  z-index: 10000;
+  z-index: 2147483647;
+  font-family: monospace !important;
+  font-size: 14px !important;
 }
 .dd-popup.doom {
   width: 100%;
@@ -22,15 +24,18 @@
 
 .dd-popup div::-webkit-scrollbar,
 .dd-popup ul::-webkit-scrollbar,
-.dd-popup p::-webkit-scrollbar {
+.dd-popup p::-webkit-scrollbar,
+.dd-popup textarea::-webkit-scrollbar {
   height: 5px;
   width: 8px;
   background: #404040;
   border: solid 1px white;
+  cursor: pointer;
 }
 .dd-popup div::-webkit-scrollbar-thumb,
 .dd-popup ul::-webkit-scrollbar-thumb,
-.dd-popup p::-webkit-scrollbar-thumb{
+.dd-popup p::-webkit-scrollbar-thumb,
+.dd-popup textarea::-webkit-scrollbar-thumb{
   background: #cc5500;
   border: solid 1px white;
   border-radius: 3px;
@@ -40,6 +45,7 @@
 
 .dd-popup div::-webkit-scrollbar-corner,
 .dd-popup ul::-webkit-scrollbar-corner,
-.dd-popup p::-webkit-scrollbar-corner {
+.dd-popup p::-webkit-scrollbar-corner,
+.dd-popup textarea::-webkit-scrollbar-corner {
   background: #630a17;
 }

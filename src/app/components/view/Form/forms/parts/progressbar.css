@@ -9,8 +9,8 @@
     height: 25px;
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .cpt {
-    font-size: 12px;
-    line-height: 12px;
+    font-size: 14px;
+    line-height: 14px;
     text-align: center;
     margin-right: 55px;
 }
@@ -35,10 +35,10 @@
 
 .dd-popup-form-tasklist  .tasklist .item span.prg .countdown {
     position: relative;
-    font-size: 10px;
-    line-height: 10px;
+    font-size: 12px;
+    line-height: 12px;
     text-align: center;
-    margin-top: -10px;
+    margin-top: -12px;
     padding: 0;
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .countdown .deadline-clock {

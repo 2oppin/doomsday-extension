@@ -18,6 +18,8 @@
     border-radius: 4px;
     box-shadow: 1px 2px 2px var(--cl-white);
     border: solid 1px white;
+    font-size: 14px;
+    font-family: monospace;
 }
 .help-container .tooltip .buttonset {
     position: absolute;
@@ -28,6 +30,10 @@
     background: var(--cl-blue);
     color: var(--cl-white);
     border: outset var(--cl-blue);
+    height: 25px;
+    line-height: 18px;
+    padding: 0 10px;
+    font-size: 14px;
 }
 .help-container .dd-brd {
     color: var(--cl-white);

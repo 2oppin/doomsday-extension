@@ -104,8 +104,8 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                     <textarea value={task.description} onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "description")} />
                 </div>
                 <div className="dd-form-buttonset">
-                    <button onClick={this.backToList}>Cancel</button>
-                    <button onClick={() => this.saveTask()}>{task.id ? "Update" : "Add"} Mission</button>
+                    <span className={"dd-popup-form-task-btn dd-brd dd-big-btn"} onClick={this.backToList}>Cancel</span>
+                    <span className={"dd-popup-form-task-btn dd-brd dd-big-btn"} onClick={() => this.saveTask()}>{task.id ? "Update" : "Add"} Mission</span>
                 </div>
             </div>
         </Form>);

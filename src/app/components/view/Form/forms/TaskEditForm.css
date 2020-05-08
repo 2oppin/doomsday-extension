@@ -1,10 +1,13 @@
 .dd-popup-form-task {
   display: flex;
   flex-direction: column;
-  font: monospace;
+  font-family: monospace;
 }
 .dd-popup-form-task p {
-  background: var(--cl-bisque);
+  color: var(--cl-rogue);
+  background: var(--cl-black);
+  border: inset 3px var(--cl-gray-lt);
+  border-radius: unset;
   max-height: 300px;
   overflow-y: auto;
 }
@@ -13,12 +16,13 @@
   text-shadow: #421000;
   margin-bottom: 0;
 }
-.dd-popup-form-inputfield {
+.dd-popup-form-contents .dd-popup-form-task .dd-popup-form-inputfield,
+.dd-popup-form-contents .dd-popup-form-task .dd-popup-form-inputfield:hover {
   padding: 1px;
   text-align: left;
-  border: outset 2px #774400;
-  background: #421000;
-  color: #ee2200;
+  border: outset 2px #774400 !important;
+  background: #421000 !important;
+  color: #ee2200 !important;
 }
 .dd-popup-form-task .priority-container {
   position: absolute;
@@ -32,15 +36,27 @@
 }
 .dd-popup-form-inputfield textarea {
   width: 100%;
+  color: var(--cl-rogue);
+  background: var(--cl-black);
+  border: inset 3px var(--cl-gray-lt);
+  border-radius: unset;
 }
 .dd-popup-form-inputfield input {
   width: 180px;
-  color: #ffcccc;
-  background: black;
-  border: inset 3px gray;
+  color: var(--cl-rogue);
+  background: var(--cl-black);
+  border: inset 3px var(--cl-gray-lt);
+  border-radius: unset;
   float: right;
+  height: 24px;
+  line-height: 24px;
+  padding: 0;
+  box-sizing: border-box;
 }
-
+.dd-popup-form-contents .dd-popup-form-task input:focus {
+  border: inset 3px var(--cl-red);
+  color: var(--cl-bisque);
+}
 .dd-popup-form-task .dd-form-buttonset {
   display: flex;
   flex-direction: row-reverse;

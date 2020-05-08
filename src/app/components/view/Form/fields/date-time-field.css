@@ -21,6 +21,10 @@
     border-color: grey;
     border-image: initial;
     min-width: 190px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .dd-field.date-time-field label {
