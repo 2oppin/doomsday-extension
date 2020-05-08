@@ -1,6 +1,5 @@
-import {HelpInfo} from "@app/components/help/dictionary";
 import {IHelpable} from "@app/components/help/Help";
-import React, {Component, ReactElement} from "react";
+import React, {Component} from "react";
 import "./Face.css";
 
 export enum FaceMood {
