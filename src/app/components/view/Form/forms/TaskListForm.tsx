@@ -11,6 +11,7 @@ import {TaskItem} from "./parts/TaskItem";
 interface ITaskListProps {
   tasks: Task[];
   active?: string;
+  hasArchive?: boolean;
   readonly?: boolean;
   previousForm?: string;
   jira?: boolean;
@@ -30,6 +31,8 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
     };
   }
 
+  private helpRef = React.createRef<Help>();
+
   constructor(props: ITaskListProps) {
     super(props);
     this.state = {
@@ -39,8 +42,12 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
     };
   }
 
+  public componentDidUpdate(prevProps: Readonly<ITaskListProps>, prevState: Readonly<ITaskListSate>, snapshot?: any) {
+    this.helpRef.current.rescanContents();
+  }
+
   public render() {
-    const {readonly, previousForm, jira} = this.props;
+    const {readonly, previousForm, jira, hasArchive} = this.props;
     const {tasks, active} = this.state;
 
     return (
@@ -57,12 +64,12 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
             >
               &#10133; <b>New Task</b>
             </span>}
-            <span
+            {hasArchive && <span
                 className="dd-popup-form-task-btn dd-brd dd-big-btn yellow-btn"
                 onClick={() => this.showArchives()}
             >
               &#x1F381; <b>Show Archives</b>
-            </span>
+            </span>}
             {!readonly && <>
               {jira && <span
                   className="dd-popup-form-task-btn dd-brd r-btn blue-btn"
@@ -88,7 +95,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
               </span>
             </>}
           </div>
-          <Help />
+          <Help ref={this.helpRef} />
         </Form>
     );
   }

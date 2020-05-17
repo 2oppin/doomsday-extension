@@ -1,5 +1,5 @@
-import {DoomPluginEvent} from "@app/common/chromeEvents";
-import {siteBase} from "@app/common/routines";
+import "@app/app.css";
+import {DoomPluginEvent, PONG} from "@app/common/chromeEvents";
 import {FaceMood} from "@app/components/view/Face/Face";
 
 import {FaceDraggable} from "@app/components/view/Face/FaceDraggable";
@@ -17,8 +17,6 @@ import {faceMoodOnTasks, Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 import {Jira} from "@app/services/jira";
 import React, {Component} from "react";
-
-import "@app/app.css";
 
 interface IDoomPanelProps {
     tasks?: Task[];
@@ -49,10 +47,9 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
     }
 
     public componentDidMount() {
-        const {config} = this.state;
         this.listen();
+        Dispatcher.call(DoomPluginEvent.refresh, null, (conf) => this.onConfig(conf));
         this.hellthchekInterval = setInterval(() => this.hellthchekOnFace(), 3000);
-        const base = siteBase();
         Jira.isJiraSite()
             .then((itIs) => this.setState({isJira: itIs}));
     }
@@ -66,8 +63,8 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         return (
             <div className="doom-manager">
                 <Panel overflow={!!form} onClose={() => this.onCloseForm()}>
-                    {face && <FaceDraggable {...face} onDoubleClick={() => this.toggleFormDisplaying()}/>}
                     {this.renderForm()}
+                    {face && <FaceDraggable {...face} onDoubleClick={() => this.toggleFormDisplaying()}/>}
                 </Panel>
             </div>
         );
@@ -82,58 +79,64 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
     private listen() {
         Dispatcher.subscribe(DoomPluginEvent.closeForm, () => this.onCloseForm());
+        Dispatcher.subscribe(DoomPluginEvent.ping, () => Promise.resolve(PONG));
         Dispatcher.subscribe(DoomPluginEvent.showForm, (args: any) => this.onShowForm(args));
         Dispatcher.subscribe(DoomPluginEvent.taskActivation, (args: any) => this.onTaskActivation(args));
-        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => {
-            this.onConfig(args);
-        });
+        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => this.onConfig(args));
     }
 
-    private onCloseForm() {
-        this.setState({
-            form: null,
-            overflow: false,
-        });
+    private onCloseForm(): Promise<any> {
+        return new Promise((r) =>
+            this.setState({
+                form: null,
+                overflow: false,
+            }, () => r(true)),
+        );
     }
 
-    private onShowForm({name, data}: { name: string, data: any }) {
+    private onShowForm({name, data}: { name: string, data: any }): Promise<boolean> {
         const {config} = this.state;
         const showFace = config && config.options && config.options.showFace;
-        this.setState({
-            form: {name, data},
-            overflow: true,
-            face: showFace ? {mood: FaceMood.BAD} : null,
-        });
+        const facePosition = (config && config.options && config.options.facePosition) || {};
+        return new Promise((r) =>
+            this.setState({
+                form: {name, data},
+                overflow: true,
+                face: showFace ? {mood: FaceMood.BAD, ...facePosition} : null,
+            }, () => r(true)),
+        );
     }
 
-    private onTaskActivation({guid}: { guid: string }) {
-        this.setState((prev) => ({
-            config: {
-                ...prev.config,
-                active: guid,
-            },
-        }));
+    private onTaskActivation({guid}: { guid: string }): Promise<boolean> {
+        return new Promise<boolean>((r) =>
+
+            this.setState((prev) => ({
+                config: {
+                    ...prev.config,
+                    active: guid,
+                },
+            }), () => r(true)),
+        );
     }
 
-    private onConfig(config: Partial<IConfig>) {
-        this.setState((prev) => {
-            if (config.tasks) config.tasks = (config.tasks || []).map((t) => new Task(t));
-            if (config.archives) config.archives = (config.archives || []).map((a) => new Archive(a));
-            const newConfig = {...prev.config, ...config};
-            const showFace = newConfig.options && newConfig.options.showFace;
-            return {
-                config: newConfig,
-                face: showFace ? {mood: faceMoodOnTasks(newConfig.tasks)} : null,
-            };
-        });
+    private onConfig(config: Partial<IConfig> = {}): Promise<boolean> {
+        return new Promise<boolean>((r) =>
+            this.setState((prev) => {
+                if (config.tasks) config.tasks = (config.tasks || []).map((t) => new Task(t));
+                if (config.archives) config.archives = (config.archives || []).map((a) => new Archive(a));
+                const newConfig = {...prev.config, ...config};
+                const showFace = newConfig.options && newConfig.options.showFace;
+                const facePosition = (config && config.options && config.options.facePosition) || {};
+                return {
+                    config: newConfig,
+                    face: showFace ? {mood: faceMoodOnTasks(newConfig.tasks), ...facePosition} : null,
+                };
+            }, () => r(true)),
+        );
     }
 
     private toggleFormDisplaying() {
-        this.setState((prev) => {
-            return {
-                form: prev.form ? null : {name: "TaskList"},
-            };
-        });
+        this.setState(({form}) => ({form: form ? null : {name: "TaskList"}}));
     }
 
     private renderForm() {
@@ -153,7 +156,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         } else if (name === "ImportForm")
             return <ImportForm {...data} />;
         else {
-            return <TaskListForm {...{tasks: config.tasks, ...data, jira: isJira}} />;
+            return <TaskListForm {...{tasks: config.tasks, ...data, jira: isJira, hasArchive: archives.length > 0}} />;
         }
     }
 }

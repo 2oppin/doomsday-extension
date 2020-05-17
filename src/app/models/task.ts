@@ -155,7 +155,8 @@ export class Task implements ITask {
 
 export function faceMoodOnTasks(tasks: Task[]): FaceMood {
     const failed = tasks.filter((t) => t.active && t.failed);
-    const progress = tasks.filter((t) => t.active && !t.failed).reduce((a, t, i) => i ? (t.progress + a * (i - 1)) / i : t.progress, 0);
+    const progress = tasks.filter((t) => t.active && !t.failed)
+        .reduce((a, t, i) => i ? (t.progress + a * (i - 1)) / i : t.progress, 0);
 
     let mood = FaceMood.OK;
     if (progress === 0 && !failed.length) mood = FaceMood.GOD;

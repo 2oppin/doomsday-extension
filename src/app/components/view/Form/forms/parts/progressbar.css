@@ -27,6 +27,7 @@
 .dd-popup-form-tasklist  .tasklist .item span.prg .prg-val {
     width: 1px;
     height: 100%;
+    min-height: 5px;
     background: var(--cl-yellow);
 }
 .dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar.inv .prg-val {

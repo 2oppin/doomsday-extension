@@ -38,15 +38,25 @@ export class Help extends Component<{}, IHelpState> {
     }
 
     public componentDidMount(): void {
-        const helpNames = this.scanContentsOnHelpNames();
+        // const helpNames = this.scanContentsOnHelpNames();
         Dispatcher.subscribe(DoomPluginEvent.configUpdated, this.onConfigUpdate);
-        this.setState({helpNames, activeHelpName: helpNames[0] || null}, () =>
-            Dispatcher.call(DoomPluginEvent.refresh),
-        );
+        Dispatcher.call(DoomPluginEvent.refresh);
     }
 
     public componentWillUnmount() {
         Dispatcher.unsubscribe(DoomPluginEvent.configUpdated, this.onConfigUpdate);
+    }
+
+    public rescanContents() {
+        Dispatcher.call(DoomPluginEvent.refresh, null, ({options}) => {
+            const {readHelp = []} = options;
+            const helpNames = this.scanContentsOnHelpNames().filter((nm) => !readHelp.includes(nm));
+            this.setState({
+                readHelp,
+                helpNames,
+                activeHelpName: helpNames[0],
+            });
+        });
     }
 
     public componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<IHelpState>): void {
@@ -119,17 +129,19 @@ export class Help extends Component<{}, IHelpState> {
         return helpItems.reduce((a, el) => [...a, el.dataset.help as HelpInfo], []);
     }
 
-    protected onConfigUpdate(config: IConfig) {
+    protected onConfigUpdate(config: IConfig): Promise<boolean> {
         const {options} = config;
-        if (!options) return;
+        if (!options) return Promise.resolve(true);
 
         const {readHelp = []} = options;
         const helpNames = this.scanContentsOnHelpNames().filter((nm) => !readHelp.includes(nm));
-        this.setState({
-            readHelp,
-            helpNames,
-            activeHelpName: helpNames[0],
-        });
+        return new Promise<boolean>((r) =>
+            this.setState({
+                readHelp,
+                helpNames,
+                activeHelpName: helpNames[0],
+            }, () => r(true)),
+        );
     }
 
     protected showTutorial() {

@@ -14,10 +14,10 @@ export interface IConfig {
     options: IConfigOptions;
 }
 
-export interface IDDMessage {
+export interface IDDMessage extends IConfigOptions {
  task?: Task;
  tasks?: Task[];
- options?: IConfigOptions;
+ // options?: IConfigOptions;
  action: string;
  tabId?: number;
  id: any;

@@ -1,17 +1,18 @@
-import {DoomPluginEvent} from "@app/common/chromeEvents";
+import {DoomPluginEvent, PONG} from "@app/common/chromeEvents";
 import {FaceMood} from "@app/components/view/Face/Face";
 
 import {IConfig, IConfigOptions} from "@app/globals";
 import {faceMoodOnTasks, Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
-import {ReactNode} from "react";
 import * as React from "react";
+import {ReactNode} from "react";
 import * as ReactDOM from "react-dom";
 import {Face} from "./app/components/view/Face";
 import "./popup.css";
 
 interface IPopupStatus {
     ready: boolean;
+    contentReady: boolean;
     mood: FaceMood;
     tasks: Task[];
     options: Partial<IConfigOptions>;
@@ -25,28 +26,51 @@ class Popup extends React.Component<{}, IPopupStatus> {
             options: {showFace: false},
             mood: FaceMood.OK,
             ready: false,
+            contentReady: false,
         };
     }
 
     public componentDidMount(): void {
-        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (data) => this.onConfigUpdate(data));
-        Dispatcher.call(DoomPluginEvent.refresh);
+        this.getConfig();
+        this.ensureContentScript();
     }
 
     public render() {
-        const {options, ready, tasks, mood} = this.state;
-        const showFace = (options && options.showFace) || false;
-        if (!ready) return null;
+        const {ready, contentReady, tasks, mood} = this.state;
+        if (!ready) return this.renderReload();
         return (
             <div className="dd-popup">
                 <Face {...{mood}} />
               <div className={"stats"}>{this.taskStats(tasks)}</div>
-              <button
-                  onClick={() => Dispatcher.call(DoomPluginEvent.showForm, {name: "TasksList"})}
-              >
+                {!contentReady && this.renderContentNotReady()}
+                {this.renderActions()}
+            </div>
+        );
+    }
+
+    private renderReload(): ReactNode {
+        return (<div className="waiting-pan">
+            <p>Seems like you out of sync with the extension storage.<br/>Click the button below to retry.</p>
+            <button onClick={() => this.getConfig()}>Sync/Retry</button>
+        </div>);
+    }
+
+    private renderContentNotReady(): ReactNode {
+        return (<div className="waiting-pan">
+            <p>This page was opened prior to extension installation.<br /> Full functionality will be available after page refresh.</p>
+        </div>);
+    }
+
+    private renderActions() {
+        const {options, contentReady} = this.state;
+        const showFace = (options && options.showFace) || false;
+        return (<>
+            {contentReady && <button
+                onClick={() => this.showTasksForm()}
+            >
                 Show Tasks
-              </button>
-              <div className={"control"}>
+            </button>}
+            <div className={"control"}>
                 <label htmlFor="face-checker">Show face on all pages: </label>
                 <input id="face-checker" type="checkbox"
                        checked={showFace}
@@ -58,12 +82,13 @@ class Popup extends React.Component<{}, IPopupStatus> {
                            );
                        }}
                 />
-              </div>
-              <div>
-                  <button className={"secondary"} onClick={() => this.resetTutorial()}>{`\ud83d\udcd6`} Reset Tutorial</button>
-              </div>
             </div>
-        );
+            {contentReady && (
+                <div>
+                    <button className={"secondary"} onClick={() => this.resetTutorial()}>{`\ud83d\udcd6`} Reset Tutorial</button>
+                </div>
+            )}
+        </>);
     }
 
     private taskStats(tasks: Task[]): ReactNode {
@@ -78,16 +103,34 @@ class Popup extends React.Component<{}, IPopupStatus> {
           </span>);
     }
 
-    private onConfigUpdate(partConfig: Partial<IConfig>) {
-        this.setState((prev) => {
-          const tasks = partConfig.tasks ? partConfig.tasks.map((t) => new Task(t)) : prev.tasks;
-          return {
-            ...prev,
-            ...partConfig,
-            tasks,
-            mood: faceMoodOnTasks(tasks),
-            ready: true,
-          };
+    private onConfigUpdate(partConfig: Partial<IConfig>): Promise<any> {
+        return new Promise<any>((r) =>
+            this.setState((prev) => {
+              const tasks = partConfig.tasks ? partConfig.tasks.map((t) => new Task(t)) : prev.tasks;
+              return {
+                ...prev,
+                ...partConfig,
+                tasks,
+                mood: faceMoodOnTasks(tasks),
+                ready: true,
+              };
+            }, () => r(true)),
+        );
+    }
+
+    private ensureContentScript() {
+        Dispatcher.activeTabCall(DoomPluginEvent.ping, null, (res: string) => {
+            this.setState({contentReady: res === PONG});
+        });
+    }
+
+    private showTasksForm() {
+        Dispatcher.activeTabCall(DoomPluginEvent.showForm, {name: "TasksList"});
+    }
+
+    private getConfig() {
+        Dispatcher.call(DoomPluginEvent.refresh, null, (conf: IConfig) => {
+            this.onConfigUpdate(conf);
         });
     }
 

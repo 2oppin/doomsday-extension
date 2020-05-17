@@ -22,7 +22,6 @@ export class Form extends Component<IFormProps, {}> {
         borderImage: `url(${url}) 33 round`,
       }}
         onClick={(e) => {
-          e.preventDefault();
           e.stopPropagation();
           return false;
         }}

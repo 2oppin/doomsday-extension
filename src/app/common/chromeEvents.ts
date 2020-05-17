@@ -1,8 +1,10 @@
-import {DOOM_OWERFLOW_APP_ID} from "@app/globals";
 import QueryInfo = chrome.tabs.QueryInfo;
+
+export const PONG = "pong";
 
 export enum DoomPluginEvent {
     refresh = "refresh",
+    ping = "ping",
 
     configUpdated = "configUpdated",
     setOptions = "setOptions",
@@ -23,11 +25,6 @@ export enum DoomPluginEvent {
     resetTasks = "resetTasks",
 }
 
-export const dispatchEventTextCmd = (eventType: DoomPluginEvent, data: any): string => {
-    return `((el) => el && el.dispatchEvent(new CustomEvent('doom', {detail:{action: '${eventType}', data: ${JSON.stringify(data)}}})))
-    (document.getElementById('${DOOM_OWERFLOW_APP_ID}'));`;
-};
-
 const withTabs = (query: QueryInfo) => (cb: (tabs: chrome.tabs.Tab[]) => Promise<any>) =>
     new Promise((r) => chrome.tabs.query(query, (tabs) => cb(tabs).then(r)));
 
@@ -46,11 +43,9 @@ export const postActiveTabs = (event: DoomPluginEvent, data: any): Promise<any> 
     );
 
 export const postSingleTab = (tabId: number) => (event: DoomPluginEvent, data: any): Promise<any> => {
-    return new Promise((r) => chrome.tabs.executeScript(
-        tabId,
-        {code: dispatchEventTextCmd(event, data)},
-        r,
-    ));
+    return new Promise((r) =>
+        chrome.tabs.sendMessage(tabId, {action: event, ...data}),
+    );
 };
 
 export const postSingleRecipient = (recvId: string) => (event: DoomPluginEvent, data: any): void => {

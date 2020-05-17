@@ -86,7 +86,7 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
           <span>Spent: <span className={cls}>{hrs(task.done)}h</span> of {hrs(task.estimate)}h</span>
           <span>Deadline: <span className={clsdd}>{tilldd}h</span></span>
         </span>
-        <span className="content caption-link" onClick={() => this.showTask(task)} data-help={HelpInfo.TaskItemView}>{task.name}</span>
+        <span className="dd-content caption-link" onClick={() => this.showTask(task)} data-help={HelpInfo.TaskItemView}>{task.name}</span>
       </span>
     );
   }

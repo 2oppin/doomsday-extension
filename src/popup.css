@@ -16,6 +16,16 @@ body {
   border: outset #283e5c;
   background: #283e5c;
 }
+.waiting-pan {
+  background: #b6b6b6;
+  color: #283e5c;
+  padding: 3px;
+}
+.waiting-pan p {
+  padding: 0 5px;
+  min-width: 100px;
+  text-align: left;
+}
 .dd-popup {
   min-width: 150px;
   display: flex;

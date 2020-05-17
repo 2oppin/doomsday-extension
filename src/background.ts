@@ -6,7 +6,7 @@ import {
     postSingleTab,
 } from "@app/common/chromeEvents";
 import {formatDate} from "@app/common/routines";
-import {IConfigOptions, IDDMessage} from "@app/globals";
+import {IConfig, IConfigOptions, IDDMessage} from "@app/globals";
 import {IArchive} from "@app/models/archive";
 import {ITask} from "@app/models/task";
 import {DoomStorage} from "@app/services/storage";
@@ -46,30 +46,34 @@ const updateArchives = async (cb: (tasks: IArchive[]) => any = (t) => t): Promis
         .then(() => postAllTabs(DoomPluginEvent.configUpdated, {archives}));
 };
 
-const broadcastConfig = (recvId?: string, tabId: number = null) => {
+const getConfig = (): Promise<IConfig> => {
     return Promise.all([
         DoomStorage.get("tasks"),
         DoomStorage.get("archives"),
         DoomStorage.get("options"),
     ])
-        .then(([tasks = [], archives = [], options = {showFace: false}]) => {
-            if (tabId) {
-                postSingleTab(tabId)(DoomPluginEvent.configUpdated, {tasks, archives, options});
-            } else if (recvId) {
-                postSingleRecipient(recvId)(DoomPluginEvent.configUpdated, {tasks, archives, options});
-            } else
-                postAllTabs(DoomPluginEvent.configUpdated, {tasks, archives, options});
-        });
+        .then(([tasks, archives, options]) =>
+            ({
+                tasks: tasks || [],
+                archives: archives || [],
+                options: options || {showFace: false, readHelp: []},
+            }));
 };
 
-const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
-    const {task, tasks, options, action, id, done} = msg;
+const broadcastConfig = () => {
+    return getConfig()
+        .then((config) => postAllTabs(DoomPluginEvent.configUpdated, config));
+};
+
+const dispatchMessage = (msg: IDDMessage, sender: any, sendResponse: (msg: any) => any) => {
+    const {task, tasks, action, id} = msg;
     switch (action) {
         case DoomPluginEvent.setOptions:
-            updateOptions((prev) => ({...prev, ...msg}));
-            break;
-        case DoomPluginEvent.configUpdated:
-            updateOptions((prev) => ({...prev, ...msg}));
+            updateOptions((prev) => {
+                const options = msg;
+                delete options.action;
+                return {...prev, ...options};
+            });
             break;
         case DoomPluginEvent.addTask:
             updateTasks((prevTasks) => [...prevTasks, task]);
@@ -137,30 +141,27 @@ const dispatchMessage = (msg: IDDMessage, sender: any, resp: any) => {
             postActiveTabs(DoomPluginEvent.showForm, msg);
             break;
         case DoomPluginEvent.refresh:
-            broadcastConfig(sender.id, sender.tab && sender.tab.id);
-            break;
+            getConfig().then(sendResponse);
+            return true;
     }
+    sendResponse(true);
+    return true;
 };
 
 chrome.runtime.onInstalled.addListener((inst) => {
-    alert("DOOM - " + JSON.stringify(inst));
-
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+        chrome.declarativeContent.onPageChanged.addRules([{
+            conditions: [
+                new chrome.declarativeContent.PageStateMatcher({
+                    pageUrl: {schemes: ["http", "https"]/*, hostEquals: 'developer.chrome.com'*/},
+                }),
+            ],
+            actions: [new chrome.declarativeContent.ShowPageAction()],
+        }]);
+    });
     chrome.tabs.onUpdated.addListener(() => {
         broadcastConfig();
     });
     chrome.runtime.onMessage.addListener(dispatchMessage);
-    getCurrentTasks()
-        .then((tasks) => {
-            chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-                chrome.declarativeContent.onPageChanged.addRules([{
-                    conditions: [
-                        new chrome.declarativeContent.PageStateMatcher({
-                            pageUrl: {schemes: ["http", "https"]/*, hostEquals: 'developer.chrome.com'*/},
-                        }),
-                    ],
-                    actions: [new chrome.declarativeContent.ShowPageAction()],
-                }]);
-            });
-            broadcastConfig();
-        });
+    broadcastConfig();
 });

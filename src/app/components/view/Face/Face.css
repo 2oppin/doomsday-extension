@@ -42,6 +42,11 @@
     animation: none; /* dd-god-face-left-right 5s infinite step-end; */
 }
 
+.doom-face-on-top .dd-face {
+    z-index: 2147483647;
+}
+
+
 @keyframes dd-face-left-right {
     0% {
         background-position-x: -468px;
