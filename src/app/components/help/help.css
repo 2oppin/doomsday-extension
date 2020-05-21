@@ -7,7 +7,7 @@
     z-index: 10000;
     background: var(--cl-cobalt-opq);
 }
-.help-container .tooltip {
+.help-container .doom-tooltip {
     position: fixed;
     z-index: 10000;
     width: 300px;
@@ -21,12 +21,12 @@
     font-size: 14px;
     font-family: monospace;
 }
-.help-container .tooltip .buttonset {
+.help-container .doom-tooltip .buttonset {
     position: absolute;
     right: 5px;
     bottom: 5px;
 }
-.help-container .tooltip .buttonset button {
+.help-container .doom-tooltip .buttonset button {
     background: var(--cl-blue);
     color: var(--cl-white);
     border: outset var(--cl-blue);

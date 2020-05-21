@@ -103,7 +103,7 @@ export class Help extends Component<{}, IHelpState> {
                 )}
                 {showTutorial && (<>
                     <div className={"overflow"} onClick={() => this.closeTutorial()} onKeyDown={(e) => this.onKeyPressed(e)}/>
-                    <div ref={this.tooltipRef} className={"tooltip"} onKeyDown={(e) => this.onKeyPressed(e)}>
+                    <div ref={this.tooltipRef} className={"doom-tooltip"} onKeyDown={(e) => this.onKeyPressed(e)}>
                         {HelpDict[activeHelpName].text}
                         <div className={"buttonset"}>
                             <button onClick={() => this.nextClick()}>Next</button>
