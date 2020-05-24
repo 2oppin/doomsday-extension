@@ -1,7 +1,7 @@
  {
    "name": "Doomsday Task-Manager",
    "version": "0.1",
-   "description": "Persistent and Nasty Extention, to keep you on the track of your tasks.",
+   "description": "Task-manager extension, inspired by old-school game ~ DOOM.",
    "permissions": ["tabs", "activeTab", "*://*/", "declarativeContent", "storage"],
    "background": {
 	   "scripts": ["background.js"],
