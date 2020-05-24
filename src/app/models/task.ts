@@ -18,6 +18,7 @@ export interface ITaskSource {
 export interface ITask {
     id: string;
     name: string;
+    discarded?: boolean;
     estimate?: number;
     priority?: number;
     created?: Date | number;
@@ -80,6 +81,7 @@ export class Task implements ITask {
 
     public id: string;
     public name: string;
+    public discarded: boolean;
     public estimate: number;
     public deadline: Date;
     public created: Date;
@@ -89,9 +91,10 @@ export class Task implements ITask {
     public source: ITaskSource = null;
     private priorityValue: number = 0;
 
-    constructor({id, name, priority = 0, source = null, created = null, estimate = 60000, deadline = null, description = "", complete = null, worklog = []}: ITask) {
+    constructor({id, name, discarded = false, priority = 0, source = null, created = null, estimate = 60000, deadline = null, description = "", complete = null, worklog = []}: ITask) {
         this.id = id;
         this.name = name;
+        this.discarded = discarded;
         this.complete = complete ? new Date(complete) : null;
         this.estimate = estimate;
         this.priority = priority;

@@ -43,6 +43,8 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
                 {this.renderTaskFace(task)}
                 <_bt u="✔" {...{readonly}} title="Mark Completed" cb={() => this.finishTask(task)}
                      dataHelp={HelpInfo.TaskItemMarkDone}/>
+                <_bt u="⊘" {...{readonly}} title="Discard" cb={() => this.discardTask(task)}
+                     dataHelp={HelpInfo.TaskItemDiscard}/>
             </>
         );
     }
@@ -57,6 +59,8 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
                 {this.renderTaskFace(task)}
                 <_bt u="✎" {...{readonly}} title="Edit" cb={() => this.editTask(task)}
                      dataHelp={HelpInfo.TaskItemEdit}/>
+                <_bt u="⊘" {...{readonly}} title="Discard" cb={() => this.discardTask(task)}
+                     dataHelp={HelpInfo.TaskItemDiscard}/>
             </>
         );
     }
@@ -69,6 +73,8 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
                      cb={() => this.archiveTask(task)} dataHelp={HelpInfo.TaskItemArchive}/>
                 {this.renderNonActiveTask(task)}
                 {this.renderTaskFace(task)}
+                <_bt u="↺" {...{readonly}} title="Reopen Task" cb={() => this.reopenTask(task)}
+                     dataHelp={HelpInfo.TaskItemReopen}/>
                 <_bt u="♻" {...{readonly}} title="Remove Task from history" cb={() => this.deleteTask(task)}
                      dataHelp={HelpInfo.TaskItemDelete}/>
             </>
@@ -94,7 +100,7 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
           <span>Spent: <span className={cls}>{hrs(task.done)}h</span> of {hrs(task.estimate)}h</span>
           <span>Deadline: <span className={clsdd}>{tilldd}h</span></span>
         </span>
-        <span className="dd-content caption-link" onClick={() => this.showTask(task)}
+        <span className={`dd-content caption-link${task.discarded ? " discarded" : ""}`} onClick={() => this.showTask(task)}
               data-help={HelpInfo.TaskItemView}>{task.name}</span>
       </span>
         );
@@ -142,8 +148,16 @@ export class TaskItem extends Component<ITaskItemProps, {}> {
         return Dispatcher.call(DoomPluginEvent.finishTask, {id});
     }
 
+    private discardTask({id}: Task) {
+        return Dispatcher.call(DoomPluginEvent.discardTask, {id});
+    }
+
     private async pauseTask({id}: Task) {
         return Dispatcher.call(DoomPluginEvent.pauseTask, {id});
+    }
+
+    private reopenTask({id}: Task) {
+        return Dispatcher.call(DoomPluginEvent.reopenTask, {id});
     }
 
     private deleteTask({id}: Task) {

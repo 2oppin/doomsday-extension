@@ -44,6 +44,9 @@
 .task-item .caption-link {
     cursor: pointer;
 }
+.task-item .caption-link.discarded {
+    text-decoration: line-through;
+}
 .task-item .caption-link:hover {
     color: var(--cl-white);
     text-shadow: 1px 2px 1px var(--cl-blue)

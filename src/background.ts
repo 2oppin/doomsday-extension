@@ -98,6 +98,28 @@ const dispatchMessage = (msg: IDDMessage, sender: any, sendResponse: (msg: any) 
                 return t;
             }));
             break;
+        case DoomPluginEvent.discardTask:
+            updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
+                if (t.id === id) {
+                    const ongoing = t.worklog.find((w) => !w.finished);
+                    if (ongoing) {
+                        ongoing.finished = (new Date()).getTime();
+                    }
+                    t.discarded = true;
+                    t.complete = (new Date()).getTime();
+                }
+                return t;
+            }));
+            break;
+        case DoomPluginEvent.reopenTask:
+            updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
+                if (t.id === id) {
+                    t.discarded = false;
+                    t.complete = null;
+                }
+                return t;
+            }));
+            break;
         case DoomPluginEvent.pauseTask:
             updateTasks((storeTasks) => storeTasks.map((t: ITask) => {
                 if (t.id === id) {

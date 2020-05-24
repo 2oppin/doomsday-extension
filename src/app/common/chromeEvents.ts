@@ -13,9 +13,11 @@ export enum DoomPluginEvent {
     updateTask = "updateTask",
     startTask = "startTask",
     finishTask = "finishTask",
+    discardTask = "discardTask",
     pauseTask = "pauseTask",
 
     deleteTask = "deleteTask",
+    reopenTask = "reopenTask",
     archiveTask = "archiveTask",
     unpackArchive = "unpackArchive",
     deleteArchive = "deleteArchive",
