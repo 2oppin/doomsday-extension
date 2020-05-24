@@ -19,14 +19,15 @@ interface IWorklogFieldState {
     worklog: Worklog[];
     days: string[];
     done: number;
-    selectedInx: number|null;
+    selectedInx: number | null;
     action: WorklogLogAction;
     offsetX: number;
-    virtWorklog: {day: string, left: string, width: string}|null;
+    virtWorklog: { day: string, left: string, width: string } | null;
 }
 
 export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFieldState> {
     protected virtLog = React.createRef<HTMLDivElement>();
+
     constructor(props: IWorklogFieldProps) {
         super(props);
         const worklog = this.normalizeWorklog(props.worklog);
@@ -63,7 +64,8 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
                             >
                                 {this.periodsFromDay(d)}
                                 {virtWorklog && virtWorklog.day === d && (
-                                    <div ref={this.virtLog} className={`log virtual${this.getLRClass()}`} style={virtWorklog} />
+                                    <div ref={this.virtLog} className={`log virtual${this.getLRClass()}`}
+                                         style={virtWorklog}/>
                                 )}
                             </div>
                         </li>
@@ -139,7 +141,7 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
             });
     }
 
-    private onMUp(e: SyntheticEvent<HTMLDivElement|HTMLUListElement, MouseEvent>) {
+    private onMUp(e: SyntheticEvent<HTMLDivElement | HTMLUListElement, MouseEvent>) {
         const virt: HTMLDivElement = this.virtLog.current;
         if (this.props.readonly || !virt) return;
         const period: HTMLDivElement = virt.parentElement as HTMLDivElement;
@@ -178,7 +180,7 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
 
     private detectNearestLogOnMouse(e: SyntheticEvent<HTMLDivElement, MouseEvent>): number {
         let diff = 15;
-        let selectedInx: number|null = null;
+        let selectedInx: number | null = null;
         const el = (e.nativeEvent.target as HTMLDivElement);
         el.childNodes.forEach((p: HTMLDivElement) => {
             const {x, width} = p.getBoundingClientRect();
@@ -203,8 +205,8 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
                 const width = (w.finished.getTime() - w.started.getTime()) / (24 * 36000);
                 return (
                     <div key={inx} data-index={inx}
-                        className={`log ${!isSelected ? "" : ` selected${this.getLRClass()}`}`}
-                        style={{left: `${left}%`, width: `${width}%`}}
+                         className={`log ${!isSelected ? "" : ` selected${this.getLRClass()}`}`}
+                         style={{left: `${left}%`, width: `${width}%`}}
                     />
                 );
             });
@@ -238,8 +240,8 @@ export class WorklogField extends React.Component<IWorklogFieldProps, IWorklogFi
         }, []);
     }
 
-    private getWorklogInfo(worklog: Worklog[]): {range: number[], done: number, days: string[]} {
-        const daysObj: {[key: string]: boolean} = {};
+    private getWorklogInfo(worklog: Worklog[]): { range: number[], done: number, days: string[] } {
+        const daysObj: { [key: string]: boolean } = {};
         let done = 0;
         const range = worklog.reduce(
             (a, w) => {

@@ -24,6 +24,7 @@ interface IJiraIssue {
 interface IJiraIssuesProps {
     tasks: Task[];
 }
+
 interface IJiraIssuesSate {
     issues: IJiraIssue[];
     tasks: Task[];
@@ -45,7 +46,7 @@ export class JiraIssuesForm extends Component<IJiraIssuesProps, IJiraIssuesSate>
         const {tasks} = this.state;
         const jiraBase = siteBase();
         Jira.getActiveIssues()
-            .then(({issues}: {issues: IJiraIssue[]}) => {
+            .then(({issues}: { issues: IJiraIssue[] }) => {
                 this.setState({
                     issues: this.filterImportedIssues(issues),
                 });
@@ -84,6 +85,7 @@ export class JiraIssuesForm extends Component<IJiraIssuesProps, IJiraIssuesSate>
         return issues.filter((iss) =>
             !tasks.find(({source}) => source.id === iss.key));
     }
+
     private showTaskList() {
         Dispatcher.dispatch(DoomPluginEvent.showForm, {name: "TaskList"});
     }
@@ -91,7 +93,7 @@ export class JiraIssuesForm extends Component<IJiraIssuesProps, IJiraIssuesSate>
     private showArchive(arch: Archive) {
         Dispatcher.dispatch(DoomPluginEvent.showForm, {
             name: "TaskList",
-            data: { tasks: arch.tasks, previousForm: "ArchiveList", readonly: true},
+            data: {tasks: arch.tasks, previousForm: "ArchiveList", readonly: true},
         });
     }
 

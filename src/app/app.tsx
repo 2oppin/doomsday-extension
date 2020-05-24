@@ -1,4 +1,3 @@
-import {DoomPluginEvent} from "@app/common/chromeEvents";
 import React from "react";
 import ReactDOM from "react-dom";
 import {DoomPanelContainer} from "./components/container/DoomPanelContainer";
@@ -13,5 +12,5 @@ import {DOOM_OWERFLOW_APP_ID} from "./globals";
     el.setAttribute("data-id", DOOM_OWERFLOW_APP_ID);
     document.body.appendChild(el);
 
-    ReactDOM.render(<DoomPanelContainer />, el);
+    ReactDOM.render(<DoomPanelContainer/>, el);
 })();

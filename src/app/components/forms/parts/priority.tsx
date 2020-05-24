@@ -2,13 +2,16 @@ import React, {Component} from "react";
 
 import "./priority.css";
 
-export enum PriorityLevel {None= "None", Low= "Low", AboveAverage = "Above Average", High = "High", Highest = "Highest!"}
+export enum PriorityLevel {None = "None", Low = "Low", AboveAverage = "Above Average", High = "High", Highest = "Highest!"}
+
 interface IPriorityProps {
     lvl: number;
 }
+
 interface IPriorityState {
     lvl: PriorityLevel;
 }
+
 export default class Priority extends Component<IPriorityProps, IPriorityState> {
     public static lvlFromNumber = (lvl: number) => {
         if (!lvl) return PriorityLevel.None;
@@ -17,6 +20,7 @@ export default class Priority extends Component<IPriorityProps, IPriorityState> 
         else if (lvl >= 6) return PriorityLevel.AboveAverage;
         return PriorityLevel.Low;
     }
+
     public static getDerivedStateFromProps({lvl}: IPriorityProps) {
         return {
             lvl: Priority.lvlFromNumber(lvl),
@@ -24,6 +28,7 @@ export default class Priority extends Component<IPriorityProps, IPriorityState> 
     }
 
     private url = chrome.extension.getURL("images/priority.png");
+
     constructor(props: IPriorityProps) {
         super(props);
         this.state = Priority.getDerivedStateFromProps(props);

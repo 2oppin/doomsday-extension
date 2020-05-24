@@ -29,10 +29,10 @@ const time = (d = new Date()) =>
 const date = (d = new Date()) =>
     `${d.getUTCFullYear()}-${`${d.getUTCMonth() + 1}`.padStart(2, "0")}-${`${d.getDate()}`.padStart(2, "0")}`;
 const dateTime = (d: Date) => (t: Date): Date => {
-  t = new Date(t);
-  d = (new Date(d));
-  d.setHours(t.getHours(), t.getMinutes(), t.getSeconds());
-  return d;
+    t = new Date(t);
+    d = (new Date(d));
+    d.setHours(t.getHours(), t.getMinutes(), t.getSeconds());
+    return d;
 };
 
 interface ITaskEditProps {
@@ -62,7 +62,8 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
             <div className="dd-popup-form-task">
                 <div className="dd-popup-form-inputfield" data-help={"task-name"}>
                     <label>Code Name</label>
-                    <input type="text" value={task.name} onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "name")} />
+                    <input type="text" value={task.name}
+                           onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "name")}/>
                 </div>
                 <div className="dd-popup-form-inputfield">
                     <label>Estimate (hours)</label>
@@ -87,24 +88,28 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                             onChange={(e) => {
                                 task.priority = parseInt((e.nativeEvent.target as HTMLInputElement).value, 10);
                                 this.setState({});
-                            }} />
-                        <div className={"priority-container"}><_prrt lvl={task.priority} /></div>
+                            }}/>
+                        <div className={"priority-container"}>
+                            <_prrt lvl={task.priority}/>
+                        </div>
                     </div>
                 </div>
                 {((task.worklog && task.worklog.length) || null) && (
                     <div className="dd-popup-form-inputfield">
                         <WorklogField worklog={task.worklog} onChange={(w) =>
                             this.updateTaskProp({nativeEvent: {target: {value: w}}} as any, "worklog", (v: any) => v)
-                        } />
+                        }/>
                     </div>
                 )}
                 <div className="dd-popup-form-inputfield">
                     <label>Brief</label>
-                    <textarea value={task.description} onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "description")} />
+                    <textarea value={task.description}
+                              onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "description")}/>
                 </div>
                 <div className="dd-form-buttonset">
                     <span className={"dd-popup-form-task-btn dd-brd dd-big-btn"} onClick={this.backToList}>Cancel</span>
-                    <span className={"dd-popup-form-task-btn dd-brd dd-big-btn"} onClick={() => this.saveTask()}>{task.id ? "Update" : "Add"} Mission</span>
+                    <span className={"dd-popup-form-task-btn dd-brd dd-big-btn"}
+                          onClick={() => this.saveTask()}>{task.id ? "Update" : "Add"} Mission</span>
                 </div>
             </div>
         </Form>);
@@ -126,7 +131,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
         });
     }
 
-    private updateTaskProp(e: SyntheticEvent, key: string, cast: (val: any) => Date|number|string|Worklog[] = (v: any) => "" + v) {
+    private updateTaskProp(e: SyntheticEvent, key: string, cast: (val: any) => Date | number | string | Worklog[] = (v: any) => "" + v) {
         const event: any = e.nativeEvent;
         if (!event.target) return;
         this.setState((prevState: ITaskEditState) => {

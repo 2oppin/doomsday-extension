@@ -52,7 +52,8 @@ export class ArchiveListForm extends Component<IArchiveListProps, IArchiveListSa
                                     >
                                         {`\ud83d\udce4`}
                                     </span>
-                                    <_bt u="♻" title="Remove Task from history" cb={() => this.deleteArchive(arch.createdDay)} />
+                                    <_bt u="♻" title="Remove Task from history"
+                                         cb={() => this.deleteArchive(arch.createdDay)}/>
                                 </div>
                             ))}
                         </div>
@@ -75,7 +76,7 @@ export class ArchiveListForm extends Component<IArchiveListProps, IArchiveListSa
     private showArchive(arch: Archive) {
         Dispatcher.dispatch(DoomPluginEvent.showForm, {
             name: "TaskList",
-            data: { tasks: arch.tasks, previousForm: "ArchiveList", readonly: true},
+            data: {tasks: arch.tasks, previousForm: "ArchiveList", readonly: true},
         });
     }
 

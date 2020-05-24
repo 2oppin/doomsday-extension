@@ -14,15 +14,16 @@ export interface ITaskSource {
     src: string;
     id: string;
 }
+
 export interface ITask {
     id: string;
     name: string;
     estimate?: number;
     priority?: number;
-    created?: Date|number;
-    deadline?: Date|number;
+    created?: Date | number;
+    deadline?: Date | number;
     description?: string;
-    complete?: Date|number|null;
+    complete?: Date | number | null;
     worklog?: IWorklog[];
     source?: ITaskSource;
 }
@@ -45,7 +46,7 @@ export class Task implements ITask {
         }
 
         if (a.priority !== b.priority) {
-            return  a.priority > b.priority ? -1 : 1;
+            return a.priority > b.priority ? -1 : 1;
         }
 
         const logA = a.started && a.lastLogTime && a.lastLogTime.getTime();
@@ -68,7 +69,7 @@ export class Task implements ITask {
         return b.name.localeCompare(a.name);
     }
 
-    public static sortByStarted(a: {started: Date|null}, b: {started: Date|null}) {
+    public static sortByStarted(a: { started: Date | null }, b: { started: Date | null }) {
         if (a.started && !b.started) return -1;
         if (b.started && !a.started) return 1;
         if (b.started && a.started) {
@@ -83,7 +84,7 @@ export class Task implements ITask {
     public deadline: Date;
     public created: Date;
     public description: string;
-    public complete: Date|null;
+    public complete: Date | null;
     public worklog: Worklog[];
     public source: ITaskSource = null;
     private priorityValue: number = 0;
@@ -123,7 +124,7 @@ export class Task implements ITask {
         return this.priorityValue >= 6;
     }
 
-    get started(): Date|null {
+    get started(): Date | null {
         return this.worklog[0] ? this.worklog[0].started : null;
     }
 
@@ -135,7 +136,7 @@ export class Task implements ITask {
         return !!this.started && !this.complete && !this.worklog.slice(-1)[0].finished;
     }
 
-    get lastLogTime(): Date|null {
+    get lastLogTime(): Date | null {
         return (this.started && this.worklog.slice(-1)[0].finished) || null;
     }
 
@@ -147,7 +148,7 @@ export class Task implements ITask {
         let progress = 0;
         if (this.done > this.estimate) {
             // tslint:disable-next-line:no-bitwise
-            progress = - (100 * (1 - this.estimate / this.done)) | 0;
+            progress = -(100 * (1 - this.estimate / this.done)) | 0;
         } else {
             // tslint:disable-next-line:no-bitwise
             progress = (100 * (this.done || 0) / (this.estimate || 1)) | 0;

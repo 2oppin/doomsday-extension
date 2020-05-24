@@ -1,10 +1,4 @@
-import {
-    DoomPluginEvent,
-    postActiveTabs,
-    postAllTabs,
-    postSingleRecipient,
-    postSingleTab,
-} from "@app/common/chromeEvents";
+import {DoomPluginEvent, postActiveTabs, postAllTabs} from "@app/common/chromeEvents";
 import {formatDate} from "@app/common/routines";
 import {IConfig, IConfigOptions, IDDMessage} from "@app/globals";
 import {IArchive} from "@app/models/archive";

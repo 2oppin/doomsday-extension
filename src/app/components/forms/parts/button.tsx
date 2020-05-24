@@ -1,4 +1,3 @@
-import {HelpInfo} from "@app/components/help/dictionary";
 import {IHelpable} from "@app/components/help/Help";
 import React, {MouseEventHandler} from "react";
 
@@ -11,17 +10,18 @@ interface IButtonProps extends IHelpable {
     yellow?: boolean;
     readonly?: boolean;
 }
+
 export default function Button({u, cb, title, yellow, readonly, dataHelp}: IButtonProps) {
 
-  return (
-    <span
-      role="button"
-      className={`dd-popup-form-task-btn dd-brd${yellow ? " yellow-btn" : ""}${readonly ? " readonly" : ""}`}
-      onClick={readonly ? null : cb}
-      title={title}
-      {...(dataHelp ? {"data-help": dataHelp} : {})}
-    >
+    return (
+        <span
+            role="button"
+            className={`dd-popup-form-task-btn dd-brd${yellow ? " yellow-btn" : ""}${readonly ? " readonly" : ""}`}
+            onClick={readonly ? null : cb}
+            title={title}
+            {...(dataHelp ? {"data-help": dataHelp} : {})}
+        >
       {u}
     </span>
-  );
+    );
 }

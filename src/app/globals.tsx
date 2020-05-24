@@ -6,8 +6,9 @@ export const DOOM_OWERFLOW_APP_ID = "dd-doom-extention-app";
 export interface IConfigOptions {
     showFace: boolean;
     readHelp: HelpInfo[];
-    facePosition: {r: number, x: number, y: number};
+    facePosition: { r: number, x: number, y: number };
 }
+
 export interface IConfig {
     tasks: any[];
     archives: any[];
@@ -15,13 +16,12 @@ export interface IConfig {
 }
 
 export interface IDDMessage extends IConfigOptions {
- task?: Task;
- tasks?: Task[];
- // options?: IConfigOptions;
- action: string;
- tabId?: number;
- id: any;
- started: number;
- finished: number;
- done: number;
+    task?: Task;
+    tasks?: Task[];
+    action: string;
+    tabId?: number;
+    id: any;
+    started: number;
+    finished: number;
+    done: number;
 }

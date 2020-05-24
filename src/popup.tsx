@@ -41,7 +41,7 @@ class Popup extends React.Component<{}, IPopupStatus> {
         return (
             <div className="dd-popup">
                 <Face {...{mood}} />
-              <div className={"stats"}>{this.taskStats(tasks)}</div>
+                <div className={"stats"}>{this.taskStats(tasks)}</div>
                 {!contentReady && this.renderContentNotReady()}
                 {this.renderActions()}
             </div>
@@ -57,7 +57,8 @@ class Popup extends React.Component<{}, IPopupStatus> {
 
     private renderContentNotReady(): ReactNode {
         return (<div className="waiting-pan">
-            <p>This page was opened prior to extension installation.<br /> Full functionality will be available after page refresh.</p>
+            <p>This page was opened prior to extension installation.<br/> Full functionality will be available after
+                page refresh.</p>
         </div>);
     }
 
@@ -66,9 +67,9 @@ class Popup extends React.Component<{}, IPopupStatus> {
         const showFace = (options && options.showFace) || false;
         return (<>
             {contentReady && <button
-                onClick={() => this.showTasksForm()}
+              onClick={() => this.showTasksForm()}
             >
-                Show Tasks
+              Show Tasks
             </button>}
             <div className={"control"}>
                 <label htmlFor="face-checker">Show face on all pages: </label>
@@ -85,20 +86,22 @@ class Popup extends React.Component<{}, IPopupStatus> {
             </div>
             {contentReady && (
                 <div>
-                    <button className={"secondary"} onClick={() => this.resetTutorial()}>{`\ud83d\udcd6`} Reset Tutorial</button>
+                    <button className={"secondary"} onClick={() => this.resetTutorial()}>{`\ud83d\udcd6`} Reset
+                        Tutorial
+                    </button>
                 </div>
             )}
         </>);
     }
 
     private taskStats(tasks: Task[]): ReactNode {
-      const counters = tasks.reduce((a, t) => ({
-        active: a.active + (t.active ? 1 : 0),
-        nonComplete: a.nonComplete + (t.complete ? 0 : 1),
-        hours: a.hours + (t.complete ? 0 : t.estimate / 3600000.0),
-      }), {active: 0, nonComplete: 0, hours: 0});
-      return (
-          <span>
+        const counters = tasks.reduce((a, t) => ({
+            active: a.active + (t.active ? 1 : 0),
+            nonComplete: a.nonComplete + (t.complete ? 0 : 1),
+            hours: a.hours + (t.complete ? 0 : t.estimate / 3600000.0),
+        }), {active: 0, nonComplete: 0, hours: 0});
+        return (
+            <span>
             {counters.nonComplete}(<b>{counters.active}</b> active) tasks ~ {counters.hours.toFixed(2)}h
           </span>);
     }
@@ -106,14 +109,14 @@ class Popup extends React.Component<{}, IPopupStatus> {
     private onConfigUpdate(partConfig: Partial<IConfig>): Promise<any> {
         return new Promise<any>((r) =>
             this.setState((prev) => {
-              const tasks = partConfig.tasks ? partConfig.tasks.map((t) => new Task(t)) : prev.tasks;
-              return {
-                ...prev,
-                ...partConfig,
-                tasks,
-                mood: faceMoodOnTasks(tasks),
-                ready: true,
-              };
+                const tasks = partConfig.tasks ? partConfig.tasks.map((t) => new Task(t)) : prev.tasks;
+                return {
+                    ...prev,
+                    ...partConfig,
+                    tasks,
+                    mood: faceMoodOnTasks(tasks),
+                    ready: true,
+                };
             }, () => r(true)),
         );
     }
@@ -129,9 +132,7 @@ class Popup extends React.Component<{}, IPopupStatus> {
     }
 
     private getConfig() {
-        Dispatcher.call(DoomPluginEvent.refresh, null, (conf: IConfig) => {
-            this.onConfigUpdate(conf);
-        });
+        Dispatcher.call(DoomPluginEvent.refresh, null, (conf: IConfig) => this.onConfigUpdate(conf));
     }
 
     private resetTutorial() {

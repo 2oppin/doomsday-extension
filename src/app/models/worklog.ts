@@ -1,11 +1,13 @@
 export interface IWorklog {
-    started: number|Date;
-    finished: number|Date|null;
+    started: number | Date;
+    finished: number | Date | null;
 }
+
 const diffDate = (a: Date, b: Date): number => (a.getTime() - b.getTime()) / 1000;
+
 export class Worklog implements IWorklog {
     public started: Date;
-    public finished: Date|null;
+    public finished: Date | null;
 
     constructor({started, finished = null}: IWorklog) {
         this.started = new Date(started);
@@ -39,10 +41,10 @@ export class Worklog implements IWorklog {
     public isTooCloseTo(w: Worklog) {
         const min5 = 300;
         return (Math.abs(diffDate(this.finished, w.started)) < min5)
-          || (Math.abs(diffDate(this.started, w.finished)) < min5)
-          || w.includes(this)
-          || this.includes(w)
-          || this.intersects(w);
+            || (Math.abs(diffDate(this.started, w.finished)) < min5)
+            || w.includes(this)
+            || this.includes(w)
+            || this.intersects(w);
     }
 
     public merge(w: Worklog): Worklog {

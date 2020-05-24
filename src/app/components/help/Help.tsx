@@ -15,7 +15,7 @@ interface IHelpState {
     showTutorial: boolean;
     helpNames: HelpInfo[];
     readHelp: HelpInfo[];
-    activeHelpName: HelpInfo|null;
+    activeHelpName: HelpInfo | null;
     right: boolean;
     bottom: boolean;
 }
@@ -68,7 +68,7 @@ export class Help extends Component<{}, IHelpState> {
         const elBox = el.getBoundingClientRect();
         const tooltip = this.tooltipRef.current;
         const ttbox = tooltip.getBoundingClientRect();
-        const offset: {x: number, y: number} = {
+        const offset: { x: number, y: number } = {
             x: elBox.x - ttbox.width,
             y: elBox.y - ttbox.height,
         };
@@ -102,7 +102,8 @@ export class Help extends Component<{}, IHelpState> {
                     </span>
                 )}
                 {showTutorial && (<>
-                    <div className={"overflow"} onClick={() => this.closeTutorial()} onKeyDown={(e) => this.onKeyPressed(e)}/>
+                    <div className={"overflow"} onClick={() => this.closeTutorial()}
+                         onKeyDown={(e) => this.onKeyPressed(e)}/>
                     <div ref={this.tooltipRef} className={"doom-tooltip"} onKeyDown={(e) => this.onKeyPressed(e)}>
                         {HelpDict[activeHelpName].text}
                         <div className={"buttonset"}>

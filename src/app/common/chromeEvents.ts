@@ -39,7 +39,7 @@ export const postActiveTabs = (event: DoomPluginEvent, data: any): Promise<any> 
         active: true,
         lastFocusedWindow: true,
     })(
-    (tabs) => Promise.all(tabs.map(({id}) => postSingleTab(id)(event, data))),
+        (tabs) => Promise.all(tabs.map(({id}) => postSingleTab(id)(event, data))),
     );
 
 export const postSingleTab = (tabId: number) => (event: DoomPluginEvent, data: any): Promise<any> => {

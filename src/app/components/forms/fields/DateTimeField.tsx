@@ -8,10 +8,11 @@ interface IDateTimeFieldProps {
     value: Date;
     caption?: string;
 }
+
 interface IDateTimeFieldState {
     date: string;
     time: string;
-    errors: {[key: string]: string};
+    errors: { [key: string]: string };
 }
 
 export class DateTimeField extends Component<IDateTimeFieldProps, IDateTimeFieldState> {
