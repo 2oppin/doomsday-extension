@@ -5,7 +5,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ChromeExtensionReloader = require("webpack-chrome-extension-reloader");
 
-module.exports = {
+module.exports = (env, argv) => ({
   mode: "production",
   devtool: "source-map",
   entry: {
@@ -69,6 +69,9 @@ module.exports = {
       filename: "[name].css",
       chunkFilename: "[id].css"
     }),
-    new ChromeExtensionReloader()
+    ...[...(argv.mode === 'development'
+      ? [new ChromeExtensionReloader()]
+      : []
+    )],
   ]
-};
+});

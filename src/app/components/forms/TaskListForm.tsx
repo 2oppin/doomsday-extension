@@ -1,3 +1,4 @@
+import {JIRA} from "@app/common/images";
 import React, {Component} from "react";
 
 import {DoomPluginEvent} from "@app/common/chromeEvents";
@@ -8,6 +9,8 @@ import {Dispatcher} from "@app/services/dispatcher";
 
 import {Form} from "./Form";
 import {TaskItem} from "./parts/TaskItem";
+
+import "./task-list.css";
 
 interface ITaskListProps {
     tasks: Task[];
@@ -75,10 +78,10 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
                     {!readonly && <>
                         {jira && (
                             <span
-                                className="dd-popup-form-task-btn dd-brd r-btn blue-btn"
+                                className="dd-popup-form-task-btn dd-brd r-btn jira-btn"
                                 onClick={() => this.showJiraTasks()}
                                 data-help={HelpInfo.JiraBtn}
-                              >J</span>
+                              ><img alt="import-from-jira" title={"Import tasks from JIRA"} src={JIRA}/></span>
                         )}
                         <span
                             className="dd-popup-form-task-btn dd-brd r-btn"
