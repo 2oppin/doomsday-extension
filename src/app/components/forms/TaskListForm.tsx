@@ -1,11 +1,12 @@
+import React, {Component} from "react";
+
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {HelpInfo} from "@app/components/help/dictionary";
 import {Help} from "@app/components/help/Help";
-
-import {Form} from "@app/components/view/Form/Form";
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
-import React, {Component} from "react";
+
+import {Form} from "./Form";
 import {TaskItem} from "./parts/TaskItem";
 
 interface ITaskListProps {

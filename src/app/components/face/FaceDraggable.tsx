@@ -1,7 +1,6 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
-import {FaceMood} from "@app/components/view/Face/Face";
-
-import {Face} from "@app/components/view/Face/index";
+import {Face} from "@app/components/face/Face";
+import {FaceMood} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component, SyntheticEvent} from "react";
 

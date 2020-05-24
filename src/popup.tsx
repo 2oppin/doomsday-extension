@@ -1,13 +1,13 @@
-import {DoomPluginEvent, PONG} from "@app/common/chromeEvents";
-import {FaceMood} from "@app/components/view/Face/Face";
-
-import {IConfig, IConfigOptions} from "@app/globals";
-import {faceMoodOnTasks, Task} from "@app/models/task";
-import {Dispatcher} from "@app/services/dispatcher";
 import * as React from "react";
 import {ReactNode} from "react";
 import * as ReactDOM from "react-dom";
-import {Face} from "./app/components/view/Face";
+
+import {DoomPluginEvent, PONG} from "@app/common/chromeEvents";
+import {Face} from "@app/components/face/Face";
+import {IConfig, IConfigOptions} from "@app/globals";
+import {FaceMood, faceMoodOnTasks, Task} from "@app/models/task";
+import {Dispatcher} from "@app/services/dispatcher";
+
 import "./popup.css";
 
 interface IPopupStatus {

@@ -1,13 +1,13 @@
+import React, {Component} from "react";
+
 import {DoomPluginEvent} from "@app/common/chromeEvents";
+import {Face} from "@app/components/face/Face";
 import {HelpInfo} from "@app/components/help/dictionary";
-
-import {Face} from "@app/components/view/Face";
-import _prrt from "@app/components/view/Form/forms/parts/priority";
-
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
-import React, {Component} from "react";
+
 import _bt from "./button";
+import _prrt from "./priority";
 import _progressBar from "./progressbar";
 
 import "./task-item.css";

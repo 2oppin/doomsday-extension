@@ -1,12 +1,11 @@
-import {Worklog} from "@app/models/worklog";
 import React, {Component} from "react";
 
 import {DoomPluginEvent} from "@app/common/chromeEvents";
-
-import {WorklogField} from "@app/components/view/Form/fields/WorklogField";
-import {Form} from "@app/components/view/Form/Form";
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
+
+import {WorklogField} from "./fields/WorklogField";
+import {Form} from "./Form";
 
 import "./TaskEditForm.css";
 

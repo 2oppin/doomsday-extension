@@ -1,17 +1,16 @@
+import React, {Component} from "react";
+
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {siteBase, UUID} from "@app/common/routines";
-
-import {Form} from "@app/components/view/Form/Form";
-import _bt from "@app/components/view/Form/forms/parts/button";
 import {Archive} from "@app/models/archive";
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
-import React, {Component} from "react";
+import {Jira} from "@app/services/jira";
 
-import {Jira} from "../../../../services/jira";
+import {Form} from "./Form";
+import _bt from "./parts/button";
 
 import "./archive-list.css";
-
 
 interface IJiraIssue {
     key: string;

@@ -1,5 +1,14 @@
-import {FaceMood} from "@app/components/view/Face/Face";
 import {IWorklog, Worklog} from "@app/models/worklog";
+
+export enum FaceMood {
+    DEAD = "dead",
+    WORST = "worst",
+    WORSE = "worse",
+    BAD = "bad",
+    NORM = "norm",
+    OK = "ok",
+    GOD = "god",
+}
 
 export interface ITaskSource {
     src: string;

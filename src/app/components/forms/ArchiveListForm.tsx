@@ -1,7 +1,7 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 
-import {Form} from "@app/components/view/Form/Form";
-import _bt from "@app/components/view/Form/forms/parts/button";
+import {Form} from "@app/components/forms/Form";
+import _bt from "@app/components/forms/parts/button";
 import {Archive} from "@app/models/archive";
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component} from "react";

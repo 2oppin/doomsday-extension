@@ -1,16 +1,7 @@
 import {IHelpable} from "@app/components/help/Help";
+import {FaceMood} from "@app/models/task";
 import React, {Component} from "react";
 import "./Face.css";
-
-export enum FaceMood {
-  DEAD = "dead",
-  WORST = "worst",
-  WORSE = "worse",
-  BAD = "bad",
-  NORM = "norm",
-  OK = "ok",
-  GOD = "god",
-}
 
 interface IFaceProps extends IHelpable {
   width?: number;

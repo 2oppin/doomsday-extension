@@ -1,16 +1,15 @@
+import React, {Component, SyntheticEvent} from "react";
+
 import {DoomPluginEvent} from "@app/common/chromeEvents";
-
 import {UUID} from "@app/common/routines";
-import {Help} from "@app/components/help/Help";
-import {DateTimeField} from "@app/components/view/Form/fields/DateTimeField";
-import {WorklogField} from "@app/components/view/Form/fields/WorklogField";
-
-import {Form} from "@app/components/view/Form/Form";
-import _prrt from "@app/components/view/Form/forms/parts/priority";
 import {ITask, Task} from "@app/models/task";
 import {Worklog} from "@app/models/worklog";
 import {Dispatcher} from "@app/services/dispatcher";
-import React, {Component, SyntheticEvent} from "react";
+
+import {DateTimeField} from "./fields/DateTimeField";
+import {WorklogField} from "./fields/WorklogField";
+import {Form} from "./Form";
+import _prrt from "./parts/priority";
 
 import "./TaskEditForm.css";
 

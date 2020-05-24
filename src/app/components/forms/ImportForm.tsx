@@ -1,9 +1,9 @@
-import {DoomPluginEvent} from "@app/common/chromeEvents";
+import React, {Component} from "react";
 
-import {Form} from "@app/components/view/Form/Form";
+import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
-import React, {Component} from "react";
+import {Form} from "./Form";
 
 interface ITaskListFormState {
   preloadedTasks?: Task[];

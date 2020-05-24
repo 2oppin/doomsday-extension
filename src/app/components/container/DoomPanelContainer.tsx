@@ -1,18 +1,16 @@
 import "@app/app.css";
 import {DoomPluginEvent, PONG} from "@app/common/chromeEvents";
-import {FaceMood} from "@app/components/view/Face/Face";
-
-import {FaceDraggable} from "@app/components/view/Face/FaceDraggable";
-import {ArchiveListForm} from "@app/components/view/Form/forms/ArchiveListForm";
-import ImportForm from "@app/components/view/Form/forms/ImportForm";
-import {JiraIssuesForm} from "@app/components/view/Form/forms/JiraIssuesForm";
-import {TaskEditForm} from "@app/components/view/Form/forms/TaskEditForm";
-import {TaskListForm} from "@app/components/view/Form/forms/TaskListForm";
-import {TaskViewForm} from "@app/components/view/Form/forms/TaskViewForm";
-import {Panel} from "@app/components/view/Panel/Panel";
+import {FaceDraggable} from "@app/components/face/FaceDraggable";
+import {ArchiveListForm} from "@app/components/forms/ArchiveListForm";
+import ImportForm from "@app/components/forms/ImportForm";
+import {JiraIssuesForm} from "@app/components/forms/JiraIssuesForm";
+import {TaskEditForm} from "@app/components/forms/TaskEditForm";
+import {TaskListForm} from "@app/components/forms/TaskListForm";
+import {TaskViewForm} from "@app/components/forms/TaskViewForm";
 import {IConfig} from "@app/globals";
 import {Archive} from "@app/models/archive";
-import {faceMoodOnTasks, Task} from "@app/models/task";
+import {FaceMood, faceMoodOnTasks, Task} from "@app/models/task";
+import {Panel} from "./Panel";
 
 import {Dispatcher} from "@app/services/dispatcher";
 import {Jira} from "@app/services/jira";
