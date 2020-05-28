@@ -115,22 +115,6 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
         </Form>);
     }
 
-    private updateWorklogByStartDate(startDate: Date, newW: Partial<Worklog>): void {
-        this.setState((prevState: ITaskEditState) => {
-            return {
-                task: new Task({
-                    ...prevState.task,
-                    priority: prevState.task.priority,
-                    worklog: prevState.task.worklog.map((w) =>
-                        w.started.getTime() === startDate.getTime()
-                            ? {...w, ...newW}
-                            : w,
-                    ),
-                }),
-            };
-        });
-    }
-
     private updateTaskProp(e: SyntheticEvent, key: string, cast: (val: any) => Date | number | string | Worklog[] = (v: any) => "" + v) {
         const event: any = e.nativeEvent;
         if (!event.target) return;

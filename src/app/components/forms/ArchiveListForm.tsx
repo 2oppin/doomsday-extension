@@ -52,7 +52,7 @@ export class ArchiveListForm extends Component<IArchiveListProps, IArchiveListSa
                                     >
                                         {`\ud83d\udce4`}
                                     </span>
-                                    <_bt u="♻" title="Remove Task from history"
+                                    <_bt u="♻" title="Remove Archive for good"
                                          cb={() => this.deleteArchive(arch.createdDay)}/>
                                 </div>
                             ))}
