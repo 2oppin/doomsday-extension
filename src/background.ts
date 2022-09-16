@@ -40,18 +40,26 @@ const updateArchives = async (cb: (tasks: IArchive[]) => any = (t) => t): Promis
         .then(() => postAllTabs(DoomPluginEvent.configUpdated, {archives}));
 };
 
+const DEFAULT_OPTIONS:IConfig = {
+  tasks: [],
+  archives:[],
+  options: {showFace: false, readHelp: [], facePosition: {r: 0, x: 0, y: 0}},
+};
 const getConfig = (): Promise<IConfig> => {
     return Promise.all([
         DoomStorage.get("tasks"),
         DoomStorage.get("archives"),
         DoomStorage.get("options"),
     ])
-        .then(([tasks, archives, options]) =>
-            ({
-                tasks: tasks || [],
-                archives: archives || [],
-                options: options || {showFace: false, readHelp: []},
-            }));
+        .then(([tasks, archives, options]) => ({
+            tasks: tasks || [],
+            archives: archives || [],
+            options: {...DEFAULT_OPTIONS, ...options},
+        }))
+        .catch((e: Error) => {
+          console.error('ERROR getting config:', e);
+          return DEFAULT_OPTIONS;
+      });
 };
 
 const broadcastConfig = () => {

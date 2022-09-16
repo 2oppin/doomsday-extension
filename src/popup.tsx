@@ -106,7 +106,7 @@ class Popup extends React.Component<{}, IPopupStatus> {
           </span>);
     }
 
-    private onConfigUpdate(partConfig: Partial<IConfig>): Promise<any> {
+    private onConfigUpdate(partConfig: Partial<IConfig> = {}): Promise<any> {
         return new Promise<any>((r) =>
             this.setState((prev) => {
                 const tasks = partConfig.tasks ? partConfig.tasks.map((t) => new Task(t)) : prev.tasks;
@@ -122,7 +122,7 @@ class Popup extends React.Component<{}, IPopupStatus> {
     }
 
     private ensureContentScript() {
-        Dispatcher.activeTabCall(DoomPluginEvent.ping, null, (res: string) => {
+        Dispatcher.activeTabCall(DoomPluginEvent.ping, {}, (res: string) => {
             this.setState({contentReady: res === PONG});
         });
     }
@@ -132,7 +132,7 @@ class Popup extends React.Component<{}, IPopupStatus> {
     }
 
     private getConfig() {
-        Dispatcher.call(DoomPluginEvent.refresh, null, (conf: IConfig) => this.onConfigUpdate(conf));
+        Dispatcher.call(DoomPluginEvent.refresh, {}, (conf: IConfig) => this.onConfigUpdate(conf));
     }
 
     private resetTutorial() {
