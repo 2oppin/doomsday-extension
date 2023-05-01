@@ -73,5 +73,10 @@ module.exports = (env, argv) => ({
       ? [new ChromeExtensionReloader()]
       : []
     )],
-  ]
+  ],
+  watch: true,
+  watchOptions: {
+    aggregateTimeout: 200,
+    poll: 1000,
+  },
 });

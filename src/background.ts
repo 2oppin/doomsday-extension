@@ -164,6 +164,9 @@ const dispatchMessage = (msg: IDDMessage, sender: any, sendResponse: (msg: any) 
         case DoomPluginEvent.showForm:
             postActiveTabs(DoomPluginEvent.showForm, msg);
             break;
+        case DoomPluginEvent.showPersonalForm:
+          postActiveTabs(DoomPluginEvent.showPersonalForm, msg);
+          break;
         case DoomPluginEvent.refresh:
             getConfig().then(sendResponse);
             return true;

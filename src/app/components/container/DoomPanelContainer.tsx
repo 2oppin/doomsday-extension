@@ -15,6 +15,7 @@ import {Panel} from "./Panel";
 import {Dispatcher} from "@app/services/dispatcher";
 import {Jira} from "@app/services/jira";
 import React, {Component} from "react";
+import { PersonalForm } from "../forms/PersonalForm";
 
 interface IDoomPanelProps {
     tasks?: Task[];
@@ -83,6 +84,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         Dispatcher.subscribe(DoomPluginEvent.closeForm, () => this.onCloseForm());
         Dispatcher.subscribe(DoomPluginEvent.ping, () => Promise.resolve(PONG));
         Dispatcher.subscribe(DoomPluginEvent.showForm, (args: any) => this.onShowForm(args));
+        Dispatcher.subscribe(DoomPluginEvent.showPersonalForm, (args: any) => this.onShowPersonalForm(args));
         Dispatcher.subscribe(DoomPluginEvent.taskActivation, (args: any) => this.onTaskActivation(args));
         Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => this.onConfig(args));
     }
@@ -107,6 +109,19 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
                 face: showFace ? {mood: FaceMood.BAD, ...facePosition} : null,
             }, () => r(true)),
         );
+    }
+
+    private onShowPersonalForm({name, data}: { name: string, data: any }): Promise<boolean> {
+      const {config} = this.state;
+      const showFace = config && config.options && config.options.showFace;
+      const facePosition = (config && config.options && config.options.facePosition) || {};
+      return new Promise((r) =>
+          this.setState({
+              form: {name, data},
+              overflow: true,
+              face: showFace ? {mood: FaceMood.BAD, ...facePosition} : null,
+          }, () => r(true)),
+      );
     }
 
     private onTaskActivation({guid}: { guid: string }): Promise<boolean> {
@@ -155,9 +170,11 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
             return <TaskViewForm {...data} />;
         } else if (name === "ArchiveList") {
             return <ArchiveListForm archives={archives}/>;
-        } else if (name === "ImportForm")
+        } else if (name === "ImportForm") {
             return <ImportForm {...data} />;
-        else {
+        } else if (name === "PersonalForm") {
+          return <PersonalForm {...data} />;
+        } else {
             return <TaskListForm {...{tasks: config.tasks, ...data, jira: isJira, hasArchive: archives.length > 0}} />;
         }
     }

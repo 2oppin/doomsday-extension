@@ -17,7 +17,7 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@types/chrome": "0.0.99",
+    "@types/chrome": "^0.0.99",
     "@types/node": "^13.9.0",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "rxjs": "^6.5.2"
+    "react-dom": "^16.9.0"
   }
 }

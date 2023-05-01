@@ -25,6 +25,8 @@ export enum DoomPluginEvent {
     showForm = "showForm",
     closeForm = "closeForm",
     resetTasks = "resetTasks",
+
+    showPersonalForm = "showPersonalForm",
 }
 
 const withTabs = (query: QueryInfo) => (cb: (tabs: chrome.tabs.Tab[]) => Promise<any>) =>

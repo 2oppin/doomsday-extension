@@ -9,6 +9,7 @@ import {FaceMood, faceMoodOnTasks, Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 
 import "./popup.css";
+import { PersonalStats } from "@app/components/personal-stats/PersonalStats";
 
 interface IPopupStatus {
     ready: boolean;
@@ -66,11 +67,18 @@ class Popup extends React.Component<{}, IPopupStatus> {
         const {options, contentReady} = this.state;
         const showFace = (options && options.showFace) || false;
         return (<>
-            {contentReady && <button
-              onClick={() => this.showTasksForm()}
-            >
-              Show Tasks
-            </button>}
+            {contentReady && (<>
+            <PersonalStats
+              i={60} e={20} p={90}
+              onClick={() => this.showPersonalForm()}
+            />
+            
+              <button
+                onClick={() => this.showTasksForm()}
+              >
+                Show Tasks
+              </button>
+            </>)}
             <div className={"control"}>
                 <label htmlFor="face-checker">Show face on all pages: </label>
                 <input id="face-checker" type="checkbox"
@@ -129,6 +137,10 @@ class Popup extends React.Component<{}, IPopupStatus> {
 
     private showTasksForm() {
         Dispatcher.activeTabCall(DoomPluginEvent.showForm, {name: "TasksList"});
+    }
+
+    private showPersonalForm() {
+      Dispatcher.activeTabCall(DoomPluginEvent.showPersonalForm, {name: "PersonalForm"});
     }
 
     private getConfig() {
