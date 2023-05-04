@@ -45,29 +45,29 @@ const DEFAULT_OPTIONS:IConfig = {
   archives:[],
   options: {showFace: false, readHelp: [], facePosition: {r: 0, x: 0, y: 0}},
 };
-const getConfig = (): Promise<IConfig> => {
-    return Promise.all([
+const getConfig = async (): Promise<IConfig> => {
+    return await Promise.all([
         DoomStorage.get("tasks"),
         DoomStorage.get("archives"),
         DoomStorage.get("options"),
     ])
-        .then(([tasks, archives, options]) => ({
-            tasks: tasks || [],
-            archives: archives || [],
-            options: {...DEFAULT_OPTIONS, ...options},
-        }))
-        .catch((e: Error) => {
-          console.error('ERROR getting config:', e);
-          return DEFAULT_OPTIONS;
-      });
+    .then(([tasks, archives, options = {}]) => ({
+        tasks: tasks || [],
+        archives: archives || [],
+        options: {...DEFAULT_OPTIONS, ...options},
+    }))
+    .catch((e: Error) => {
+      console.error('ERROR getting config:', e);
+      return DEFAULT_OPTIONS;
+    });
 };
 
-const broadcastConfig = () => {
-    return getConfig()
-        .then((config) => postAllTabs(DoomPluginEvent.configUpdated, config));
+const broadcastConfig = async () => {
+    const config = await getConfig();
+    postAllTabs(DoomPluginEvent.configUpdated, config);
 };
 
-const dispatchMessage = (msg: IDDMessage, sender: any, sendResponse: (msg: any) => any) => {
+const dispatchMessage = async (msg: IDDMessage, sender: any, sendResponse: (msg: any) => any) => {
     const {task, tasks, action, id} = msg;
     switch (action) {
         case DoomPluginEvent.setOptions:
@@ -164,11 +164,9 @@ const dispatchMessage = (msg: IDDMessage, sender: any, sendResponse: (msg: any) 
         case DoomPluginEvent.showForm:
             postActiveTabs(DoomPluginEvent.showForm, msg);
             break;
-        case DoomPluginEvent.showPersonalForm:
-          postActiveTabs(DoomPluginEvent.showPersonalForm, msg);
-          break;
         case DoomPluginEvent.refresh:
-            getConfig().then(sendResponse);
+            const config = await getConfig();
+            sendResponse(config);
             return true;
     }
     sendResponse(true);

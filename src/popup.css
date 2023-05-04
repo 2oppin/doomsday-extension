@@ -11,6 +11,15 @@ body {
   margin: 0 3px;
   cursor: pointer;
 }
+.dd-popup button.inverted {
+  color: #e9b30f;
+  width: 100%;
+  font-weight: bold;
+  border: outset #a72e2e;
+  background: #a72e2e;
+  margin: 0 3px;
+  cursor: pointer;
+}
 .dd-popup button.secondary {
   color: #b6b6b6;
   border: outset #283e5c;
@@ -44,4 +53,12 @@ body {
 }
 .dd-popup span b {
   color: #ef3232;;
+}
+.dd-popup .main-buttons {
+  display: inline-flex;
+  width: 108%;
+}
+.dd-popup button.inverted.settings {
+  width: 20%;
+  font-size: 20px;
 }

@@ -32,3 +32,9 @@
     color: var(--cl-dark);
     cursor: pointer;
 }
+.dd-popup .jira-btn {
+  background-color: var(--cl-white);
+}
+.dd-popup .jira-btn img {
+  height: 22px;
+}

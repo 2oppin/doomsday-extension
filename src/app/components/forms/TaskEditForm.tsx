@@ -12,6 +12,7 @@ import {Form} from "./Form";
 import _prrt from "./parts/priority";
 
 import "./TaskEditForm.css";
+import { Help, HelpInfo } from "../help/Help";
 
 const DEFAULT_TASK: ITask = {
     complete: null,
@@ -60,7 +61,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
 
         return (<Form caption={caption}>
             <div className="dd-popup-form-task">
-                <div className="dd-popup-form-inputfield" data-help={"task-name"}>
+                <div className="dd-popup-form-inputfield" data-help={HelpInfo.TaskEditName}>
                     <label>Code Name</label>
                     <input type="text" value={task.name}
                            onChange={(e: SyntheticEvent) => this.updateTaskProp(e, "name")}/>
@@ -112,6 +113,7 @@ export class TaskEditForm extends Component<ITaskEditProps, ITaskEditState> {
                           onClick={() => this.saveTask()}>{task.id ? "Update" : "Add"} Mission</span>
                 </div>
             </div>
+            <Help />
         </Form>);
     }
 

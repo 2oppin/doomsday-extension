@@ -1,40 +1,40 @@
-.dd-popup-form-tasklist  .tasklist .item span.info {
+.dd-popup-form-list  .list .item span.info {
     flex-grow: 1;
 }
-.dd-popup-form-tasklist  .tasklist .item span.prg {
+.dd-popup-form-list  .list .item span.prg {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
     padding:3px;
     height: 25px;
 }
-.dd-popup-form-tasklist  .tasklist .item span.prg .cpt {
+.dd-popup-form-list  .list .item span.prg .cpt {
     font-size: 14px;
     line-height: 14px;
     text-align: center;
     margin-right: 55px;
 }
-.dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar {
+.dd-popup-form-list  .list .item span.prg .prg-bar {
     flex-grow: 1;
     width: 100%;
     min-height: 5px;
     background: var(--cl-red);
     padding:0;
 }
-.dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar.inv {
+.dd-popup-form-list  .list .item span.prg .prg-bar.inv {
     background: var(--cl-blue);
 }
-.dd-popup-form-tasklist  .tasklist .item span.prg .prg-val {
+.dd-popup-form-list  .list .item span.prg .prg-val {
     width: 1px;
     height: 100%;
     min-height: 5px;
     background: var(--cl-yellow);
 }
-.dd-popup-form-tasklist  .tasklist .item span.prg .prg-bar.inv .prg-val {
+.dd-popup-form-list  .list .item span.prg .prg-bar.inv .prg-val {
     background: var(--cl-red);
 }
 
-.dd-popup-form-tasklist  .tasklist .item span.prg .countdown {
+.dd-popup-form-list  .list .item span.prg .countdown {
     position: relative;
     font-size: 12px;
     line-height: 12px;
@@ -42,6 +42,6 @@
     margin-top: -12px;
     padding: 0;
 }
-.dd-popup-form-tasklist  .tasklist .item span.prg .countdown .deadline-clock {
+.dd-popup-form-list  .list .item span.prg .countdown .deadline-clock {
     color: var(--cl-red);
 }

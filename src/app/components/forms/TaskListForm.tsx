@@ -2,15 +2,16 @@ import {JIRA} from "@app/common/images";
 import React, {Component} from "react";
 
 import {DoomPluginEvent} from "@app/common/chromeEvents";
-import {HelpInfo} from "@app/components/help/dictionary";
-import {Help} from "@app/components/help/Help";
+
+import {Help, HelpInfo} from "@app/components/help/Help";
+
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 
 import {Form} from "./Form";
 import {TaskItem} from "./parts/TaskItem";
 
-import "./task-list.css";
+
 
 interface ITaskListProps {
     tasks: Task[];
@@ -35,8 +36,6 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
         };
     }
 
-    private helpRef = React.createRef<Help>();
-
     constructor(props: ITaskListProps) {
         super(props);
         this.state = {
@@ -46,10 +45,6 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
         };
     }
 
-    public componentDidUpdate(prevProps: Readonly<ITaskListProps>, prevState: Readonly<ITaskListSate>, snapshot?: any) {
-        this.helpRef.current.rescanContents();
-    }
-
     public render() {
         const {readonly, previousForm, jira, hasArchive} = this.props;
         const {tasks, active} = this.state;
@@ -57,8 +52,8 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
         return (
             <Form caption="List of Tasks:">
                 <div>
-                    <div className="dd-popup-form-tasklist" data-help={HelpInfo.TaskList}>
-                        <div className="tasklist">
+                    <div className="dd-popup-form-list" data-help={HelpInfo.TaskList}>
+                        <div className="list">
                             {tasks.map((t) => <TaskItem {...{readonly, previousForm}} key={t.id}
                                                         active={t.id === active} task={t}/>)}
                         </div>
@@ -96,7 +91,7 @@ export class TaskListForm extends Component<ITaskListProps, ITaskListSate> {
                         >&#8687;</span>
                     </>}
                 </div>
-                <Help ref={this.helpRef}/>
+                <Help />
             </Form>
         );
     }

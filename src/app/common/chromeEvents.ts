@@ -26,7 +26,8 @@ export enum DoomPluginEvent {
     closeForm = "closeForm",
     resetTasks = "resetTasks",
 
-    showPersonalForm = "showPersonalForm",
+    // showPersonalForm = "showPersonalForm",
+    // showSettingsForm = "showSettingsForm",
 }
 
 const withTabs = (query: QueryInfo) => (cb: (tabs: chrome.tabs.Tab[]) => Promise<any>) =>
@@ -47,7 +48,7 @@ export const postActiveTabs = (event: DoomPluginEvent, data: any): Promise<any> 
     );
 
 export const postSingleTab = (tabId: number) => (event: DoomPluginEvent, data: any): Promise<any> => {
-    return new Promise((r) =>
+    return new Promise(() =>
         chrome.tabs.sendMessage(tabId, {action: event, ...data}),
     );
 };

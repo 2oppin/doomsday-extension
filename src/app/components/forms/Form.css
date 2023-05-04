@@ -12,7 +12,7 @@
 .dd-popup-form-contents {
   background: rgba(220, 49, 0, 0.6);
   padding: 25px 50px 15px;
-  min-height: 200px;
+  min-height: 50px;
 }
 h3.dd-form-caption {
   font-size: 1.17em;
@@ -40,7 +40,7 @@ h3.dd-form-caption {
   color: white;
 }
 
-.dd-popup-form-tasklist .tasklist {
+.dd-popup-form-list .list {
   padding: 0;
   list-style-type: none;
   display: flex;
@@ -48,7 +48,7 @@ h3.dd-form-caption {
   max-height: calc(100vh - 150px);
   overflow-y: auto;
 }
-.dd-popup-form-tasklist .tasklist .item {
+.dd-popup-form-list .list .item {
   display: flex;
   min-width: 400px;
   flex-direction: row;
@@ -62,12 +62,12 @@ h3.dd-form-caption {
   overflow-y: hidden;
   min-height: 50px;
 }
-.dd-popup-form-tasklist .tasklist .item.active {
-border: double 10px #a2a2a2;
-margin: -5px -5px 0 -5px;
-z-index: 10;
+.dd-popup-form-list .list .item.active {
+  border: double 10px var(--cl-gray-mid);
+  margin: -5px -5px 0 -5px;
+  z-index: 10;
 }
-.dd-popup-form-tasklist  .tasklist .item span{
+.dd-popup-form-list  .list .item span{
 padding: 3px;
 }
 .dd-brd{

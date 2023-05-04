@@ -72,12 +72,15 @@ class Popup extends React.Component<{}, IPopupStatus> {
               i={60} e={20} p={90}
               onClick={() => this.showPersonalForm()}
             />
-            
+            <div className="main-buttons">
               <button
                 onClick={() => this.showTasksForm()}
-              >
-                Show Tasks
-              </button>
+              >Show Tasks</button>
+              <button
+                className="inverted settings"
+                onClick={() => this.showSettingsForm()}
+              >⚙</button>
+            </div>
             </>)}
             <div className={"control"}>
                 <label htmlFor="face-checker">Show face on all pages: </label>
@@ -140,8 +143,12 @@ class Popup extends React.Component<{}, IPopupStatus> {
     }
 
     private showPersonalForm() {
-      Dispatcher.activeTabCall(DoomPluginEvent.showPersonalForm, {name: "PersonalForm"});
+      Dispatcher.activeTabCall(DoomPluginEvent.showForm, {name: "PersonalForm"});
     }
+
+    private showSettingsForm() {
+      Dispatcher.activeTabCall(DoomPluginEvent.showForm, {name: "Settings"});
+  }
 
     private getConfig() {
         Dispatcher.call(DoomPluginEvent.refresh, {}, (conf: IConfig) => this.onConfigUpdate(conf));

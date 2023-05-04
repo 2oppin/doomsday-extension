@@ -26,8 +26,8 @@ export default class TaskListForm extends Component<{}, ITaskListFormState> {
         return (
             <Form caption="List of Tasks:">
                 <div>
-                    <div className="dd-popup-form-tasklist">
-                        <div className="tasklist">
+                    <div className="dd-popup-form-list">
+                        <div className="list">
                             <input type="file" accept="application/json" onChange={(e) => {
                                 const file = e.target.files && e.target.files[0];
                                 if (file) {

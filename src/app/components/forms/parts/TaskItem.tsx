@@ -2,7 +2,7 @@ import React, {Component} from "react";
 
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {Face} from "@app/components/face/Face";
-import {HelpInfo} from "@app/components/help/dictionary";
+import {HelpInfo} from "@app/components/help/Help";
 import {Task} from "@app/models/task";
 import {Dispatcher} from "@app/services/dispatcher";
 

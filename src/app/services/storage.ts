@@ -18,13 +18,12 @@ class ChromeSyncStorage implements IDoomStorage {
 }
 
 class LocalStorage implements IDoomStorage {
-    public get(key: string): Promise<any> {
-        return Promise.resolve(
-            JSON.parse(window.localStorage.getItem(`doom-taskmanager-extension-${key}`)) || null,
-        );
+    public async get(key: string): Promise<any> {
+      const val = JSON.parse(window.localStorage.getItem(`doom-taskmanager-extension-${key}`)) || null;
+      return Promise.resolve(val);
     }
 
-    public set(key: string, data: any): Promise<void> {
+    public async set(key: string, data: any): Promise<void> {
         window.localStorage.setItem(`doom-taskmanager-extension-${key}`, JSON.stringify(data));
         return Promise.resolve();
     }
@@ -33,11 +32,11 @@ class LocalStorage implements IDoomStorage {
 class TmpStorage implements IDoomStorage {
     protected cache: {[key: string]: any} = {};
 
-    public get(key: string): Promise<any> {
+    public async get(key: string): Promise<any> {
         return Promise.resolve(this.cache[key] || null);
     }
 
-    public set(key: string, data: any): Promise<void> {
+    public async set(key: string, data: any): Promise<void> {
         this.cache[key] = data;
         return Promise.resolve();
     }

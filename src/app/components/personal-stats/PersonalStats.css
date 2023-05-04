@@ -1,0 +1,57 @@
+.personal-stats {
+  width: 150px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: 7px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.personal-stats .numbers label {
+  width: 40px;
+  display: inline-block;
+}
+.personal-stats .diagram {
+  position: relative;
+  transform: scale(0.5);
+  width: 70px;
+}
+.personal-stats .int {
+  position: absolute;
+  height: 90px;
+  width: 90px;
+  border-radius: 45px;
+}
+.personal-stats .emo {
+  position: absolute;
+  background: black;
+  height: 60px;
+  width: 60px;
+  left: 15px;
+  top: 15px;
+  border-radius: 30px;
+}
+.personal-stats .phy {
+  position: absolute;
+  background: black;
+  height: 30px;
+  width: 30px;
+  left: 30px;
+  top: 30px;
+  border-radius: 15px;
+}
+.personal-stats .bg {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+.int .bgg {
+  background: radial-gradient(circle 70px, #0055ff, transparent);
+}
+.emo .bgg {
+  background: radial-gradient(circle 40px, #ffbb00, transparent);
+}
+.phy .bgg {
+  background: radial-gradient(circle 15px, #ff5500, transparent);
+}

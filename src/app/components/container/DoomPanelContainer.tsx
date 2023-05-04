@@ -16,6 +16,7 @@ import {Dispatcher} from "@app/services/dispatcher";
 import {Jira} from "@app/services/jira";
 import React, {Component} from "react";
 import { PersonalForm } from "../forms/PersonalForm";
+import { SettingsForm } from "../forms/SettingsForm";
 
 interface IDoomPanelProps {
     tasks?: Task[];
@@ -51,10 +52,11 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
     public componentDidMount() {
         this.listen();
-        Dispatcher.call(DoomPluginEvent.refresh, null, (conf) => this.onConfig(conf));
+        Dispatcher.call(DoomPluginEvent.refresh, null, (conf) => {
+          this.onConfig(conf);
+        });
         this.hellthchekInterval = setInterval(() => this.hellthchekOnFace(), 3000);
-        Jira.isJiraSite()
-            .then((itIs) => this.setState({isJira: itIs}));
+        Jira.isJiraSite().then((isJira) => this.setState({isJira}));
     }
 
     public componentWillUnmount() {
@@ -84,9 +86,10 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         Dispatcher.subscribe(DoomPluginEvent.closeForm, () => this.onCloseForm());
         Dispatcher.subscribe(DoomPluginEvent.ping, () => Promise.resolve(PONG));
         Dispatcher.subscribe(DoomPluginEvent.showForm, (args: any) => this.onShowForm(args));
-        Dispatcher.subscribe(DoomPluginEvent.showPersonalForm, (args: any) => this.onShowPersonalForm(args));
         Dispatcher.subscribe(DoomPluginEvent.taskActivation, (args: any) => this.onTaskActivation(args));
-        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => this.onConfig(args));
+        Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => {
+          return this.onConfig(args);
+        });
     }
 
     private onCloseForm(): Promise<any> {
@@ -109,19 +112,6 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
                 face: showFace ? {mood: FaceMood.BAD, ...facePosition} : null,
             }, () => r(true)),
         );
-    }
-
-    private onShowPersonalForm({name, data}: { name: string, data: any }): Promise<boolean> {
-      const {config} = this.state;
-      const showFace = config && config.options && config.options.showFace;
-      const facePosition = (config && config.options && config.options.facePosition) || {};
-      return new Promise((r) =>
-          this.setState({
-              form: {name, data},
-              overflow: true,
-              face: showFace ? {mood: FaceMood.BAD, ...facePosition} : null,
-          }, () => r(true)),
-      );
     }
 
     private onTaskActivation({guid}: { guid: string }): Promise<boolean> {
@@ -174,6 +164,8 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
             return <ImportForm {...data} />;
         } else if (name === "PersonalForm") {
           return <PersonalForm {...data} />;
+        } else if (name === "Settings") {
+          return <SettingsForm config={config.options} />;
         } else {
             return <TaskListForm {...{tasks: config.tasks, ...data, jira: isJira, hasArchive: archives.length > 0}} />;
         }

@@ -36,8 +36,8 @@ export class ArchiveListForm extends Component<IArchiveListProps, IArchiveListSa
         return (
             <Form caption={caption}>
                 <div>
-                    <div className="dd-popup-form-tasklist">
-                        <div className="tasklist">
+                    <div className="dd-popup-form-list">
+                        <div className="list">
                             {archives.map((arch, i) => (
                                 <div key={i} className={"task-item item archive-item"}>
                                     <span

@@ -1,0 +1,10 @@
+.dd-popup-form-list .list .item.setting {
+  height: auto;
+  flex-direction: column;
+}
+.dd-popup-form-list .list .item.setting .dd-control {
+  flex-direction: row;
+}
+.dd-popup-form-list .list .item.setting .delimiter-top {
+  border-top: 1px dashed var(--cl-white);
+}

@@ -1,21 +1,29 @@
 import {DoomPluginEvent} from "@app/common/chromeEvents";
 import {UUID} from "@app/common/routines";
-import {HelpDict, HelpInfo} from "@app/components/help/dictionary";
 import {IConfig} from "@app/globals";
 import {Dispatcher} from "@app/services/dispatcher";
 import React, {Component, RefObject} from "react";
 
-import "./help.css";
+import { i18n, HelpInfo } from "@app/components/i18n/i18n";
+export { HelpInfo} from "@app/components/i18n/i18n";
 
+export interface HelpTooltip {
+    text: string;
+}
+type Dict = {[key: string]: HelpTooltip};
+export const HelpDict: Dict = 
+  Object.entries(HelpInfo).reduce((a, [,v]) => ({...a, [v]: {text: i18n(v)}}), {}) as {[key: string]: HelpTooltip};
+
+import "./help.css";
 export interface IHelpable {
-    dataHelp?: HelpInfo;
+    dataHelp?: string
 }
 
 interface IHelpState {
     showTutorial: boolean;
-    helpNames: HelpInfo[];
-    readHelp: HelpInfo[];
-    activeHelpName: HelpInfo | null;
+    helpNames: string[];
+    readHelp: string[];
+    activeHelpName: string | null;
     right: boolean;
     bottom: boolean;
 }
@@ -38,9 +46,8 @@ export class Help extends Component<{}, IHelpState> {
     }
 
     public componentDidMount(): void {
-        // const helpNames = this.scanContentsOnHelpNames();
         Dispatcher.subscribe(DoomPluginEvent.configUpdated, this.onConfigUpdate);
-        Dispatcher.call(DoomPluginEvent.refresh);
+        this.rescanContents();
     }
 
     public componentWillUnmount() {
@@ -48,7 +55,8 @@ export class Help extends Component<{}, IHelpState> {
     }
 
     public rescanContents() {
-        Dispatcher.call(DoomPluginEvent.refresh, null, ({options}) => {
+        Dispatcher.call(DoomPluginEvent.refresh, null, (conf) => {
+            const {options} = conf;
             const {readHelp = []} = options;
             const helpNames = this.scanContentsOnHelpNames().filter((nm) => !readHelp.includes(nm));
             this.setState({
@@ -125,9 +133,9 @@ export class Help extends Component<{}, IHelpState> {
         }
     }
 
-    protected scanContentsOnHelpNames(): HelpInfo[] {
+    protected scanContentsOnHelpNames(): string[] {
         const helpItems: HTMLElement[] = Array.prototype.slice.call(document.querySelectorAll("[data-help]"));
-        return helpItems.reduce((a, el) => [...a, el.dataset.help as HelpInfo], []);
+        return helpItems.reduce((a, el) => [...a, el.dataset.help], []);
     }
 
     protected onConfigUpdate(config: IConfig): Promise<boolean> {
@@ -136,6 +144,7 @@ export class Help extends Component<{}, IHelpState> {
 
         const {readHelp = []} = options;
         const helpNames = this.scanContentsOnHelpNames().filter((nm) => !readHelp.includes(nm));
+
         return new Promise<boolean>((r) =>
             this.setState({
                 readHelp,

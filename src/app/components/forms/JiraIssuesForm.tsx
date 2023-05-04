@@ -59,8 +59,8 @@ export class JiraIssuesForm extends Component<IJiraIssuesProps, IJiraIssuesSate>
         return (
             <Form caption={caption}>
                 <div>
-                    <div className="dd-popup-form-tasklist">
-                        <div className="tasklist">
+                    <div className="dd-popup-form-list">
+                        <div className="list">
                             {issues.map((issue, i) => (
                                 <div key={i} className={"task-item item archive-item"}>
                                     <span>{issue.key}: {issue.fields.summary}</span>

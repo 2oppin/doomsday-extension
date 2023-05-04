@@ -1,11 +1,10 @@
-import {HelpInfo} from "@app/components/help/dictionary";
 import {Task} from "@app/models/task";
 
 export const DOOM_OWERFLOW_APP_ID = "dd-doom-extention-app";
 
 export interface IConfigOptions {
     showFace: boolean;
-    readHelp: HelpInfo[];
+    readHelp: string[];
     facePosition: { r: number, x: number, y: number };
 }
 
@@ -25,3 +24,5 @@ export interface IDDMessage extends IConfigOptions {
     finished: number;
     done: number;
 }
+
+(global as any).DD_LANG = "en";
