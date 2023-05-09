@@ -9,7 +9,7 @@ import { IConfigOptions } from "@app/globals";
 import { i18n } from "../i18n/i18n";
 
 import "./settings-form.css"
-import { WebRTC } from "@app/services/web-rtc-io";
+import { WEBRTC_STATE_CHANGED, WebRTC } from "@app/services/web-rtc-io";
 import { DoomPluginEvent } from "@app/common/chromeEvents";
 
 interface ISettingsFormProps {
@@ -17,7 +17,8 @@ interface ISettingsFormProps {
 }
 
 interface ISettingsFormSate {
-    config: IConfigOptions;
+  config: IConfigOptions;
+  connectionState: [RTCIceConnectionState, RTCSignalingState,  RTCDataChannelState];
 }
 
 export class SettingsForm extends Component<ISettingsFormProps, ISettingsFormSate> {
@@ -32,12 +33,20 @@ export class SettingsForm extends Component<ISettingsFormProps, ISettingsFormSat
       this.state = {
           ...this.state,
           ...SettingsForm.getDerivedStateFromProps(props),
+          connectionState: WebRTC.state,
       };
+  }
+
+  componentDidMount(): void {
+    WebRTC.subscribe(WEBRTC_STATE_CHANGED, (e) => {
+      console.log("stateChanged", e);
+      this.setState({connectionState: WebRTC.state});
+    })
   }
 
   async createOffer(e: any) {
     console.log('ok - run');
-    const offerStr = await WebRTC().createOffer();
+    const offerStr = await WebRTC.createOffer();
     Dispatcher.dispatch(DoomPluginEvent.showModal, {caption: "Oook", contents: (<>
       <span style={{maxWidth: '500px', overflowWrap: 'break-word'}}>
         <p>{offerStr}</p>
@@ -46,7 +55,7 @@ export class SettingsForm extends Component<ISettingsFormProps, ISettingsFormSat
       <span style={{maxWidth: '500px', overflowWrap: 'break-word'}}>
       {i18n('settings-webrtc-p2p-accept-answer')}:
       <textarea id="dd-webrtc-answer-accept"></textarea>
-      <button onClick={() => WebRTC().acceptAnswer(
+      <button onClick={() => WebRTC.acceptAnswer(
         (document.getElementById('dd-webrtc-answer-accept') as HTMLTextAreaElement).value
       )}>🚀</button>
     </span>
@@ -59,7 +68,7 @@ export class SettingsForm extends Component<ISettingsFormProps, ISettingsFormSat
       contents: (<div>
         <textarea id="dd-webrtc-offer-accept" name="offer"></textarea>
         <button onClick={async () => {
-          const answer = await WebRTC().acceptOffer(
+          const answer = await WebRTC.acceptOffer(
             (document.getElementById('dd-webrtc-offer-accept') as HTMLTextAreaElement).value
           );
           const el = document.getElementById('dd-settings-webrtc-created-answer');
@@ -74,11 +83,12 @@ export class SettingsForm extends Component<ISettingsFormProps, ISettingsFormSat
   }
 
   sendMessage() {
-    WebRTC().sendMessage('Have you read it at last? :`(');
+    WebRTC.sendMessage('Have you read it at last? :`(');
   }
 
   public render() {
       const {facePosition} = this.props.config;
+      const {connectionState} = this.state;
 
       return (
           <Form caption={i18n("settings-title")}>
@@ -92,6 +102,9 @@ export class SettingsForm extends Component<ISettingsFormProps, ISettingsFormSat
                     <button onClick={this.acceptOffer} data-help={HelpInfo.SettingsAcceptOffer}>{i18n("settings-accept-offer")}</button>
                     <button onClick={this.sendMessage} >SEND</button>
                   </div>
+                  <span className="delimiter-top">
+                      Status: {connectionState.join('/')}<br/>
+                  </span>
                   <span className="delimiter-top">{i18n("settings-online-desc")}</span>
                 </div>
                 <div className="setting item">

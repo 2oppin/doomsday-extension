@@ -22,4 +22,6 @@ export default {
   [HelpInfo.TaskItemProgressbar]: "This is how your progress looks like.",
   [HelpInfo.TaskItemInfo]: "This is the basic info on the task. Estimation, time spent, deadline.",
   [HelpInfo.Settings]: "Settings to fine-tune your work process",
+  [HelpInfo.SettingsCreateOffer]: "Push the button, and copy message conntents, and pass it to you friend via... USPS ¯\_(ツ)_/¯ or whatever",
+  [HelpInfo.SettingsAcceptOffer]: "Open an envelop from your friend and let your other friend behind your back to read it, then type it character by character into a input box on your screen; now you can chat with your friend on the other side of the envelop, and f**k USPS :P",
 };

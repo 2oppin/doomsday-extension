@@ -17,6 +17,7 @@ import {Jira} from "@app/services/jira";
 import React, {Component} from "react";
 import { PersonalForm } from "../forms/PersonalForm";
 import { SettingsForm } from "../forms/SettingsForm";
+import ModalForm from "../forms/ModalForm";
 
 interface IDoomPanelProps {
     tasks?: Task[];
@@ -25,6 +26,7 @@ interface IDoomPanelProps {
 interface IDoomPanelState {
     overflow: boolean;
     form: any;
+    modal: any;
     face: { mood: FaceMood } | null;
     activeTask: string;
     config: IConfig;
@@ -39,6 +41,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
         this.state = {
             overflow: false,
             form: null,
+            modal: null,
             face: {mood: FaceMood.BAD},
             activeTask: null,
             config: {
@@ -70,6 +73,7 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
                 <Panel overflow={!!form} onClose={() => this.onCloseForm()}>
                     {this.renderForm()}
                     {face && <FaceDraggable {...face} onDoubleClick={() => this.toggleFormDisplaying()}/>}
+                    {this.renderModal()}
                 </Panel>
             </div>
         );
@@ -84,12 +88,22 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
     private listen() {
         Dispatcher.subscribe(DoomPluginEvent.closeForm, () => this.onCloseForm());
+        Dispatcher.subscribe(DoomPluginEvent.closeModal, () => this.onCloseModal());
         Dispatcher.subscribe(DoomPluginEvent.ping, () => Promise.resolve(PONG));
         Dispatcher.subscribe(DoomPluginEvent.showForm, (args: any) => this.onShowForm(args));
+        Dispatcher.subscribe(DoomPluginEvent.showModal, (args: any) => this.onShowModal(args));
         Dispatcher.subscribe(DoomPluginEvent.taskActivation, (args: any) => this.onTaskActivation(args));
         Dispatcher.subscribe(DoomPluginEvent.configUpdated, (args: any) => {
           return this.onConfig(args);
         });
+    }
+
+    private onCloseModal(): Promise<any> {
+      return new Promise((r) =>
+          this.setState({
+              modal: null
+          }, () => r(true)),
+      );
     }
 
     private onCloseForm(): Promise<any> {
@@ -99,6 +113,14 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
                 overflow: false,
             }, () => r(true)),
         );
+    }
+
+    private onShowModal({caption, contents}: { caption?: string, contents?: any } = {}): Promise<boolean> {
+      return new Promise((r) =>
+          this.setState({
+              modal: {caption, contents},
+          }, () => r(true)),
+      );
     }
 
     private onShowForm({name, data}: { name: string, data: any }): Promise<boolean> {
@@ -144,6 +166,13 @@ export class DoomPanelContainer extends Component<IDoomPanelProps, IDoomPanelSta
 
     private toggleFormDisplaying() {
         this.setState(({form}) => ({form: form ? null : {name: "TaskList"}}));
+    }
+
+    private renderModal() {
+      if (!this.state.modal) return null;
+      const {caption, contents = null} = this.state.modal || {};
+
+      return <ModalForm {...{caption, contents}} />;
     }
 
     private renderForm() {

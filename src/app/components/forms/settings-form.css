@@ -1,5 +1,6 @@
 .dd-popup-form-list .list .item.setting {
   height: auto;
+  width: auto;
   flex-direction: column;
 }
 .dd-popup-form-list .list .item.setting .dd-control {

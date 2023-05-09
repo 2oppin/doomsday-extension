@@ -24,4 +24,6 @@ export const HelpInfo = Object.freeze({
   TaskEditName: "help-task-ed-name",
 
   Settings: "help-settings-info",
+  SettingsCreateOffer: "help-settings-create-offer",
+  SettingsAcceptOffer: "help-settings-accept-offer",
 });

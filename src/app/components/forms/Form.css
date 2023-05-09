@@ -8,6 +8,7 @@
   font-family: monospace;
   padding: 0;
   min-width: 300px;
+  width: auto;
 }
 .dd-popup-form-contents {
   background: rgba(220, 49, 0, 0.6);
@@ -72,4 +73,19 @@ padding: 3px;
 }
 .dd-brd{
   border-image: 33 round;
+}
+.dd-popup-form.dd-form-modal {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  height: fit-content;
+  position: fixed;
+  max-width: 95%;
+}
+.dd-popup-form.dd-form-modal .dd-popup-form-contents {
+  background: rgb(242, 152, 127);
+  padding: 25px 50px 15px;
+  min-height: 50px;
 }

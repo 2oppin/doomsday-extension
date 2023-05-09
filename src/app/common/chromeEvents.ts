@@ -23,7 +23,9 @@ export enum DoomPluginEvent {
     deleteArchive = "deleteArchive",
 
     showForm = "showForm",
+    showModal = "showModal",
     closeForm = "closeForm",
+    closeModal = "closeModal",
     resetTasks = "resetTasks",
 
     // showPersonalForm = "showPersonalForm",
